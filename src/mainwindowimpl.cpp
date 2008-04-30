@@ -130,6 +130,8 @@ void MainWindowImpl::logReceived(QStandardItemModel *model)
 	logView->setModel(logModel);
 	if(prevModel)
 		delete prevModel;
+	logView->setColumnWidth(0,450);
+	logView->setColumnWidth(1,200);
 }
 
 void MainWindowImpl::progress(int i)

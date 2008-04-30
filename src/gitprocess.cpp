@@ -54,7 +54,6 @@ void GitProcess::getLog(int numLog)
 	QStandardItem *it1 = new QStandardItem(QString("Author"));
 	QStandardItem *it2 = new QStandardItem(QString("Date"));
 	QStandardItem *it3 = new QStandardItem(QString("Commit"));
-
 	logModel->setHorizontalHeaderItem(0,it);
 	logModel->setHorizontalHeaderItem(1,it1);
 	logModel->setHorizontalHeaderItem(2,it2);
@@ -80,10 +79,12 @@ void GitProcess::getLog(int numLog)
 		if(oneLiner.startsWith("\n"))
 			oneLiner = oneLiner.remove(0,1);
 		QStandardItem *item1 = new QStandardItem(oneLiner);
+		item1->setEditable(false);
 		itemlist.append(item1);
 		
 		while(it2.hasNext()) {
 			QStandardItem *item1 = new QStandardItem(it2.next());
+			item1->setEditable(false);	
 			itemlist.append(item1);
 		}
 		logModel->appendRow(itemlist);
