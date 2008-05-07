@@ -32,7 +32,7 @@ void MainWindowImpl::setupConnections()
 	connect(gt->git,SIGNAL(notify(const QString &)),this->statusBar(),SLOT(showMessage(const QString &)));
 	connect(gt->git,SIGNAL(progress(int)),this,SLOT(progress(int)));
 	connect(gt->git,SIGNAL(logReceived(QStandardItemModel *)),this,SLOT(logReceived(QStandardItemModel *)));
-	connect(gt->git,SIGNAL(userSettings(QStringList)),this,SLOT(userSettings(QStringlist)));
+	connect(gt->git,SIGNAL(userSettings(QString, QString)),this,SLOT(userSettings(QString, QString)));
 }
 
 MainWindowImpl::~MainWindowImpl()

@@ -35,19 +35,16 @@ QByteArray GitProcess::runGit(QStringList arguments)
 void GitProcess::getUserSettings()
 {
 	QStringList args, args2;
-	QStringList gitSettings;
 	args << "config" << "--global" << "--get" << "user.name";
 	emit notify("Getting user settings");
 	QByteArray array = runGit(args);
 	QString name(array);
-	gitSettings << name;
 
 	args2 << "config" << "--global" << "--get" << "user.email";
 	QByteArray array2 = runGit(args);
 	QString email(array);
 
-	gitSettings << email;
-	emit userSettings(gitSettings);
+	emit userSettings(name,email);
 	emit notify("Ready");
 }
 

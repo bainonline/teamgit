@@ -45,6 +45,6 @@ Q_OBJECT
 	void logReceived(QStandardItemModel *);
 	void notify(const QString &);
 	void progress(int);
-	void userSettings(QStringList);
+	void userSettings(QString, QString);
 };
 #endif

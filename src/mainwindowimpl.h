@@ -46,7 +46,7 @@ private slots:
 	void settingsDialog();
 	void logReceived(QStandardItemModel *);
 	void progress(int);
-	void userSettings(QStringList);
+	void userSettings(QString, QString);
 	
 	void testSlot();
 
