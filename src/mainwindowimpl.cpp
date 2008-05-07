@@ -39,6 +39,7 @@ MainWindowImpl::~MainWindowImpl()
 {
 	writeSettings();
 }
+
 void MainWindowImpl::writeSettings()
 {
 	QSettings settings(COMPANY, "Teamgit");
@@ -135,7 +136,10 @@ void MainWindowImpl::progress(int i)
 		progressBar->setValue(i);
 	}
 }
-
+void MainWindowImpl::userSettings(QString name, QString email)
+{
+	
+}
 void MainWindowImpl::testSlot()
 {
 
