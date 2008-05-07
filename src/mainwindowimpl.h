@@ -22,15 +22,19 @@ class MainWindowImpl : public QMainWindow, public Ui::MainWindow
 Q_OBJECT
 private:
 	
-	SettingsImpl *sd;
+	//settings
 	QString teamGitWorkingDir;
+	QString userName;
+	QString userEmail;
+	
+	SettingsImpl *sd;
 	QStandardItemModel *logModel;
 	QProgressBar *progressBar;
 	
 	void readSettings();
 	void writeSettings();
 	void setupConnections();
-	void initTeamGitDir();
+	void initSettings();
 	ProjectSettings projectsettings;
 public:
 	GitThread *gt;
@@ -42,6 +46,7 @@ private slots:
 	void settingsDialog();
 	void logReceived(QStandardItemModel *);
 	void progress(int);
+	void userSettings(QStringList);
 	
 	void testSlot();
 

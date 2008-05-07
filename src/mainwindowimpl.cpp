@@ -21,7 +21,6 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 	QTimer::singleShot(0,this,SLOT(initSlot()));
 	readSettings();
 	setupConnections();
-	qRegisterMetaType<ProjectSettings>("ProjectSettings");
 }
 
 void MainWindowImpl::setupConnections()
@@ -33,6 +32,7 @@ void MainWindowImpl::setupConnections()
 	connect(gt->git,SIGNAL(notify(const QString &)),this->statusBar(),SLOT(showMessage(const QString &)));
 	connect(gt->git,SIGNAL(progress(int)),this,SLOT(progress(int)));
 	connect(gt->git,SIGNAL(logReceived(QStandardItemModel *)),this,SLOT(logReceived(QStandardItemModel *)));
+	connect(gt->git,SIGNAL(userSettings(QStringList)),this,SLOT(userSettings(QStringlist)));
 }
 
 MainWindowImpl::~MainWindowImpl()
@@ -77,24 +77,10 @@ void MainWindowImpl::readSettings()
 	teamGitWorkingDir = settings.value("workspace",QString("notset")).toString();
 	settings.endGroup();	
 
-//	Load projects
-	//QStringList projectNameList;
-	//settings.beginGroup("Projects");
-	//projectNameList = settings.value("project_list",NULL).toStringList();
-	//settings.endGroup();	
-	//
-	//QStringListIterator Iterator(projectNameList);
-	//while (Iterator.hasNext()) {
-		//settings.beginGroup(Iterator.next());
-		//ProjectSettings s1;
-		//s1.name = settings.value("name",QString("")).toString();
-		//s1.path = settings.value("path",QString("")).toString();
-		//settings.endGroup();
-		//projects << s1;	
-	//}
+
 }
 
-void MainWindowImpl::initTeamGitDir()
+void MainWindowImpl::initSettings()
 {
 	if(teamGitWorkingDir == "notset") {
 		settingsDialog();
@@ -103,7 +89,7 @@ void MainWindowImpl::initTeamGitDir()
 
 void MainWindowImpl::initSlot()
 {
-	initTeamGitDir();
+	initSettings();
 	GIT_INVOKE("getLog");
 	
 }

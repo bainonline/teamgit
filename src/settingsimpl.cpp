@@ -8,7 +8,22 @@ SettingsImpl::SettingsImpl()
 	connect(pickPathButton,SIGNAL(clicked()),this,SLOT(getFilePath()));
 	connect(pickWorkingDir,SIGNAL(clicked()),this,SLOT(getWorkingDirPath()));	
 }
+void SettingsImpl::setUserSettings(const QString &name, const QString &email)
+{
+	userName->setText(name);
+	userEmail->setText(email);
+}
 
+QString SettingsImpl::getUserName()
+{
+	return userName->text();
+}
+
+
+QString SettingsImpl::getUserEmail()
+{
+	return userEmail->text();
+}
 void SettingsImpl::setGitBinaryPath(const QString &path)
 {
 	gitBinaryPath->setText(path);
