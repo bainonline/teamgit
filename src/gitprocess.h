@@ -39,10 +39,12 @@ Q_OBJECT
 	public slots:
 	void setGitBinaryPath(const QString &path); 
 	void getLog(int numLog=1000);
+	void getUserSettings();
 	
 	signals:
 	void logReceived(QStandardItemModel *);
 	void notify(const QString &);
 	void progress(int);
+	void userSettings(QStringList);
 };
 #endif
