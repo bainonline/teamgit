@@ -18,5 +18,4 @@ SOURCES = src/mainwindowimpl.cpp \
  src/gitprocess.cpp \
  src/gitthread.cpp \
  src/settingsimpl.cpp \
- src/projectsettings.cpp \
  src/projectmanager.cpp
