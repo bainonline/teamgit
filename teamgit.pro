@@ -12,7 +12,8 @@ HEADERS = src/mainwindowimpl.h \
  src/settingsimpl.h \
  src/projectsettings.h \
  src/projectmanager.h \
- src/defs.h
+ src/defs.h \
+ src/settings.h
 SOURCES = src/mainwindowimpl.cpp \
  src/main.cpp \
  src/gitprocess.cpp \

@@ -1,6 +1,7 @@
 #include <QFileDialog>
 
 #include "settingsimpl.h"
+//#include "gsettings.h"
 
 SettingsImpl::SettingsImpl()
 {
@@ -8,6 +9,7 @@ SettingsImpl::SettingsImpl()
 	connect(pickPathButton,SIGNAL(clicked()),this,SLOT(getFilePath()));
 	connect(pickWorkingDir,SIGNAL(clicked()),this,SLOT(getWorkingDirPath()));	
 }
+
 void SettingsImpl::setUserSettings(const QString &name, const QString &email)
 {
 	userName->setText(name);

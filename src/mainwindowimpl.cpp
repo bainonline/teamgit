@@ -10,11 +10,16 @@
 #include "mainwindowimpl.h"
 #include "gitthread.h"
 #include "settingsimpl.h"
+
+gsettings *gSettings;
+gsettings GlobalSettings;
 //
 MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 	: QMainWindow(parent, f)
 {
 	setupUi(this);
+	
+	gSettings = &GlobalSettings;//(gsettings *)malloc(sizeof(gsettings));
 	gt = new GitThread();
 	gt->start();
 	sd = new SettingsImpl();
@@ -55,7 +60,7 @@ void MainWindowImpl::writeSettings()
 	settings.endGroup();
 	
 	settings.beginGroup("TeamGit");
-	settings.setValue("workspace",teamGitWorkingDir);
+	settings.setValue("workspace",gSettings->teamGitWorkingDir);
 	settings.endGroup();
 }
 
@@ -75,7 +80,7 @@ void MainWindowImpl::readSettings()
      settings.endGroup();
      
 	settings.beginGroup("TeamGit");
-	teamGitWorkingDir = settings.value("workspace",QString("notset")).toString();
+	gSettings->teamGitWorkingDir = settings.value("workspace",QString("notset")).toString();
 	settings.endGroup();	
 
 
@@ -83,7 +88,7 @@ void MainWindowImpl::readSettings()
 
 void MainWindowImpl::initSettings()
 {
-	if(teamGitWorkingDir == "notset") {
+	if(gSettings->teamGitWorkingDir == "notset") {
 		settingsDialog();
 	} 
 }
@@ -97,14 +102,15 @@ void MainWindowImpl::initSlot()
 
 void MainWindowImpl::settingsDialog()
 {
-	sd->setTeamGitWorkingDir(teamGitWorkingDir);
+	sd->setTeamGitWorkingDir(gSettings->teamGitWorkingDir);
 	sd->setGitBinaryPath(gt->git->getGitBinaryPath());
+//	sd->refreshUI();
 	int ret = sd->exec();
 	if( ret == QDialog::Accepted) {
 		gt->git->setGitBinaryPath(sd->getGitBinaryPath());
-		if(teamGitWorkingDir != sd->getTeamGitWorkingDir()) {
-			teamGitWorkingDir = sd->getTeamGitWorkingDir();
-			emit teamGitWorkingDirChanged(teamGitWorkingDir);
+		if(gSettings->teamGitWorkingDir != sd->getTeamGitWorkingDir()) {
+			gSettings->teamGitWorkingDir = sd->getTeamGitWorkingDir();
+			emit teamGitWorkingDirChanged(gSettings->teamGitWorkingDir);
 		}
 	}
 }
@@ -138,8 +144,10 @@ void MainWindowImpl::progress(int i)
 }
 void MainWindowImpl::userSettings(QString name, QString email)
 {
-	
+	gSettings->userName = name;
+	gSettings->userEmail = email;
 }
+
 void MainWindowImpl::testSlot()
 {
 

@@ -16,16 +16,16 @@
 				QMetaObject::invokeMethod(gt->git,action_slot,Qt::QueuedConnection); \
 			} while(0)	
 
+struct gsettings {
+	QString userName;
+	QString userEmail;
+	QString teamGitWorkingDir;
+};
 
 class MainWindowImpl : public QMainWindow, public Ui::MainWindow
 {
 Q_OBJECT
 private:
-	
-	//settings
-	QString teamGitWorkingDir;
-	QString userName;
-	QString userEmail;
 	
 	SettingsImpl *sd;
 	QStandardItemModel *logModel;
@@ -36,6 +36,7 @@ private:
 	void setupConnections();
 	void initSettings();
 	ProjectSettings projectsettings;
+	
 public:
 	GitThread *gt;
 	MainWindowImpl( QWidget * parent = 0, Qt::WFlags f = 0 );
