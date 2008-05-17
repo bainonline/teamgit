@@ -3,11 +3,16 @@
 #include "settingsimpl.h"
 //#include "gsettings.h"
 
+gsettings GlobalSettings;
+gsettings *gSettings;
+
 SettingsImpl::SettingsImpl()
 {
 	setupUi(this);
 	connect(pickPathButton,SIGNAL(clicked()),this,SLOT(getFilePath()));
 	connect(pickWorkingDir,SIGNAL(clicked()),this,SLOT(getWorkingDirPath()));	
+	
+	gSettings = &GlobalSettings;//(gsettings *)malloc(sizeof(gsettings));
 }
 
 void SettingsImpl::setUserSettings(const QString &name, const QString &email)
@@ -64,4 +69,21 @@ void SettingsImpl::setTeamGitWorkingDir(const QString &dir)
 QString SettingsImpl::getTeamGitWorkingDir()
 {
 	return teamGitWorkingDir->text();
+}
+
+
+void SettingsImpl::refreshUi()
+{
+	userName->setText(gSettings->userName);
+	userEmail->setText(gSettings->userEmail);
+}
+
+
+
+void SettingsImpl::accept()
+{
+	gSettings->userName = userName->text();
+	gSettings->userEmail = userEmail->text();
+	
+	QDialog::accept();
 }

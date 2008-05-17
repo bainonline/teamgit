@@ -40,6 +40,7 @@ Q_OBJECT
 	void setGitBinaryPath(const QString &path); 
 	void getLog(int numLog=1000);
 	void getUserSettings();
+	void setUserSettings();
 	
 	signals:
 	void logReceived(QStandardItemModel *);

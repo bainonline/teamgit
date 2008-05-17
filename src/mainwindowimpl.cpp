@@ -10,16 +10,14 @@
 #include "mainwindowimpl.h"
 #include "gitthread.h"
 #include "settingsimpl.h"
+#include "gsettings.h"
 
-gsettings *gSettings;
-gsettings GlobalSettings;
 //
 MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 	: QMainWindow(parent, f)
 {
 	setupUi(this);
 	
-	gSettings = &GlobalSettings;//(gsettings *)malloc(sizeof(gsettings));
 	gt = new GitThread();
 	gt->start();
 	sd = new SettingsImpl();
@@ -82,8 +80,8 @@ void MainWindowImpl::readSettings()
 	settings.beginGroup("TeamGit");
 	gSettings->teamGitWorkingDir = settings.value("workspace",QString("notset")).toString();
 	settings.endGroup();	
-
-
+	
+	GIT_INVOKE("getUserSettings");
 }
 
 void MainWindowImpl::initSettings()
@@ -104,7 +102,7 @@ void MainWindowImpl::settingsDialog()
 {
 	sd->setTeamGitWorkingDir(gSettings->teamGitWorkingDir);
 	sd->setGitBinaryPath(gt->git->getGitBinaryPath());
-//	sd->refreshUI();
+	sd->refreshUi();
 	int ret = sd->exec();
 	if( ret == QDialog::Accepted) {
 		gt->git->setGitBinaryPath(sd->getGitBinaryPath());
@@ -112,6 +110,7 @@ void MainWindowImpl::settingsDialog()
 			gSettings->teamGitWorkingDir = sd->getTeamGitWorkingDir();
 			emit teamGitWorkingDirChanged(gSettings->teamGitWorkingDir);
 		}
+		GIT_INVOKE("setUserSettings");
 	}
 }
 
@@ -142,12 +141,15 @@ void MainWindowImpl::progress(int i)
 		progressBar->setValue(i);
 	}
 }
+
 void MainWindowImpl::userSettings(QString name, QString email)
 {
 	gSettings->userName = name;
 	gSettings->userEmail = email;
 }
 
+//Used for connecting random things while devloping,
+//Usefull if you want to pop a dialog for debug from git thread etc.
 void MainWindowImpl::testSlot()
 {
 

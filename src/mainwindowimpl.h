@@ -8,7 +8,6 @@
 #include "ui_mainwindow.h"
 #include "gitthread.h"
 #include "settingsimpl.h"
-#include "projectmanager.h"
 //
 
 #define GIT_INVOKE(action_slot)	\
@@ -16,11 +15,7 @@
 				QMetaObject::invokeMethod(gt->git,action_slot,Qt::QueuedConnection); \
 			} while(0)	
 
-struct gsettings {
-	QString userName;
-	QString userEmail;
-	QString teamGitWorkingDir;
-};
+
 
 class MainWindowImpl : public QMainWindow, public Ui::MainWindow
 {
@@ -35,7 +30,6 @@ private:
 	void writeSettings();
 	void setupConnections();
 	void initSettings();
-	ProjectSettings projectsettings;
 	
 public:
 	GitThread *gt;

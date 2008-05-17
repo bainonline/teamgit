@@ -10,13 +10,11 @@ HEADERS = src/mainwindowimpl.h \
  src/gitthread.h \
  src/gitprocess.h \
  src/settingsimpl.h \
- src/projectsettings.h \
- src/projectmanager.h \
  src/defs.h \
- src/settings.h
+ src/settings.h \
+ src/gsettings.h
 SOURCES = src/mainwindowimpl.cpp \
  src/main.cpp \
  src/gitprocess.cpp \
  src/gitthread.cpp \
- src/settingsimpl.cpp \
- src/projectmanager.cpp
+ src/settingsimpl.cpp

@@ -4,6 +4,12 @@
 
 #include "ui_settings.h"
 
+struct gsettings {
+	QString userName;
+	QString userEmail;
+	QString teamGitWorkingDir;
+};
+
 class SettingsImpl : public QDialog, public Ui::SettingsDialog
 {
 	Q_OBJECT
@@ -21,7 +27,9 @@ class SettingsImpl : public QDialog, public Ui::SettingsDialog
 		QString getUserEmail();
 		
 	public slots:
+		void refreshUi();
 		void getFilePath();
 		void getWorkingDirPath();
+		void accept();
 };
 #endif // __SETTINGSIMPL_H__

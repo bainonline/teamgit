@@ -4,7 +4,7 @@
 #include <QMessageBox>
 
 #include "gitprocess.h"
-
+#include "gsettings.h"
 //
 GitProcess::GitProcess()
 	: QProcess()
@@ -32,6 +32,7 @@ QByteArray GitProcess::runGit(QStringList arguments)
 	waitForFinished();
 	return readAllStandardOutput();
 }
+
 void GitProcess::getUserSettings()
 {
 	QStringList args, args2;
@@ -41,10 +42,23 @@ void GitProcess::getUserSettings()
 	QString name(array);
 
 	args2 << "config" << "--global" << "--get" << "user.email";
-	QByteArray array2 = runGit(args);
-	QString email(array);
+	QByteArray array2 = runGit(args2);
+	QString email(array2);
 
 	emit userSettings(name,email);
+	emit notify("Ready");
+}
+
+
+void GitProcess::setUserSettings()
+{
+	QStringList args, args2;
+	args << "config" << "--global" << "user.name" << gSettings->userName;
+	emit notify("Setting user settings");
+	runGit(args);
+
+	args2 << "config" << "--global"  << "user.email" << gSettings->userEmail;
+	runGit(args2);
 	emit notify("Ready");
 }
 
