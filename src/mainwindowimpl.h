@@ -8,6 +8,9 @@
 #include "ui_mainwindow.h"
 #include "gitthread.h"
 #include "settingsimpl.h"
+#include "newprojectimpl.h"
+#include "outputdialogimpl.h"
+
 //
 
 #define GIT_INVOKE(action_slot)	\
@@ -23,8 +26,10 @@ Q_OBJECT
 private:
 	
 	SettingsImpl *sd;
+	NewProjectImpl *npd;
 	QStandardItemModel *logModel;
 	QProgressBar *progressBar;
+	OutputDialogImpl *opd;
 	
 	void readSettings();
 	void writeSettings();
@@ -38,10 +43,22 @@ public:
 
 private slots:
 	void initSlot();
+	
 	void settingsDialog();
+	void newProjectDialog();
+	
 	void logReceived(QStandardItemModel *);
 	void progress(int);
+	
+	void commitDetails(QStringList);
+	
+	void initOutputDialog();
+	void notifyOutputDialog(const QString &);
+	void doneOutputDialog();
+	
 	void userSettings(QString, QString);
+	
+	void logClicked(const QModelIndex &);
 	
 	void testSlot();
 
@@ -49,7 +66,6 @@ signals:
 	void teamGitWorkingDirChanged(const QString &newDir);
 };
 #endif
-
 
 
 

@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1270</width>
-    <height>745</height>
+    <width>1280</width>
+    <height>752</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -16,7 +16,7 @@
    <enum>Qt::LeftToRight</enum>
   </property>
   <widget class="QWidget" name="centralwidget" >
-   <layout class="QVBoxLayout" >
+   <layout class="QHBoxLayout" >
     <item>
      <widget class="QSplitter" name="horizontalSplitter2_2" >
       <property name="orientation" >
@@ -89,7 +89,7 @@
           <property name="sizePolicy" >
            <sizepolicy vsizetype="Expanding" hsizetype="Minimum" >
             <horstretch>0</horstretch>
-            <verstretch>1</verstretch>
+            <verstretch>5</verstretch>
            </sizepolicy>
           </property>
           <property name="minimumSize" >
@@ -111,27 +111,75 @@
            <enum>QTabWidget::Triangular</enum>
           </property>
           <property name="currentIndex" >
-           <number>1</number>
+           <number>0</number>
           </property>
           <widget class="QWidget" name="tab_3" >
            <attribute name="title" >
             <string>&amp;Info</string>
            </attribute>
-           <widget class="QLineEdit" name="lineEdit" >
-            <property name="geometry" >
-             <rect>
-              <x>9</x>
-              <y>26</y>
-              <width>741</width>
-              <height>28</height>
-             </rect>
-            </property>
-           </widget>
+           <layout class="QHBoxLayout" >
+            <item>
+             <layout class="QVBoxLayout" >
+              <item>
+               <layout class="QVBoxLayout" >
+                <item>
+                 <layout class="QHBoxLayout" >
+                  <item>
+                   <widget class="QLabel" name="label" >
+                    <property name="text" >
+                     <string>Author</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLineEdit" name="commit_author" />
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" >
+                  <item>
+                   <widget class="QLabel" name="label_2" >
+                    <property name="text" >
+                     <string>Date</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLineEdit" name="commit_date" />
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <widget class="QFrame" name="Log" >
+                <property name="frameShape" >
+                 <enum>QFrame::StyledPanel</enum>
+                </property>
+                <property name="frameShadow" >
+                 <enum>QFrame::Raised</enum>
+                </property>
+                <layout class="QHBoxLayout" >
+                 <item>
+                  <widget class="QTextEdit" name="commit_log" />
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
           </widget>
           <widget class="QWidget" name="tab_4" >
            <attribute name="title" >
             <string>&amp;Diff</string>
            </attribute>
+           <layout class="QHBoxLayout" >
+            <item>
+             <widget class="QTextEdit" name="commit_diff" />
+            </item>
+           </layout>
           </widget>
          </widget>
         </widget>
@@ -188,7 +236,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1270</width>
+     <width>1280</width>
      <height>30</height>
     </rect>
    </property>
