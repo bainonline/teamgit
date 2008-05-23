@@ -171,8 +171,8 @@ void MainWindowImpl::logReceived(QStandardItemModel *model)
 
 void MainWindowImpl::commitDetails(QStringList cd)
 {
-	commit_author->setText(cd.at(1));
-	commit_date->setText(cd.at(2));
+	commit_author->setText(cd.at(1).remove(0,8));
+	commit_date->setText(cd.at(2).remove(0,6));
 	commit_log->setText(cd.at(3));
 	commit_diff->clear();
 	QString diff=cd.at(4);
