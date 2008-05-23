@@ -235,7 +235,9 @@ void GitProcess::getCommit(QString commitHash)
 	while(1) {
 		if(commit.startsWith("diff"))
 			break;
-		log.append(commit.left(commit.indexOf(QChar('\n'))));
+		if(!commit.startsWith("\n")) {
+			log.append(commit.left(commit.indexOf(QChar('\n'))+1));
+		}
 		commit.remove(0,commit.indexOf(QChar('\n'))+1);
 	}
 	commitDet << log;
