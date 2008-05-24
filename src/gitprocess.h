@@ -37,9 +37,10 @@ Q_OBJECT
 	KPty pty;
 	QString gitBinary;
 	QString workingDir;
-	QStandardItemModel *logModel;
 	
 	public:
+	
+	QStandardItemModel *logModel;
 	GitProcess();
 	QByteArray runGit(QStringList arguments, bool block=true,bool usePseudoTerm=false); 
 	QString getGitBinaryPath();
@@ -54,7 +55,9 @@ Q_OBJECT
 	public slots:
 	void setGitBinaryPath(const QString &path); 
 	void getLog(int numLog=1000);
+	void getFileLog(QString);
 	void getCommit(QString commitHash);
+	void getFiles();
 	
 	//Async slots
 	void getUserSettings();
@@ -62,7 +65,8 @@ Q_OBJECT
 	void clone(QString,QString,QString);
 	
 	signals:
-	void logReceived(QStandardItemModel *);
+	void logReceived();
+	void fileLogReceived();
 	void notify(const QString &);
 	
 	void initOutputDialog();
@@ -73,5 +77,7 @@ Q_OBJECT
 	void userSettings(QString, QString);
 	
 	void commitDetails(QStringList);
+	void projectFiles(QString);
+
 };
 #endif

@@ -8,6 +8,7 @@ struct gsettings {
 	QString userName;
 	QString userEmail;
 	QString teamGitWorkingDir;
+	QString currProjectPath;
 };
 
 class SettingsImpl : public QDialog, public Ui::SettingsDialog

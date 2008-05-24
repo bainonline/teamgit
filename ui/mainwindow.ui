@@ -27,6 +27,9 @@
         <enum>Qt::Horizontal</enum>
        </property>
        <widget class="QTabWidget" name="tabWidget" >
+        <property name="enabled" >
+         <bool>true</bool>
+        </property>
         <property name="sizePolicy" >
          <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
           <horstretch>0</horstretch>
@@ -43,7 +46,7 @@
          <enum>QTabWidget::Triangular</enum>
         </property>
         <property name="currentIndex" >
-         <number>1</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="tab" >
          <attribute name="title" >
@@ -51,17 +54,10 @@
          </attribute>
          <layout class="QVBoxLayout" >
           <item>
-           <widget class="QTreeView" name="treeView" />
+           <widget class="QComboBox" name="projectsComboBox" />
           </item>
-         </layout>
-        </widget>
-        <widget class="QWidget" name="tab_2" >
-         <attribute name="title" >
-          <string>&amp;Views</string>
-         </attribute>
-         <layout class="QVBoxLayout" >
           <item>
-           <widget class="QListView" name="listView" />
+           <widget class="QTreeView" name="projectFilesView" />
           </item>
          </layout>
         </widget>
@@ -70,16 +66,46 @@
         <property name="orientation" >
          <enum>Qt::Vertical</enum>
         </property>
-        <widget class="QTreeView" name="logView" >
-         <property name="sizePolicy" >
-          <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
-           <horstretch>0</horstretch>
-           <verstretch>1</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="rootIsDecorated" >
-          <bool>false</bool>
-         </property>
+        <widget class="QWidget" name="layoutWidget" >
+         <layout class="QVBoxLayout" >
+          <item>
+           <layout class="QHBoxLayout" >
+            <item>
+             <widget class="QLabel" name="LogMessage" >
+              <property name="text" >
+               <string>TextLabel</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="ResetLogButton" >
+              <property name="maximumSize" >
+               <size>
+                <width>100</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="text" >
+               <string>Reset to full log</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QTreeView" name="logView" >
+            <property name="sizePolicy" >
+             <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+              <horstretch>0</horstretch>
+              <verstretch>1</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="rootIsDecorated" >
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
         <widget class="QSplitter" name="horizontalSplitter2" >
          <property name="orientation" >
@@ -202,7 +228,7 @@
         <enum>Qt::LeftToRight</enum>
        </property>
        <property name="currentIndex" >
-        <number>0</number>
+        <number>1</number>
        </property>
        <widget class="QWidget" name="tab_5" >
         <attribute name="title" >
@@ -316,6 +342,28 @@
   <widget class="QToolBar" name="toolBar_2" >
    <property name="windowTitle" >
     <string>toolBar_2</string>
+   </property>
+   <attribute name="toolBarArea" >
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak" >
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QToolBar" name="toolBar_3" >
+   <property name="windowTitle" >
+    <string>toolBar_3</string>
+   </property>
+   <attribute name="toolBarArea" >
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak" >
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QToolBar" name="toolBar_4" >
+   <property name="windowTitle" >
+    <string>toolBar_4</string>
    </property>
    <attribute name="toolBarArea" >
     <enum>TopToolBarArea</enum>

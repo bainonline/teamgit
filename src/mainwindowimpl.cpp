@@ -25,11 +25,36 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 	npd = new NewProjectImpl();
 	opd = new OutputDialogImpl();
 	
+	
 	QTimer::singleShot(0,this,SLOT(initSlot()));
 	readSettings();
 	setupConnections();
+	
+	// Populate projects
+	QDir dir(gSettings->teamGitWorkingDir);
+	dir.setFilter(QDir::AllDirs);
+	QStringList filter;
+	QStringList projects = dir.entryList(filter);
+	for(int i = 0;i < projects.size();i++) {
+		if(projects.at(i) != "." && projects.at(i) != "..")
+			projectsComboBox->addItem(projects.at(i));
+	}
+	projectsModel = NULL;
+	hideLogReset();
 }
 
+void MainWindowImpl::hideLogReset()
+{
+	LogMessage->hide();
+	ResetLogButton->hide();	
+}
+
+
+void MainWindowImpl::showLogReset()
+{
+	LogMessage->show();
+	ResetLogButton->show();	
+}
 void MainWindowImpl::setupConnections()
 {
 	connect(pushButton,SIGNAL(clicked()),this,SLOT(testSlot()));
@@ -39,7 +64,9 @@ void MainWindowImpl::setupConnections()
 
 	connect(gt->git,SIGNAL(notify(const QString &)),this->statusBar(),SLOT(showMessage(const QString &)));
 	connect(gt->git,SIGNAL(progress(int)),this,SLOT(progress(int)));
-	connect(gt->git,SIGNAL(logReceived(QStandardItemModel *)),this,SLOT(logReceived(QStandardItemModel *)));
+	connect(gt->git,SIGNAL(logReceived()),this,SLOT(logReceived()));
+	connect(gt->git,SIGNAL(fileLogReceived()),this,SLOT(fileLogReceived()));
+	connect(gt->git,SIGNAL(projectFiles(QString)),this,SLOT(filesReceived(QString)));
 	connect(gt->git,SIGNAL(commitDetails(QStringList)),this,SLOT(commitDetails(QStringList)));
 	connect(gt->git,SIGNAL(userSettings(QString, QString)),this,SLOT(userSettings(QString, QString)));
 
@@ -48,6 +75,9 @@ void MainWindowImpl::setupConnections()
 	connect(gt->git,SIGNAL(doneOutputDialog()),this,SLOT(doneOutputDialog()));
 	
 	connect(logView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(logClicked(const QModelIndex &)));
+	connect(projectFilesView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(projectFilesViewClicked(const QModelIndex &)));
+	connect(projectsComboBox,SIGNAL(activated(int)),this,SLOT(projectsComboBoxActivated(int)));
+	connect(ResetLogButton,SIGNAL(clicked()),this,SLOT(resetLog()));
 }
 
 MainWindowImpl::~MainWindowImpl()
@@ -71,6 +101,7 @@ void MainWindowImpl::writeSettings()
 	
 	settings.beginGroup("TeamGit");
 	settings.setValue("workspace",gSettings->teamGitWorkingDir);
+	settings.setValue("current_project",gSettings->currProjectPath);
 	settings.endGroup();
 }
 
@@ -91,6 +122,7 @@ void MainWindowImpl::readSettings()
      
 	settings.beginGroup("TeamGit");
 	gSettings->teamGitWorkingDir = settings.value("workspace",QString("notset")).toString();
+	gSettings->currProjectPath = settings.value("current_project",QString("notset")).toString();
 	settings.endGroup();	
 	
 	GIT_INVOKE("getUserSettings");
@@ -103,12 +135,28 @@ void MainWindowImpl::initSettings()
 	} 
 }
 
+
 void MainWindowImpl::initSlot()
 {
 	initSettings();
-	gt->git->setWorkingDir(gSettings->teamGitWorkingDir + "teamgit");
-	GIT_INVOKE("getLog");
+	if(gSettings->currProjectPath == "notset")
+		gSettings->currProjectPath=projectsComboBox->itemText(0);
+	else 
+		projectsComboBox->setCurrentIndex(projectsComboBox->findText(gSettings->currProjectPath));
+	gt->git->setWorkingDir(gSettings->teamGitWorkingDir + gSettings->currProjectPath);
 	
+	refresh();
+}
+
+void MainWindowImpl::refresh()
+{
+	commit_author->clear();
+	commit_date->clear();
+	commit_log->clear();
+	commit_diff->clear();
+	hideLogReset();
+	GIT_INVOKE("getLog");
+	GIT_INVOKE("getFiles");
 }
 
 void MainWindowImpl::newProjectDialog()
@@ -157,16 +205,37 @@ void MainWindowImpl::doneOutputDialog()
 	QApplication::restoreOverrideCursor();
 }
 
-void MainWindowImpl::logReceived(QStandardItemModel *model)
+void MainWindowImpl::logReceived()
 {
 	QStandardItemModel *prevModel;
 	prevModel = (QStandardItemModel *)logView->model();
-	logModel = model;
+	logModel = gt->git->logModel;
 	logView->setModel(logModel);
 	if(prevModel)
 		delete prevModel;
 	logView->setColumnWidth(0,450);
 	logView->setColumnWidth(1,200);
+}
+
+void MainWindowImpl::fileLogReceived()
+{
+	QStandardItemModel *prevModel;
+	prevModel = (QStandardItemModel *)logView->model();
+	
+
+	QStandardItemModel *model;
+	model = gt->git->logModel;
+	logView->setModel(model);
+	if(prevModel != logModel)
+		delete prevModel;
+}
+
+void MainWindowImpl::filesReceived(QString files)
+{
+	if(projectsModel)
+		delete projectsModel;
+	projectsModel = new ProjectsModel(files);
+	projectFilesView->setModel(projectsModel);
 }
 
 void MainWindowImpl::commitDetails(QStringList cd)
@@ -249,15 +318,50 @@ void MainWindowImpl::userSettings(QString name, QString email)
 
 void MainWindowImpl::logClicked(const QModelIndex &index)
 {
-	QStandardItem *item = logModel->itemFromIndex(index);
-	QString str;
-	//str.sprintf("%i",item->row());
-	//logView->item(item->row(),3)->text();
-	
+	QStandardItemModel *model = (QStandardItemModel *)logView->model();
+	QStandardItem *item = model->itemFromIndex(index);
 	QMetaObject::invokeMethod(gt->git,"getCommit",
-                           Q_ARG(QString,logModel->item(item->row(),3)->text()));
+                           Q_ARG(QString,model->item(item->row(),3)->text()));
 }
 
+void MainWindowImpl::projectFilesViewClicked(const QModelIndex &index)
+{
+	QModelIndex i;
+	i=index;
+	QStringList path;
+	
+	while(i.isValid()) {
+		path << projectsModel->data(i,0).toString();
+		i = projectsModel->parent(i);
+	}
+	QString text;
+	for(int j=path.size()-1;j>=0;j--) {
+		text += path[j];
+		if(j)
+			text+= "/";
+	}
+	LogMessage->setText("Showing log for : " + text);
+	showLogReset();;
+	QMetaObject::invokeMethod(gt->git,"getFileLog",
+                           Q_ARG(QString,text));
+}
+void MainWindowImpl::projectsComboBoxActivated(int index)
+{
+	gSettings->currProjectPath=projectsComboBox->itemText(index);
+	gt->git->setWorkingDir(gSettings->teamGitWorkingDir + gSettings->currProjectPath);
+	refresh();
+}
+
+
+void MainWindowImpl::resetLog()
+{
+	QStandardItemModel *prevModel;
+	prevModel = (QStandardItemModel *)logView->model();	
+	logView->setModel(logModel);
+	if(prevModel != logModel)
+		delete prevModel;
+	hideLogReset();
+}
 
 //Used for connecting random things while devloping,
 //Usefull if you want to pop a dialog for debug from git thread etc.

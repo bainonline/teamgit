@@ -16,7 +16,8 @@ HEADERS = src/mainwindowimpl.h \
  src/newprojectimpl.h \
  src/outputdialogimpl.h \
  src/kpty_p.h \
- src/kpty.h
+ src/kpty.h \
+ src/projectsmodel.h
 SOURCES = src/mainwindowimpl.cpp \
  src/main.cpp \
  src/gitprocess.cpp \
@@ -24,4 +25,5 @@ SOURCES = src/mainwindowimpl.cpp \
  src/settingsimpl.cpp \
  src/newprojectimpl.cpp \
  src/outputdialogimpl.cpp \
- src/kpty.cpp
+ src/kpty.cpp \
+ src/projectsmodel.cpp

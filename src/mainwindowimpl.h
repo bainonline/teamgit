@@ -10,6 +10,7 @@
 #include "settingsimpl.h"
 #include "newprojectimpl.h"
 #include "outputdialogimpl.h"
+#include "projectsmodel.h"
 
 //
 
@@ -28,6 +29,7 @@ private:
 	SettingsImpl *sd;
 	NewProjectImpl *npd;
 	QStandardItemModel *logModel;
+	ProjectsModel *projectsModel;
 	QProgressBar *progressBar;
 	OutputDialogImpl *opd;
 	
@@ -35,6 +37,9 @@ private:
 	void writeSettings();
 	void setupConnections();
 	void initSettings();
+	void refresh();
+	void hideLogReset();
+	void showLogReset();
 	
 public:
 	GitThread *gt;
@@ -47,7 +52,9 @@ private slots:
 	void settingsDialog();
 	void newProjectDialog();
 	
-	void logReceived(QStandardItemModel *);
+	void logReceived();
+	void fileLogReceived();
+	void filesReceived(QString);
 	void progress(int);
 	
 	void commitDetails(QStringList);
@@ -59,7 +66,9 @@ private slots:
 	void userSettings(QString, QString);
 	
 	void logClicked(const QModelIndex &);
-	
+	void projectFilesViewClicked(const QModelIndex &);
+	void projectsComboBoxActivated(int);
+	void resetLog();
 	void testSlot();
 
 signals:
