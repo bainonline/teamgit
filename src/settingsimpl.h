@@ -18,7 +18,7 @@ class SettingsImpl : public QDialog, public Ui::SettingsDialog
 		int i;
 		
 	public:
-		SettingsImpl();
+		SettingsImpl(QWidget *parent = 0);
 		void setGitBinaryPath(const QString &path);
 		QString getGitBinaryPath();
 		void setTeamGitWorkingDir(const QString &dir);

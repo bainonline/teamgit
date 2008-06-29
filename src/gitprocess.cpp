@@ -11,6 +11,10 @@
 #include "gitprocess.h"
 #include "gsettings.h"
 
+QWaitCondition eventDelivered; 
+QMutex mutex;
+QMutex gitMutex;
+
 GitProcess::GitProcess()
 	: QProcess()
 {
@@ -45,12 +49,10 @@ QByteArray GitProcess::runGit(QStringList arguments,bool block,bool usePseudoTer
 }
 
 
- void GitProcess::setupChildProcess()
- {
-     // Drop all privileges in the child process, and enter
-     // a chroot jail.
+void GitProcess::setupChildProcess()
+{
  #if defined Q_OS_UNIX
-     if(usePty) {
+	if(usePty) {
 	 	int fd=::open(pty.ttyName(),O_RDWR);
 		::dup2(fd,0);
 		::dup2(fd,1);
@@ -58,7 +60,6 @@ QByteArray GitProcess::runGit(QStringList arguments,bool block,bool usePseudoTer
 	}
 #endif
 }
- 
 
 QByteArray GitProcess::readAllStandardOutput() 
 {
@@ -66,8 +67,15 @@ QByteArray GitProcess::readAllStandardOutput()
 		QByteArray array;
 		char data[1024]={
 			0,};
-		::read(pty.masterFd(),data,1023);
-		array.append(data);
+		int	ret;
+again:
+		while(1){
+			ret =::read(pty.masterFd(),data,1023);
+			array.append(data);
+			if(ret != 0)
+				break;
+			goto again;
+		}
 		return array;
 	} else {
 		return QProcess::readAllStandardOutput();
@@ -75,17 +83,21 @@ QByteArray GitProcess::readAllStandardOutput()
 }
 
 
-
-void GitProcess::clone(QString repo, QString branch, QString refRepo) 
+void GitProcess::pull(QString repo, QString branch, QString mergeStrategy) 
 {
+		LockEvent();
+
 	QStringList args;
-	args << "clone" << repo;
+	args << "pull";
+	if(!repo.isEmpty()) 
+		args << branch;
 	if(!branch.isEmpty()) 
 		args << branch;
-	if(!refRepo.isEmpty()) 
-		args << "--reference" << refRepo;
+	//fixme
+	if(!mergeStrategy.isEmpty()) 
+		args << "--strategy" << mergeStrategy;
 		
-	emit notify("Cloning");
+	emit notify("Doing Pull");
 	emit initOutputDialog();
 	QByteArray array = runGit(args,false,true);
 	notifyOutputDialog(QString(array));	
@@ -96,15 +108,57 @@ void GitProcess::clone(QString repo, QString branch, QString refRepo)
 		array = readAllStandardError();
 		if(array.size())
 			notifyOutputDialog(QString(array));
-		waitForFinished(1000);
+		waitForFinished(100);
 	}
 	emit doneOutputDialog();
 	emit notify("Ready");
+	WaitForEventDelivery();
+}
+
+void GitProcess::pull()
+{
+	pull(QString(),QString(),QString());
+}
+
+void GitProcess::clone(QString repo, QString target, QString refRepo,QString dir) 
+{
+	LockEvent();
+
+	QStringList args;
+	args << "clone" << repo;
+	if(!target.isEmpty()) 
+		args << target;
+	if(!refRepo.isEmpty()) 
+		args << "--reference" << refRepo;
+	
+	workingDir = dir;
+	emit notify("Cloning");
+	emit initOutputDialog();
+	QByteArray array = runGit(args,false,true);
+	notifyOutputDialog(QString(array));	
+
+	while(state()) {
+		array = readAllStandardOutput();
+		if(array.size())
+			notifyOutputDialog(QString(array));
+		//array = readAllStandardError();
+		//if(array.size())
+			//notifyOutputDialog(QString(array));
+		waitForFinished(100);
+	}
+	
+	emit cloneComplete(target);
+	emit notify("Ready");
+	emit doneOutputDialog();
+	WaitForEventDelivery();
 }
 
 void GitProcess::getUserSettings()
 {
 	QStringList args, args2;
+	
+	LockEvent();
+
 	args << "config" << "--global" << "--get" << "user.name";
 	emit notify("Getting user settings");
 	QByteArray array = runGit(args);
@@ -116,6 +170,7 @@ void GitProcess::getUserSettings()
 
 	emit userSettings(name,email);
 	emit notify("Ready");
+	WaitForEventDelivery();
 }
 
 
@@ -136,6 +191,7 @@ void GitProcess::getFileLog(QString files)
 	QStringList args;
 	QString s;
 
+	LockEvent();
 	logModel = new QStandardItemModel(0,4);	
 	emit notify("Running git log for file");
 	emit progress(0);
@@ -193,12 +249,15 @@ void GitProcess::getFileLog(QString files)
 	emit fileLogReceived();
 	emit notify("Ready");
 	emit progress(100);
+	WaitForEventDelivery();
 }
 
 void GitProcess::getLog(int numLog)
 {
 	QStringList args;
 	QString s;
+	
+	LockEvent();
 
 	logModel = new QStandardItemModel(0,4);	
 	emit notify("Running git log");
@@ -256,6 +315,8 @@ void GitProcess::getLog(int numLog)
 	emit logReceived();
 	emit notify("Ready");
 	emit progress(100);
+	WaitForEventDelivery();
+	
 }
 
 void GitProcess::getCommit(QString commitHash)
@@ -263,6 +324,7 @@ void GitProcess::getCommit(QString commitHash)
 	QStringList args;
 	QString s;
 	
+	LockEvent();
 	emit notify("Gathering commit information");
 	emit progress(0);
 	args << "show";
@@ -301,13 +363,17 @@ void GitProcess::getCommit(QString commitHash)
 	emit progress(90);
 	commitDet << commit;
 	emit commitDetails(commitDet);
+	emit notify("Ready");
 	emit progress(100);
+	WaitForEventDelivery();
 }
 
 void GitProcess::getFiles()
 {
 	QStringList args;
 	
+	LockEvent();
+
 	emit notify("Gathering files");
 	emit progress(0);
 	args << "ls-files";
@@ -317,5 +383,22 @@ void GitProcess::getFiles()
 	
 	QString files(array);
 	emit projectFiles(files);
+
+	emit notify("Ready");
 	emit progress(100);
+	WaitForEventDelivery();
+}
+
+void GitProcess::WaitForEventDelivery()
+{
+	gitMutex.lock();
+	gitMutex.unlock();
+	//mutex.lock();
+	//eventDelivered.wait(&mutex);	eventDelivered.wait(&mutex);
+	//mutex.unlock();	mutex.unlock();
+}
+
+void GitProcess::LockEvent()
+{
+	gitMutex.lock();
 }

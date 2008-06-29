@@ -6,10 +6,15 @@
 #include <QString>
 #include <QStandardItemModel>
 #include <QFile>
+#include <QWaitCondition>
+#include <QMutex>
 
 #include "kpty.h"
 //
 
+//Used byg git and main thread to sync on event delivery;
+extern QWaitCondition eventDelivered; 
+extern QMutex mutex;
 /*
 This is the class which is responsible for both executing the 
 git process _and_ parsing its output.
@@ -35,13 +40,16 @@ Q_OBJECT
 	
 	bool usePty;
 	KPty pty;
-	QString gitBinary;
+	QString gitBinary;	
+	void LockEvent();
+	void WaitForEventDelivery();
 	QString workingDir;
 	
 	public:
 	
 	QStandardItemModel *logModel;
 	GitProcess();
+
 	QByteArray runGit(QStringList arguments, bool block=true,bool usePseudoTerm=false); 
 	QString getGitBinaryPath();
 	void setupChildProcess();
@@ -62,7 +70,9 @@ Q_OBJECT
 	//Async slots
 	void getUserSettings();
 	void setUserSettings();
-	void clone(QString,QString,QString);
+	void clone(QString,QString,QString,QString);
+	void pull();
+	void pull(QString,QString,QString);
 	
 	signals:
 	void logReceived();
@@ -79,5 +89,7 @@ Q_OBJECT
 	void commitDetails(QStringList);
 	void projectFiles(QString);
 
+	void cloneComplete(QString);
+	
 };
 #endif

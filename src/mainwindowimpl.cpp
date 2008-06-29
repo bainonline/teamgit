@@ -5,7 +5,7 @@
 #include <QStringListIterator>
 #include <QVariant>
 #include <QMetaType>
-#include <QMessageBox>
+#include <QMessageBox> 
 
 #include "defs.h"
 #include "mainwindowimpl.h"
@@ -21,16 +21,25 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 	
 	gt = new GitThread();
 	gt->start();
-	sd = new SettingsImpl();
-	npd = new NewProjectImpl();
-	opd = new OutputDialogImpl();
+	sd = new SettingsImpl(this);
+	npd = new NewProjectImpl(this);
+	opd = new OutputDialogImpl(this);
 	
 	
 	QTimer::singleShot(0,this,SLOT(initSlot()));
 	readSettings();
 	setupConnections();
 	
-	// Populate projects
+	populateProjects();
+	
+	projectsModel = NULL;
+	logModel = NULL;
+	hideLogReset();
+}
+
+void MainWindowImpl::populateProjects()
+{
+	projectsComboBox->clear();
 	QDir dir(gSettings->teamGitWorkingDir);
 	dir.setFilter(QDir::AllDirs);
 	QStringList filter;
@@ -39,8 +48,6 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 		if(projects.at(i) != "." && projects.at(i) != "..")
 			projectsComboBox->addItem(projects.at(i));
 	}
-	projectsModel = NULL;
-	hideLogReset();
 }
 
 void MainWindowImpl::hideLogReset()
@@ -55,12 +62,15 @@ void MainWindowImpl::showLogReset()
 	LogMessage->show();
 	ResetLogButton->show();	
 }
+
 void MainWindowImpl::setupConnections()
 {
 	connect(pushButton,SIGNAL(clicked()),this,SLOT(testSlot()));
 
 	connect(action_Options,SIGNAL(triggered()),this,SLOT(settingsDialog()));
 	connect(action_New,SIGNAL(triggered()),this,SLOT(newProjectDialog()));
+	connect(action_Pull,SIGNAL(triggered()),this,SLOT(pullDialog()));
+	connect(action_Refresh,SIGNAL(triggered()),this,SLOT(refresh()));
 
 	connect(gt->git,SIGNAL(notify(const QString &)),this->statusBar(),SLOT(showMessage(const QString &)));
 	connect(gt->git,SIGNAL(progress(int)),this,SLOT(progress(int)));
@@ -69,6 +79,7 @@ void MainWindowImpl::setupConnections()
 	connect(gt->git,SIGNAL(projectFiles(QString)),this,SLOT(filesReceived(QString)));
 	connect(gt->git,SIGNAL(commitDetails(QStringList)),this,SLOT(commitDetails(QStringList)));
 	connect(gt->git,SIGNAL(userSettings(QString, QString)),this,SLOT(userSettings(QString, QString)));
+	connect(gt->git,SIGNAL(cloneComplete(QString)),this,SLOT(cloneComplete(QString)));
 
 	connect(gt->git,SIGNAL(initOutputDialog()),this,SLOT(initOutputDialog()));
 	connect(gt->git,SIGNAL(notifyOutputDialog(const QString &)),this,SLOT(notifyOutputDialog(const QString &)));
@@ -122,6 +133,9 @@ void MainWindowImpl::readSettings()
      
 	settings.beginGroup("TeamGit");
 	gSettings->teamGitWorkingDir = settings.value("workspace",QString("notset")).toString();
+	if(!gSettings->teamGitWorkingDir.endsWith("/")) {
+		gSettings->teamGitWorkingDir.append("/");
+	}
 	gSettings->currProjectPath = settings.value("current_project",QString("notset")).toString();
 	settings.endGroup();	
 	
@@ -143,13 +157,13 @@ void MainWindowImpl::initSlot()
 		gSettings->currProjectPath=projectsComboBox->itemText(0);
 	else 
 		projectsComboBox->setCurrentIndex(projectsComboBox->findText(gSettings->currProjectPath));
-	gt->git->setWorkingDir(gSettings->teamGitWorkingDir + gSettings->currProjectPath);
 	
 	refresh();
 }
 
 void MainWindowImpl::refresh()
 {
+	gt->git->setWorkingDir(gSettings->teamGitWorkingDir + gSettings->currProjectPath);
 	commit_author->clear();
 	commit_date->clear();
 	commit_log->clear();
@@ -159,17 +173,31 @@ void MainWindowImpl::refresh()
 	GIT_INVOKE("getFiles");
 }
 
+void MainWindowImpl::checkWorkingDiff()
+{
+	
+}
+
 void MainWindowImpl::newProjectDialog()
 {
 	int ret = npd->exec();
 	if( ret == QDialog::Accepted) {
-		QMetaObject::invokeMethod(gt->git,"clone",
+		QMetaObject::invokeMethod(gt->git,"clone",Qt::QueuedConnection,
                            Q_ARG(QString, npd->getRepository()),                       
-                           Q_ARG(QString, npd->getBranch()),
-                           Q_ARG(QString, npd->getRefRepo()));
+                           Q_ARG(QString, npd->getTarget()),
+                           Q_ARG(QString, npd->getRefRepo()),
+                           Q_ARG(QString, gSettings->teamGitWorkingDir));
 	}
 }	
 
+void MainWindowImpl::pullDialog()
+{
+	GIT_INVOKE("pull");
+	refresh();
+	//int ret = pullDialog->exec();
+	//if( ret == QDialog::Accepted) {
+		//}
+}	
 
 void MainWindowImpl::settingsDialog()
 {
@@ -191,7 +219,7 @@ void MainWindowImpl::settingsDialog()
 void MainWindowImpl::initOutputDialog()
 {
 	QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-	opd->initOutputDialog();
+	opd->initOutputDialog(DEFAULT,true,true);
 }
 
 void MainWindowImpl::notifyOutputDialog(const QString &msg)
@@ -199,22 +227,39 @@ void MainWindowImpl::notifyOutputDialog(const QString &msg)
 	opd->notifyOutputDialog(msg);
 }
 
+
+void MainWindowImpl::cloneComplete(QString dir)
+{
+	gSettings->currProjectPath = dir;
+	QString msg("Cloning repository ");
+	msg.append(dir);
+	msg.append(" complete.");
+	statusBar()->showMessage(msg,10);
+	refresh();
+}
+
 void MainWindowImpl::doneOutputDialog()
 {
 	opd->doneOutputDialog();
 	QApplication::restoreOverrideCursor();
+	eventReceived();
 }
+
 
 void MainWindowImpl::logReceived()
 {
 	QStandardItemModel *prevModel;
 	prevModel = (QStandardItemModel *)logView->model();
+	if(prevModel != logModel && logModel!=NULL)
+		delete logModel;
 	logModel = gt->git->logModel;
 	logView->setModel(logModel);
 	if(prevModel)
 		delete prevModel;
 	logView->setColumnWidth(0,450);
 	logView->setColumnWidth(1,200);
+
+	eventReceived();
 }
 
 void MainWindowImpl::fileLogReceived()
@@ -228,6 +273,7 @@ void MainWindowImpl::fileLogReceived()
 	logView->setModel(model);
 	if(prevModel != logModel)
 		delete prevModel;
+	eventReceived();
 }
 
 void MainWindowImpl::filesReceived(QString files)
@@ -236,13 +282,14 @@ void MainWindowImpl::filesReceived(QString files)
 		delete projectsModel;
 	projectsModel = new ProjectsModel(files);
 	projectFilesView->setModel(projectsModel);
+	eventReceived();
 }
 
 void MainWindowImpl::commitDetails(QStringList cd)
 {
-	commit_author->setText(cd.at(1).remove(0,8));
-	commit_date->setText(cd.at(2).remove(0,6));
-	commit_log->setText(cd.at(3));
+	commit_author->setText(cd[1].remove(0,8));
+	commit_date->setText(cd[2].remove(0,6));
+	commit_log->setText(cd[3]);
 	commit_diff->clear();
 	QString diff=cd.at(4);
 	QStringList diffLines=diff.split(QChar('\n'));
@@ -292,18 +339,22 @@ void MainWindowImpl::commitDetails(QStringList cd)
 		}
 	}
 	
+	eventReceived();
 }
 
 void MainWindowImpl::progress(int i)
 {
 	if(i == 0) {
 		progressBar = new QProgressBar(this);
-		statusBar()->addPermanentWidget(progressBar);
+		statusBar()->addPermanentWidget(progressBar); 
+		QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+		
 	} else if(i == 100) {
 		if(progressBar) {
 			statusBar()->removeWidget(progressBar);
 			delete progressBar;
 			progressBar = NULL;
+			QApplication::restoreOverrideCursor();
 		}
 	} else {
 		progressBar->setValue(i);
@@ -314,13 +365,15 @@ void MainWindowImpl::userSettings(QString name, QString email)
 {
 	gSettings->userName = name;
 	gSettings->userEmail = email;
+	
+	eventReceived();
 }
 
 void MainWindowImpl::logClicked(const QModelIndex &index)
 {
 	QStandardItemModel *model = (QStandardItemModel *)logView->model();
 	QStandardItem *item = model->itemFromIndex(index);
-	QMetaObject::invokeMethod(gt->git,"getCommit",
+	QMetaObject::invokeMethod(gt->git,"getCommit",Qt::QueuedConnection,
                            Q_ARG(QString,model->item(item->row(),3)->text()));
 }
 
@@ -342,7 +395,7 @@ void MainWindowImpl::projectFilesViewClicked(const QModelIndex &index)
 	}
 	LogMessage->setText("Showing log for : " + text);
 	showLogReset();;
-	QMetaObject::invokeMethod(gt->git,"getFileLog",
+	QMetaObject::invokeMethod(gt->git,"getFileLog",Qt::QueuedConnection,
                            Q_ARG(QString,text));
 }
 void MainWindowImpl::projectsComboBoxActivated(int index)

@@ -6,7 +6,8 @@
 gsettings GlobalSettings;
 gsettings *gSettings;
 
-SettingsImpl::SettingsImpl()
+SettingsImpl::SettingsImpl(QWidget *parent)
+			: QDialog(parent)
 {
 	setupUi(this);
 	connect(pickPathButton,SIGNAL(clicked()),this,SLOT(getFilePath()));

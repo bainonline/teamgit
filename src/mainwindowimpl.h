@@ -19,7 +19,7 @@
 				QMetaObject::invokeMethod(gt->git,action_slot,Qt::QueuedConnection); \
 			} while(0)	
 
-
+extern QMutex gitMutex;
 
 class MainWindowImpl : public QMainWindow, public Ui::MainWindow
 {
@@ -37,10 +37,14 @@ private:
 	void writeSettings();
 	void setupConnections();
 	void initSettings();
-	void refresh();
+	void checkWorkingDiff();
 	void hideLogReset();
 	void showLogReset();
+	void populateProjects();
 	
+	void eventReceived() {
+		gitMutex.unlock();
+	}
 public:
 	GitThread *gt;
 	MainWindowImpl( QWidget * parent = 0, Qt::WFlags f = 0 );
@@ -49,13 +53,17 @@ public:
 private slots:
 	void initSlot();
 	
+	void refresh();
+	
 	void settingsDialog();
 	void newProjectDialog();
+	void pullDialog();
 	
 	void logReceived();
 	void fileLogReceived();
 	void filesReceived(QString);
 	void progress(int);
+	void cloneComplete(QString);
 	
 	void commitDetails(QStringList);
 	
