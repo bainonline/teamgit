@@ -3,6 +3,7 @@
 #include <QStringListIterator>
 #include <QMessageBox>
 #include <QFile>
+#include <QTemporaryFile>
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
@@ -33,9 +34,6 @@ QString GitProcess::getGitBinaryPath()
 {
 	return gitBinary; 
 }
-
-
-
 
 QByteArray GitProcess::runGit(QStringList arguments,bool block,bool usePseudoTerm) 
 {
@@ -82,6 +80,87 @@ again:
 	}
 }
 
+void GitProcess::stageHunk(QString hunk)
+{
+	LockEvent();
+ 	QTemporaryFile file;
+ 	if (file.open()) {
+		QTextStream stream( &file );
+        	stream << hunk;
+	}
+	file.close();
+	QStringList args;
+	
+	args << "apply";
+	args << "--index";
+	args << "--cached";
+	args << file.fileName();
+	
+	runGit(args);
+	
+     // the QTemporaryFile destructor removes the temporary file
+     emit patchApplied();
+     WaitForEventDelivery();
+}
+
+//Used to unstage all staged changes
+void  GitProcess::reset(QString ref,bool hard)
+{
+	LockEvent();
+	QStringList args;
+	args << "reset";
+	if(hard)
+		args << "--hard";
+	else 
+		args << "--soft";
+	if(!ref.isEmpty())
+		args << ref;
+	runGit(args);
+	emit resetDone();
+	WaitForEventDelivery();
+}
+
+
+void  GitProcess::addFiles(QStringList files)
+{
+	LockEvent();
+	QStringList args;
+	args << "add";
+	for(int i=0;i < files.size();i++) {
+		args << files[i];
+	}
+	runGit(args);
+	emit addDone();
+	WaitForEventDelivery();
+}
+
+void  GitProcess::commit(QString commit_msg)
+{
+	QStringList args;
+	args << "commit";
+	if(!commit_msg.isEmpty()) {
+		LockEvent();
+		args << "-m";
+		args << commit_msg;
+	} else {
+		return;
+	}
+	runGit(args);
+	emit commitDone();
+	WaitForEventDelivery();
+}
+
+void  GitProcess::tag(QString tag)
+{
+	LockEvent();
+	QStringList args;
+	args << "tag";
+	if(!tag.isEmpty())
+		args << tag;
+	runGit(args);
+	emit tagDone();
+	WaitForEventDelivery();
+}
 
 void GitProcess::pull(QString repo, QString branch, QString mergeStrategy) 
 {
@@ -184,6 +263,19 @@ void GitProcess::setUserSettings()
 	args2 << "config" << "--global"  << "user.email" << gSettings->userEmail;
 	runGit(args2);
 	emit notify("Ready");
+}
+
+void GitProcess::getCurDiff()
+{
+	LockEvent();
+	
+	QStringList args;
+	args << "diff";
+	QByteArray array = runGit(args);
+	QString diff(array);
+	emit currentDiff(diff);
+	WaitForEventDelivery();
+
 }
 
 void GitProcess::getFileLog(QString files)
@@ -394,8 +486,8 @@ void GitProcess::WaitForEventDelivery()
 	gitMutex.lock();
 	gitMutex.unlock();
 	//mutex.lock();
-	//eventDelivered.wait(&mutex);	eventDelivered.wait(&mutex);
-	//mutex.unlock();	mutex.unlock();
+	//eventDelivered.wait(&mutex);
+	//mutex.unlock();	
 }
 
 void GitProcess::LockEvent()

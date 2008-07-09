@@ -66,6 +66,12 @@ Q_OBJECT
 	void getFileLog(QString);
 	void getCommit(QString commitHash);
 	void getFiles();
+	void reset(QString ref,bool hard);
+	void stageHunk(QString hunk);
+	void commit(QString commit_msg);
+	void tag(QString tag);
+	void addFiles(QStringList files);
+	void getCurDiff();
 	
 	//Async slots
 	void getUserSettings();
@@ -91,5 +97,12 @@ Q_OBJECT
 
 	void cloneComplete(QString);
 	
+	void patchApplied();
+	void resetDone();
+	void tagDone();
+	void addDone();
+	void commitDone();
+
+	void currentDiff(QString);
 };
 #endif
