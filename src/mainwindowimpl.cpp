@@ -173,8 +173,8 @@ void MainWindowImpl::refresh()
 	commit_log->clear();
 	commit_diff->clear();
 	hideLogReset();
-	GIT_INVOKE("getLog");
 	GIT_INVOKE("getFiles");
+	GIT_INVOKE("getLog");
 }
 
 void MainWindowImpl::checkWorkingDiff()
@@ -386,8 +386,10 @@ void MainWindowImpl::commitDetails(QStringList cd)
 			commit_diff->setFontWeight(QFont::Normal);
 		}
 	}
-	
-	
+	QTextCursor cursor = commit_diff->textCursor();
+	cursor.movePosition(QTextCursor::Start);
+	commit_diff->setTextCursor(cursor);
+	commit_diff->ensureCursorVisible ();
 }
 
 void MainWindowImpl::progress(int i)
