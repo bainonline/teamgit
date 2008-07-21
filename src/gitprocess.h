@@ -45,8 +45,6 @@ Q_OBJECT
 	QString workingDir;
 	
 	public:
-	
-	QStandardItemModel *logModel;
 	GitProcess();
 
 	QByteArray runGit(QStringList arguments, bool block=true,bool usePseudoTerm=false); 
@@ -83,7 +81,7 @@ Q_OBJECT
 	void pull(QString,QString,QString);
 	
 	signals:
-	void logReceived();
+	void logReceived(QString);
 	void fileLogReceived(QString);
 	void notify(const QString &);
 	

@@ -74,7 +74,7 @@ void MainWindowImpl::setupConnections()
 
 	connect(gt->git,SIGNAL(notify(const QString &)),this->statusBar(),SLOT(showMessage(const QString &)));
 	connect(gt->git,SIGNAL(progress(int)),this,SLOT(progress(int)));
-	connect(gt->git,SIGNAL(logReceived()),this,SLOT(logReceived()));
+	connect(gt->git,SIGNAL(logReceived(QString)),this,SLOT(logReceived(QString)));
 	connect(gt->git,SIGNAL(fileLogReceived(QString)),this,SLOT(fileLogReceived(QString)));
 	connect(gt->git,SIGNAL(projectFiles(QString)),this,SLOT(filesReceived(QString)));
 	connect(gt->git,SIGNAL(commitDetails(QStringList)),this,SLOT(commitDetails(QStringList)));
@@ -249,13 +249,13 @@ void MainWindowImpl::doneOutputDialog()
 	}
 
 
-void MainWindowImpl::logReceived()
+void MainWindowImpl::logReceived(QString log)
 {
 	QStandardItemModel *prevModel;
 	prevModel = (QStandardItemModel *)logView->model();
 	if(prevModel != logModel && logModel!=NULL)
 		delete logModel;
-	logModel = gt->git->logModel;
+	logModel = parseLog2Model(log);
 	logView->setModel(logModel);
 	if(prevModel)
 		delete prevModel;
@@ -270,6 +270,25 @@ void MainWindowImpl::fileLogReceived(QString log)
 	QStandardItemModel *prevModel;
 	prevModel = (QStandardItemModel *)logView->model();
 	
+	QStandardItemModel *model = parseLog2Model(log);
+	logView->setModel(model);
+	if(prevModel != logModel)
+		delete prevModel;
+	this->statusBar()->showMessage("Ready");
+	progress(100);
+}
+
+void MainWindowImpl::filesReceived(QString files)
+{
+	if(projectsModel)
+		delete projectsModel;
+	projectsModel = new ProjectsModel(files);
+	projectFilesView->setModel(projectsModel);
+	
+}
+
+QStandardItemModel *MainWindowImpl::parseLog2Model(QString log)
+{
 	QStandardItemModel *model = new QStandardItemModel(0,4);	
 	QStandardItem *it = new QStandardItem(QString("Log"));
 	QStandardItem *it1 = new QStandardItem(QString("Author"));
@@ -310,22 +329,9 @@ void MainWindowImpl::fileLogReceived(QString log)
 		}
 		model->appendRow(itemlist);
 	}
-
-	logView->setModel(model);
-	if(prevModel != logModel)
-		delete prevModel;
-	this->statusBar()->showMessage("Ready");
-	progress(100);
+	return model;
 }
 
-void MainWindowImpl::filesReceived(QString files)
-{
-	if(projectsModel)
-		delete projectsModel;
-	projectsModel = new ProjectsModel(files);
-	projectFilesView->setModel(projectsModel);
-	
-}
 
 void MainWindowImpl::commitDetails(QStringList cd)
 {

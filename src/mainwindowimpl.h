@@ -41,6 +41,7 @@ private:
 	void hideLogReset();
 	void showLogReset();
 	void populateProjects();
+	QStandardItemModel *parseLog2Model(QString log);
 	
 public:
 	GitThread *gt;
@@ -56,7 +57,7 @@ private slots:
 	void newProjectDialog();
 	void pullDialog();
 	
-	void logReceived();
+	void logReceived(QString);
 	void fileLogReceived(QString);
 	void filesReceived(QString);
 	void progress(int);

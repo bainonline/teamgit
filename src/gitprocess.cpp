@@ -259,7 +259,6 @@ void GitProcess::getFileLog(QString files)
 	QStringList args;
 	QString s;
 
-	logModel = new QStandardItemModel(0,4);	
 	emit notify("Running git log for file");
 	emit progress(0);
 	args << "log";
@@ -272,47 +271,6 @@ void GitProcess::getFileLog(QString files)
 	emit progress(50);
 	
 	QString log(array);
-	//
-	//QStandardItem *it = new QStandardItem(QString("Log"));
-	//QStandardItem *it1 = new QStandardItem(QString("Author"));
-	//QStandardItem *it2 = new QStandardItem(QString("Date"));
-	//QStandardItem *it3 = new QStandardItem(QString("Commit"));
-	//logModel->setHorizontalHeaderItem(0,it);
-	//logModel->setHorizontalHeaderItem(1,it1);
-	//logModel->setHorizontalHeaderItem(2,it2);
-	//logModel->setHorizontalHeaderItem(3,it3);
-	//
-	//QString delimit("TEAMGITFIELDEND");
-	//QString delimit2("TEAMGITFIELDMARKER");
-	//QStringList logList=log.split(delimit);
-	//int numLogs=logList.count();
-	//int parsed=0;
-	//QStringListIterator iterator(logList);
-	//while (iterator.hasNext()) {
-		//parsed++;
-		//int percent=50 + ((float)((float)parsed/(float)numLogs)*(float)100)/2;
-		//if(!(percent % 10) && percent) {
-			//emit progress(percent);
-		//}
-		//QString singleLog = iterator.next();
-		//QStringList logFields = singleLog.split(delimit2);
-		//QStringListIterator it2(logFields);
-		//QList<QStandardItem*> itemlist;
-		//QString oneLiner = it2.next();
-		//if(oneLiner.startsWith("\n"))
-			//oneLiner = oneLiner.remove(0,1);
-		//QStandardItem *item1 = new QStandardItem(oneLiner);
-		//item1->setEditable(false);
-		//itemlist.append(item1);
-		//
-		//while(it2.hasNext()) {
-			//QStandardItem *item1 = new QStandardItem(it2.next());
-			//item1->setEditable(false);	
-			//itemlist.append(item1);
-		//}
-		//logModel->appendRow(itemlist);
-	//}
-	
 	emit fileLogReceived(log);
 }
 
@@ -321,8 +279,6 @@ void GitProcess::getLog(int numLog)
 	QStringList args;
 	QString s;
 	
-
-	logModel = new QStandardItemModel(0,4);	
 	emit notify("Running git log");
 	emit progress(0);
 	s.sprintf("-%i",numLog);
@@ -334,51 +290,7 @@ void GitProcess::getLog(int numLog)
 	emit progress(50);
 	
 	QString log(array);
-	
-	QStandardItem *it = new QStandardItem(QString("Log"));
-	QStandardItem *it1 = new QStandardItem(QString("Author"));
-	QStandardItem *it2 = new QStandardItem(QString("Date"));
-	QStandardItem *it3 = new QStandardItem(QString("Commit"));
-	logModel->setHorizontalHeaderItem(0,it);
-	logModel->setHorizontalHeaderItem(1,it1);
-	logModel->setHorizontalHeaderItem(2,it2);
-	logModel->setHorizontalHeaderItem(3,it3);
-	
-	QString delimit("TEAMGITFIELDEND");
-	QString delimit2("TEAMGITFIELDMARKER");
-	QStringList logList=log.split(delimit);
-	int numLogs=logList.count();
-	int parsed=0;
-	QStringListIterator iterator(logList);
-	while (iterator.hasNext()) {
-		parsed++;
-		int percent=50 + ((float)((float)parsed/(float)numLogs)*(float)100)/2;
-		if(!(percent % 10) && percent) {
-			emit progress(percent);
-		}
-		QString singleLog = iterator.next();
-		QStringList logFields = singleLog.split(delimit2);
-		QStringListIterator it2(logFields);
-		QList<QStandardItem*> itemlist;
-		QString oneLiner = it2.next();
-		if(oneLiner.startsWith("\n"))
-			oneLiner = oneLiner.remove(0,1);
-		QStandardItem *item1 = new QStandardItem(oneLiner);
-		item1->setEditable(false);
-		itemlist.append(item1);
-		
-		while(it2.hasNext()) {
-			QStandardItem *item1 = new QStandardItem(it2.next());
-			item1->setEditable(false);	
-			itemlist.append(item1);
-		}
-		logModel->appendRow(itemlist);
-	}
-	
-	emit logReceived();
-	emit notify("Ready");
-	emit progress(100);
-	
+	emit logReceived(log);
 }
 
 void GitProcess::getCommit(QString commitHash)
