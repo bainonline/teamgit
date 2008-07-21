@@ -356,14 +356,11 @@ void GitProcess::getFiles()
 
 	emit notify("Ready");
 	emit progress(100);
-	WaitForEventDelivery();
 }
 
 void GitProcess::getBranches()
 {
 	QStringList args;
-	
-	LockEvent();
 
 	emit notify("Gathering branches");
 	emit progress(0);
@@ -377,15 +374,12 @@ void GitProcess::getBranches()
 
 	emit notify("Ready");
 	emit progress(100);
-	WaitForEventDelivery();
 }
 
 void GitProcess::getTags()
 {
 	QStringList args;
 	
-	LockEvent();
-
 	emit notify("Gathering tags");
 	emit progress(0);
 	args << "tag";
