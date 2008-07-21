@@ -312,6 +312,8 @@ QStandardItemModel *MainWindowImpl::parseLog2Model(QString log)
 			progress(percent);
 		}
 		QString singleLog = iterator.next();
+		if(!singleLog.contains(delimit2))
+			continue;
 		QStringList logFields = singleLog.split(delimit2);
 		QStringListIterator it2(logFields);
 		QList<QStandardItem*> itemlist;
