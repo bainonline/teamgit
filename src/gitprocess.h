@@ -72,6 +72,9 @@ Q_OBJECT
 	void tag(QString tag);
 	void addFiles(QStringList files);
 	void getCurDiff();
+	void getTags();
+	void getBranches();
+	//void checkout(QString ref);
 	
 	//Async slots
 	void getUserSettings();
@@ -102,6 +105,9 @@ Q_OBJECT
 	void tagDone();
 	void addDone();
 	void commitDone();
+	
+	void branchList(QString);
+	void tagList(QString);
 
 	void currentDiff(QString);
 };

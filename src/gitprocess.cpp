@@ -481,6 +481,48 @@ void GitProcess::getFiles()
 	WaitForEventDelivery();
 }
 
+void GitProcess::getBranches()
+{
+	QStringList args;
+	
+	LockEvent();
+
+	emit notify("Gathering branches");
+	emit progress(0);
+	args << "branch";
+	
+	QByteArray array = runGit(args);
+	emit progress(50);
+	
+	QString branches(array);
+	emit branchList(branches);
+
+	emit notify("Ready");
+	emit progress(100);
+	WaitForEventDelivery();
+}
+
+void GitProcess::getTags()
+{
+	QStringList args;
+	
+	LockEvent();
+
+	emit notify("Gathering tags");
+	emit progress(0);
+	args << "tag";
+	
+	QByteArray array = runGit(args);
+	emit progress(50);
+	
+	QString tags(array);
+	emit tagList(tags);
+
+	emit notify("Ready");
+	emit progress(100);
+	WaitForEventDelivery();
+}
+
 void GitProcess::WaitForEventDelivery()
 {
 	gitMutex.lock();
