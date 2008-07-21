@@ -50,7 +50,7 @@
         <enum>QTabWidget::Triangular</enum>
        </property>
        <property name="currentIndex" >
-        <number>2</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="tab" >
         <property name="geometry" >
@@ -85,6 +85,11 @@
         <attribute name="title" >
          <string>&amp;Branches</string>
         </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_2" >
+         <item>
+          <widget class="QTreeView" name="branchesView" />
+         </item>
+        </layout>
        </widget>
        <widget class="QWidget" name="tab_7" >
         <property name="geometry" >
@@ -98,6 +103,11 @@
         <attribute name="title" >
          <string>&amp;Tags</string>
         </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_3" >
+         <item>
+          <widget class="QTreeView" name="tagsView" />
+         </item>
+        </layout>
        </widget>
       </widget>
       <widget class="QSplitter" name="horizontalSplitter1" >
@@ -334,22 +344,17 @@
     <addaction name="action_New" />
     <addaction name="action_Pull" />
    </widget>
-   <widget class="QMenu" name="menu_Window" >
-    <property name="title" >
-     <string>&amp;Window</string>
-    </property>
-   </widget>
    <widget class="QMenu" name="menu_Help" >
     <property name="title" >
      <string>&amp;Help</string>
     </property>
+    <addaction name="actionAbout" />
    </widget>
    <addaction name="menuFile" />
    <addaction name="menu_Edit" />
    <addaction name="menu_View" />
    <addaction name="menu_Connection" />
    <addaction name="menu_Tools" />
-   <addaction name="menu_Window" />
    <addaction name="menu_Help" />
   </widget>
   <widget class="QStatusBar" name="statusbar" >
@@ -367,7 +372,7 @@
     <rect>
      <x>0</x>
      <y>27</y>
-     <width>353</width>
+     <width>1071</width>
      <height>30</height>
     </rect>
    </property>
@@ -389,89 +394,56 @@
    <addaction name="separator" />
    <addaction name="action_Options" />
   </widget>
-  <widget class="QToolBar" name="toolBar_2" >
-   <property name="geometry" >
-    <rect>
-     <x>353</x>
-     <y>27</y>
-     <width>10</width>
-     <height>30</height>
-    </rect>
-   </property>
-   <property name="windowTitle" >
-    <string>toolBar_2</string>
-   </property>
-   <attribute name="toolBarArea" >
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak" >
-    <bool>false</bool>
-   </attribute>
-  </widget>
-  <widget class="QToolBar" name="toolBar_3" >
-   <property name="geometry" >
-    <rect>
-     <x>363</x>
-     <y>27</y>
-     <width>10</width>
-     <height>30</height>
-    </rect>
-   </property>
-   <property name="windowTitle" >
-    <string>toolBar_3</string>
-   </property>
-   <attribute name="toolBarArea" >
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak" >
-    <bool>false</bool>
-   </attribute>
-  </widget>
-  <widget class="QToolBar" name="toolBar_4" >
-   <property name="geometry" >
-    <rect>
-     <x>373</x>
-     <y>27</y>
-     <width>698</width>
-     <height>30</height>
-    </rect>
-   </property>
-   <property name="windowTitle" >
-    <string>toolBar_4</string>
-   </property>
-   <attribute name="toolBarArea" >
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak" >
-    <bool>false</bool>
-   </attribute>
-  </widget>
   <action name="action_New" >
+   <property name="icon" >
+    <iconset resource="icons.qrc" >
+     <normaloff>:/main/add.png</normaloff>:/main/add.png</iconset>
+   </property>
    <property name="text" >
     <string>&amp;New</string>
    </property>
   </action>
   <action name="action_Pull" >
+   <property name="icon" >
+    <iconset resource="icons.qrc" >
+     <normaloff>:/main/extender_opened.png</normaloff>:/main/extender_opened.png</iconset>
+   </property>
    <property name="text" >
     <string>&amp;Pull</string>
    </property>
   </action>
   <action name="action_Refresh" >
+   <property name="icon" >
+    <iconset resource="icons.qrc" >
+     <normaloff>:/main/reload_page.png</normaloff>:/main/reload_page.png</iconset>
+   </property>
    <property name="text" >
     <string>&amp;Refresh</string>
    </property>
   </action>
   <action name="action_Options" >
+   <property name="icon" >
+    <iconset resource="icons.qrc" >
+     <normaloff>:/main/configure.png</normaloff>:/main/configure.png</iconset>
+   </property>
    <property name="text" >
     <string>&amp;Options</string>
    </property>
   </action>
   <action name="action_CherryPick" >
+   <property name="icon" >
+    <iconset resource="icons.qrc" >
+     <normaloff>:/main/redo.png</normaloff>:/main/redo.png</iconset>
+   </property>
    <property name="text" >
     <string>&amp;CherryPick</string>
    </property>
   </action>
   <action name="action_Merge" >
+   <property name="icon" >
+    <iconset resource="icons.qrc" >
+     <normaloff>:/main/bookmark_toolbar.png</normaloff>:/main/bookmark_toolbar.png</iconset>
+   </property>
    <property name="text" >
     <string>&amp;Merge</string>
    </property>
@@ -482,6 +454,10 @@
    </property>
   </action>
   <action name="actionAdd_Repositories" >
+   <property name="icon" >
+    <iconset resource="icons.qrc" >
+     <normaloff>:/main/adept_install.png</normaloff>:/main/adept_install.png</iconset>
+   </property>
    <property name="text" >
     <string>Add &amp;Repository</string>
    </property>
@@ -492,13 +468,30 @@
    </property>
   </action>
   <action name="actionDelete_Repository" >
+   <property name="icon" >
+    <iconset resource="icons.qrc" >
+     <normaloff>:/main/adept_remove.png</normaloff>:/main/adept_remove.png</iconset>
+   </property>
    <property name="text" >
     <string>Remove Repository</string>
    </property>
   </action>
   <action name="actionRemove_View" >
+   <property name="icon" >
+    <iconset resource="icons.qrc" >
+     <normaloff>:/main/remove.png</normaloff>:/main/remove.png</iconset>
+   </property>
    <property name="text" >
     <string>Remove View</string>
+   </property>
+  </action>
+  <action name="actionAbout" >
+   <property name="icon" >
+    <iconset resource="icons.qrc" >
+     <normaloff>:/main/messagebox_info.png</normaloff>:/main/messagebox_info.png</iconset>
+   </property>
+   <property name="text" >
+    <string>About</string>
    </property>
   </action>
  </widget>
