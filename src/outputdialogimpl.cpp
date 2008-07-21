@@ -12,6 +12,8 @@ OutputDialogImpl::OutputDialogImpl(QWidget *parent)
 {
 	setModal(true);
 	setupUi(this);
+
+
 }
 
 void OutputDialogImpl::initOutputDialog(OUTPUT_TYPE type,bool showProgressBar,bool showCancelButton)
@@ -81,9 +83,9 @@ void OutputDialogImpl::processMessage(const QString msg)
 			}
 		} else {
 			progressBar->setValue(100);
-			line.remove(line.size()-1,1);
+			line.remove("\n");
 			if(line.size() > 1)
-				output->append(line);
+				output->insertPlainText(line);
 		}
 	}
 #if 0 
