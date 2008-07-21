@@ -41,8 +41,7 @@ Q_OBJECT
 	bool usePty;
 	KPty pty;
 	QString gitBinary;	
-	void LockEvent();
-	void WaitForEventDelivery();
+
 	QString workingDir;
 	
 	public:
@@ -85,7 +84,7 @@ Q_OBJECT
 	
 	signals:
 	void logReceived();
-	void fileLogReceived();
+	void fileLogReceived(QString);
 	void notify(const QString &);
 	
 	void initOutputDialog();

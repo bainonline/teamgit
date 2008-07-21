@@ -42,9 +42,6 @@ private:
 	void showLogReset();
 	void populateProjects();
 	
-	void eventReceived() {
-		gitMutex.unlock();
-	}
 public:
 	GitThread *gt;
 	MainWindowImpl( QWidget * parent = 0, Qt::WFlags f = 0 );
@@ -60,7 +57,7 @@ private slots:
 	void pullDialog();
 	
 	void logReceived();
-	void fileLogReceived();
+	void fileLogReceived(QString);
 	void filesReceived(QString);
 	void progress(int);
 	void cloneComplete(QString);

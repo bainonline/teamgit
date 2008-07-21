@@ -12,10 +12,6 @@
 #include "gitprocess.h"
 #include "gsettings.h"
 
-QWaitCondition eventDelivered; 
-QMutex mutex;
-QMutex gitMutex;
-
 GitProcess::GitProcess()
 	: QProcess()
 {
@@ -82,8 +78,7 @@ again:
 
 void GitProcess::stageHunk(QString hunk)
 {
-	LockEvent();
- 	QTemporaryFile file;
+	QTemporaryFile file;
  	if (file.open()) {
 		QTextStream stream( &file );
         	stream << hunk;
@@ -100,13 +95,11 @@ void GitProcess::stageHunk(QString hunk)
 	
      // the QTemporaryFile destructor removes the temporary file
      emit patchApplied();
-     WaitForEventDelivery();
 }
 
 //Used to unstage all staged changes
 void  GitProcess::reset(QString ref,bool hard)
 {
-	LockEvent();
 	QStringList args;
 	args << "reset";
 	if(hard)
@@ -117,13 +110,11 @@ void  GitProcess::reset(QString ref,bool hard)
 		args << ref;
 	runGit(args);
 	emit resetDone();
-	WaitForEventDelivery();
 }
 
 
 void  GitProcess::addFiles(QStringList files)
 {
-	LockEvent();
 	QStringList args;
 	args << "add";
 	for(int i=0;i < files.size();i++) {
@@ -131,7 +122,6 @@ void  GitProcess::addFiles(QStringList files)
 	}
 	runGit(args);
 	emit addDone();
-	WaitForEventDelivery();
 }
 
 void  GitProcess::commit(QString commit_msg)
@@ -139,7 +129,6 @@ void  GitProcess::commit(QString commit_msg)
 	QStringList args;
 	args << "commit";
 	if(!commit_msg.isEmpty()) {
-		LockEvent();
 		args << "-m";
 		args << commit_msg;
 	} else {
@@ -147,24 +136,20 @@ void  GitProcess::commit(QString commit_msg)
 	}
 	runGit(args);
 	emit commitDone();
-	WaitForEventDelivery();
 }
 
 void  GitProcess::tag(QString tag)
 {
-	LockEvent();
 	QStringList args;
 	args << "tag";
 	if(!tag.isEmpty())
 		args << tag;
 	runGit(args);
 	emit tagDone();
-	WaitForEventDelivery();
 }
 
 void GitProcess::pull(QString repo, QString branch, QString mergeStrategy) 
 {
-		LockEvent();
 
 	QStringList args;
 	args << "pull";
@@ -191,7 +176,6 @@ void GitProcess::pull(QString repo, QString branch, QString mergeStrategy)
 	}
 	emit doneOutputDialog();
 	emit notify("Ready");
-	WaitForEventDelivery();
 }
 
 void GitProcess::pull()
@@ -201,7 +185,6 @@ void GitProcess::pull()
 
 void GitProcess::clone(QString repo, QString target, QString refRepo,QString dir) 
 {
-	LockEvent();
 
 	QStringList args;
 	args << "clone" << repo;
@@ -229,15 +212,12 @@ void GitProcess::clone(QString repo, QString target, QString refRepo,QString dir
 	emit cloneComplete(target);
 	emit notify("Ready");
 	emit doneOutputDialog();
-	WaitForEventDelivery();
 }
 
 void GitProcess::getUserSettings()
 {
 	QStringList args, args2;
 	
-	LockEvent();
-
 	args << "config" << "--global" << "--get" << "user.name";
 	emit notify("Getting user settings");
 	QByteArray array = runGit(args);
@@ -249,7 +229,6 @@ void GitProcess::getUserSettings()
 
 	emit userSettings(name,email);
 	emit notify("Ready");
-	WaitForEventDelivery();
 }
 
 
@@ -267,14 +246,11 @@ void GitProcess::setUserSettings()
 
 void GitProcess::getCurDiff()
 {
-	LockEvent();
-	
 	QStringList args;
 	args << "diff";
 	QByteArray array = runGit(args);
 	QString diff(array);
 	emit currentDiff(diff);
-	WaitForEventDelivery();
 
 }
 
@@ -283,7 +259,6 @@ void GitProcess::getFileLog(QString files)
 	QStringList args;
 	QString s;
 
-	LockEvent();
 	logModel = new QStandardItemModel(0,4);	
 	emit notify("Running git log for file");
 	emit progress(0);
@@ -297,51 +272,48 @@ void GitProcess::getFileLog(QString files)
 	emit progress(50);
 	
 	QString log(array);
+	//
+	//QStandardItem *it = new QStandardItem(QString("Log"));
+	//QStandardItem *it1 = new QStandardItem(QString("Author"));
+	//QStandardItem *it2 = new QStandardItem(QString("Date"));
+	//QStandardItem *it3 = new QStandardItem(QString("Commit"));
+	//logModel->setHorizontalHeaderItem(0,it);
+	//logModel->setHorizontalHeaderItem(1,it1);
+	//logModel->setHorizontalHeaderItem(2,it2);
+	//logModel->setHorizontalHeaderItem(3,it3);
+	//
+	//QString delimit("TEAMGITFIELDEND");
+	//QString delimit2("TEAMGITFIELDMARKER");
+	//QStringList logList=log.split(delimit);
+	//int numLogs=logList.count();
+	//int parsed=0;
+	//QStringListIterator iterator(logList);
+	//while (iterator.hasNext()) {
+		//parsed++;
+		//int percent=50 + ((float)((float)parsed/(float)numLogs)*(float)100)/2;
+		//if(!(percent % 10) && percent) {
+			//emit progress(percent);
+		//}
+		//QString singleLog = iterator.next();
+		//QStringList logFields = singleLog.split(delimit2);
+		//QStringListIterator it2(logFields);
+		//QList<QStandardItem*> itemlist;
+		//QString oneLiner = it2.next();
+		//if(oneLiner.startsWith("\n"))
+			//oneLiner = oneLiner.remove(0,1);
+		//QStandardItem *item1 = new QStandardItem(oneLiner);
+		//item1->setEditable(false);
+		//itemlist.append(item1);
+		//
+		//while(it2.hasNext()) {
+			//QStandardItem *item1 = new QStandardItem(it2.next());
+			//item1->setEditable(false);	
+			//itemlist.append(item1);
+		//}
+		//logModel->appendRow(itemlist);
+	//}
 	
-	QStandardItem *it = new QStandardItem(QString("Log"));
-	QStandardItem *it1 = new QStandardItem(QString("Author"));
-	QStandardItem *it2 = new QStandardItem(QString("Date"));
-	QStandardItem *it3 = new QStandardItem(QString("Commit"));
-	logModel->setHorizontalHeaderItem(0,it);
-	logModel->setHorizontalHeaderItem(1,it1);
-	logModel->setHorizontalHeaderItem(2,it2);
-	logModel->setHorizontalHeaderItem(3,it3);
-	
-	QString delimit("TEAMGITFIELDEND");
-	QString delimit2("TEAMGITFIELDMARKER");
-	QStringList logList=log.split(delimit);
-	int numLogs=logList.count();
-	int parsed=0;
-	QStringListIterator iterator(logList);
-	while (iterator.hasNext()) {
-		parsed++;
-		int percent=50 + ((float)((float)parsed/(float)numLogs)*(float)100)/2;
-		if(!(percent % 10) && percent) {
-			emit progress(percent);
-		}
-		QString singleLog = iterator.next();
-		QStringList logFields = singleLog.split(delimit2);
-		QStringListIterator it2(logFields);
-		QList<QStandardItem*> itemlist;
-		QString oneLiner = it2.next();
-		if(oneLiner.startsWith("\n"))
-			oneLiner = oneLiner.remove(0,1);
-		QStandardItem *item1 = new QStandardItem(oneLiner);
-		item1->setEditable(false);
-		itemlist.append(item1);
-		
-		while(it2.hasNext()) {
-			QStandardItem *item1 = new QStandardItem(it2.next());
-			item1->setEditable(false);	
-			itemlist.append(item1);
-		}
-		logModel->appendRow(itemlist);
-	}
-	
-	emit fileLogReceived();
-	emit notify("Ready");
-	emit progress(100);
-	WaitForEventDelivery();
+	emit fileLogReceived(log);
 }
 
 void GitProcess::getLog(int numLog)
@@ -349,7 +321,6 @@ void GitProcess::getLog(int numLog)
 	QStringList args;
 	QString s;
 	
-	LockEvent();
 
 	logModel = new QStandardItemModel(0,4);	
 	emit notify("Running git log");
@@ -407,7 +378,6 @@ void GitProcess::getLog(int numLog)
 	emit logReceived();
 	emit notify("Ready");
 	emit progress(100);
-	WaitForEventDelivery();
 	
 }
 
@@ -416,7 +386,6 @@ void GitProcess::getCommit(QString commitHash)
 	QStringList args;
 	QString s;
 	
-	LockEvent();
 	emit notify("Gathering commit information");
 	emit progress(0);
 	args << "show";
@@ -457,15 +426,12 @@ void GitProcess::getCommit(QString commitHash)
 	emit commitDetails(commitDet);
 	emit notify("Ready");
 	emit progress(100);
-	WaitForEventDelivery();
 }
 
 void GitProcess::getFiles()
 {
 	QStringList args;
 	
-	LockEvent();
-
 	emit notify("Gathering files");
 	emit progress(0);
 	args << "ls-files";
@@ -520,19 +486,5 @@ void GitProcess::getTags()
 
 	emit notify("Ready");
 	emit progress(100);
-	WaitForEventDelivery();
 }
 
-void GitProcess::WaitForEventDelivery()
-{
-	gitMutex.lock();
-	gitMutex.unlock();
-	//mutex.lock();
-	//eventDelivered.wait(&mutex);
-	//mutex.unlock();	
-}
-
-void GitProcess::LockEvent()
-{
-	gitMutex.lock();
-}

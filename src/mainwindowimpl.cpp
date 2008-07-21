@@ -75,7 +75,7 @@ void MainWindowImpl::setupConnections()
 	connect(gt->git,SIGNAL(notify(const QString &)),this->statusBar(),SLOT(showMessage(const QString &)));
 	connect(gt->git,SIGNAL(progress(int)),this,SLOT(progress(int)));
 	connect(gt->git,SIGNAL(logReceived()),this,SLOT(logReceived()));
-	connect(gt->git,SIGNAL(fileLogReceived()),this,SLOT(fileLogReceived()));
+	connect(gt->git,SIGNAL(fileLogReceived(QString)),this,SLOT(fileLogReceived(QString)));
 	connect(gt->git,SIGNAL(projectFiles(QString)),this,SLOT(filesReceived(QString)));
 	connect(gt->git,SIGNAL(commitDetails(QStringList)),this,SLOT(commitDetails(QStringList)));
 	connect(gt->git,SIGNAL(userSettings(QString, QString)),this,SLOT(userSettings(QString, QString)));
@@ -246,8 +246,7 @@ void MainWindowImpl::doneOutputDialog()
 {
 	opd->doneOutputDialog();
 	QApplication::restoreOverrideCursor();
-	eventReceived();
-}
+	}
 
 
 void MainWindowImpl::logReceived()
@@ -263,21 +262,60 @@ void MainWindowImpl::logReceived()
 	logView->setColumnWidth(0,450);
 	logView->setColumnWidth(1,200);
 
-	eventReceived();
+
 }
 
-void MainWindowImpl::fileLogReceived()
-{
+void MainWindowImpl::fileLogReceived(QString log)
+{	
 	QStandardItemModel *prevModel;
 	prevModel = (QStandardItemModel *)logView->model();
 	
+	QStandardItemModel *model = new QStandardItemModel(0,4);	
+	QStandardItem *it = new QStandardItem(QString("Log"));
+	QStandardItem *it1 = new QStandardItem(QString("Author"));
+	QStandardItem *it2 = new QStandardItem(QString("Date"));
+	QStandardItem *it3 = new QStandardItem(QString("Commit"));
+	model->setHorizontalHeaderItem(0,it);
+	model->setHorizontalHeaderItem(1,it1);
+	model->setHorizontalHeaderItem(2,it2);
+	model->setHorizontalHeaderItem(3,it3);
+	
+	QString delimit("TEAMGITFIELDEND");
+	QString delimit2("TEAMGITFIELDMARKER");
+	QStringList logList=log.split(delimit);
+	int numLogs=logList.count();
+	int parsed=0;
+	QStringListIterator iterator(logList);
+	while (iterator.hasNext()) {
+		parsed++;
+		int percent=50 + ((float)((float)parsed/(float)numLogs)*(float)100)/2;
+		if(percent && !(percent % 10)) {
+			progress(percent);
+		}
+		QString singleLog = iterator.next();
+		QStringList logFields = singleLog.split(delimit2);
+		QStringListIterator it2(logFields);
+		QList<QStandardItem*> itemlist;
+		QString oneLiner = it2.next();
+		if(oneLiner.startsWith("\n"))
+			oneLiner = oneLiner.remove(0,1);
+		QStandardItem *item1 = new QStandardItem(oneLiner);
+		item1->setEditable(false);
+		itemlist.append(item1);
+		
+		while(it2.hasNext()) {
+			QStandardItem *item1 = new QStandardItem(it2.next());
+			item1->setEditable(false);	
+			itemlist.append(item1);
+		}
+		model->appendRow(itemlist);
+	}
 
-	QStandardItemModel *model;
-	model = gt->git->logModel;
 	logView->setModel(model);
 	if(prevModel != logModel)
 		delete prevModel;
-	eventReceived();
+	this->statusBar()->showMessage("Ready");
+	progress(100);
 }
 
 void MainWindowImpl::filesReceived(QString files)
@@ -286,7 +324,7 @@ void MainWindowImpl::filesReceived(QString files)
 		delete projectsModel;
 	projectsModel = new ProjectsModel(files);
 	projectFilesView->setModel(projectsModel);
-	eventReceived();
+	
 }
 
 void MainWindowImpl::commitDetails(QStringList cd)
@@ -343,7 +381,7 @@ void MainWindowImpl::commitDetails(QStringList cd)
 		}
 	}
 	
-	eventReceived();
+	
 }
 
 void MainWindowImpl::progress(int i)
@@ -369,8 +407,7 @@ void MainWindowImpl::userSettings(QString name, QString email)
 {
 	gSettings->userName = name;
 	gSettings->userEmail = email;
-	
-	eventReceived();
+
 }
 
 void MainWindowImpl::logClicked(const QModelIndex &index)
