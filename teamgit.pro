@@ -27,3 +27,4 @@ SOURCES = src/mainwindowimpl.cpp \
  src/outputdialogimpl.cpp \
  src/kpty.cpp \
  src/projectsmodel.cpp
+RESOURCES += ui/icons.qrc
