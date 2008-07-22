@@ -322,19 +322,21 @@ void GitProcess::getCommit(QString commitHash)
 	commit.remove(0,commit.indexOf(QChar('\n'))+1);
 	emit progress(75);
 	QString log;
-	while(1) {
+	while(commit.size() > 1) {
 		if(commit.startsWith("diff"))
 			break;
 		if(!commit.startsWith("\n")) {
 			log.append(commit.left(commit.indexOf(QChar('\n'))+1));
 		}
 		commit.remove(0,commit.indexOf(QChar('\n'))+1);
-		if(commit.size() <= 1) 
-			break;
 	}
+	
 	commitDet << log;
 	emit progress(90);
-	commitDet << commit;
+	//if(commit.size() < 1024*100)
+		commitDet << commit;
+	//else 
+		//commitDet << "too huge commit to parse";
 	emit commitDetails(commitDet);
 	emit notify("Ready");
 	emit progress(100);
