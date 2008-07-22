@@ -124,13 +124,16 @@
  {
      if (!index.isValid())
          return QVariant();
-
-     if (role != Qt::DisplayRole)
-         return QVariant();
-
-     ProjectsItem *item = static_cast<ProjectsItem*>(index.internalPointer());
-
-     return item->data(index.column());
+	ProjectsItem *item = static_cast<ProjectsItem*>(index.internalPointer());	
+	if (role == Qt::DecorationRole)  {
+		if(item->childCount())
+			return QIcon(":/main/fileopen.png");
+		else 
+			return QIcon(":/main/contents2.png");
+	} else if (role == Qt::DisplayRole) {
+		return item->data(index.column());
+	} else 
+		return QVariant();
  }
 
  Qt::ItemFlags ProjectsModel::flags(const QModelIndex &index) const
