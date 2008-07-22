@@ -334,7 +334,7 @@ QStandardItemModel *MainWindowImpl::parseLog2Model(QString log)
 	return model;
 }
 
-
+#define DIFF_LIMIT (1024 * 1024)
 void MainWindowImpl::commitDetails(QStringList cd)
 {
 	commit_author->setText(cd[1].remove(0,8));
@@ -342,8 +342,12 @@ void MainWindowImpl::commitDetails(QStringList cd)
 	commit_log->setText(cd[3]);
 	commit_diff->clear();
 	QString diff=cd.at(4);
+	if(diff.size() > DIFF_LIMIT) {
+		diff.remove(DIFF_LIMIT,diff.size()-(DIFF_LIMIT));
+		diff.append("\n- Commit too huge: trimmed!");
+	}
 	QStringList diffLines=diff.split(QChar('\n'));
-	
+	 
 	for (int i = 0; i < diffLines.size(); ++i) {
 		QString line = diffLines.at(i);
 		/* preprocess */
