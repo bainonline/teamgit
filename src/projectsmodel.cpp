@@ -206,11 +206,11 @@
      dirs << "rootihopenobodynamestheirdirectorythisinsanename";
 
 	int number = 0;
-	while (number < lines.count()) { 
+	while (number < lines.count()-1) { 
 		QStringList pathItems;
 		pathItems << "rootihopenobodynamestheirdirectorythisinsanename";
 		pathItems << lines[number].split("/"); 
-		//Find out it pathItems parents and dir parents are same
+		//Find out if pathItems parents and dir parents are same
 		for(int j=1;j<dirs.size()||j<(pathItems.size()-1);j++) {
 			if(j>=(pathItems.size()-1)) {
 				//We found a partial path so pop back few parents
