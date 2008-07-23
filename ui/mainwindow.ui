@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1071</width>
-    <height>659</height>
+    <width>1439</width>
+    <height>850</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -16,15 +16,7 @@
    <enum>Qt::LeftToRight</enum>
   </property>
   <widget class="QWidget" name="centralwidget" >
-   <property name="geometry" >
-    <rect>
-     <x>0</x>
-     <y>57</y>
-     <width>1071</width>
-     <height>578</height>
-    </rect>
-   </property>
-   <layout class="QVBoxLayout" name="verticalLayout" >
+   <layout class="QVBoxLayout" >
     <item>
      <widget class="QSplitter" name="verticalSplitter1" >
       <property name="orientation" >
@@ -53,14 +45,6 @@
         <number>0</number>
        </property>
        <widget class="QWidget" name="tab" >
-        <property name="geometry" >
-         <rect>
-          <x>0</x>
-          <y>0</y>
-          <width>501</width>
-          <height>530</height>
-         </rect>
-        </property>
         <attribute name="title" >
          <string>&amp;Files</string>
         </attribute>
@@ -69,41 +53,66 @@
           <widget class="QComboBox" name="projectsComboBox" />
          </item>
          <item>
-          <widget class="QTreeView" name="projectFilesView" />
+          <widget class="QSplitter" name="splitter" >
+           <property name="orientation" >
+            <enum>Qt::Vertical</enum>
+           </property>
+           <widget class="QTreeView" name="projectFilesView" />
+           <widget class="QWidget" name="layoutWidget" >
+            <layout class="QVBoxLayout" >
+             <item>
+              <widget class="QTreeView" name="stagedFilesView" >
+               <property name="selectionMode" >
+                <enum>QAbstractItemView::MultiSelection</enum>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="stageButton" >
+               <property name="text" >
+                <string>&amp;Stage Selected</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="layoutWidget" >
+            <layout class="QVBoxLayout" >
+             <item>
+              <widget class="QTreeView" name="unstagedFilesView" >
+               <property name="selectionMode" >
+                <enum>QAbstractItemView::MultiSelection</enum>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="unstageButton" >
+               <property name="text" >
+                <string>&amp;Unstage Selected</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </widget>
          </item>
         </layout>
        </widget>
        <widget class="QWidget" name="tab_2" >
-        <property name="geometry" >
-         <rect>
-          <x>0</x>
-          <y>0</y>
-          <width>501</width>
-          <height>530</height>
-         </rect>
-        </property>
         <attribute name="title" >
          <string>&amp;Branches</string>
         </attribute>
-        <layout class="QVBoxLayout" name="verticalLayout_2" >
+        <layout class="QVBoxLayout" >
          <item>
           <widget class="QTreeView" name="branchesView" />
          </item>
         </layout>
        </widget>
        <widget class="QWidget" name="tab_7" >
-        <property name="geometry" >
-         <rect>
-          <x>0</x>
-          <y>0</y>
-          <width>501</width>
-          <height>530</height>
-         </rect>
-        </property>
         <attribute name="title" >
          <string>&amp;Tags</string>
         </attribute>
-        <layout class="QVBoxLayout" name="verticalLayout_3" >
+        <layout class="QVBoxLayout" >
          <item>
           <widget class="QTreeView" name="tagsView" />
          </item>
@@ -194,14 +203,6 @@
           <number>0</number>
          </property>
          <widget class="QWidget" name="tab_3" >
-          <property name="geometry" >
-           <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>532</width>
-            <height>293</height>
-           </rect>
-          </property>
           <attribute name="title" >
            <string>&amp;Info</string>
           </attribute>
@@ -272,14 +273,6 @@
           </layout>
          </widget>
          <widget class="QWidget" name="tab_4" >
-          <property name="geometry" >
-           <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>532</width>
-            <height>293</height>
-           </rect>
-          </property>
           <attribute name="title" >
            <string>&amp;Diff</string>
           </attribute>
@@ -305,8 +298,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1071</width>
-     <height>27</height>
+     <width>1439</width>
+     <height>30</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile" >
@@ -357,25 +350,8 @@
    <addaction name="menu_Tools" />
    <addaction name="menu_Help" />
   </widget>
-  <widget class="QStatusBar" name="statusbar" >
-   <property name="geometry" >
-    <rect>
-     <x>0</x>
-     <y>635</y>
-     <width>1071</width>
-     <height>24</height>
-    </rect>
-   </property>
-  </widget>
+  <widget class="QStatusBar" name="statusbar" />
   <widget class="QToolBar" name="toolBar" >
-   <property name="geometry" >
-    <rect>
-     <x>0</x>
-     <y>27</y>
-     <width>1071</width>
-     <height>30</height>
-    </rect>
-   </property>
    <property name="windowTitle" >
     <string>toolBar</string>
    </property>
@@ -396,8 +372,7 @@
   </widget>
   <action name="action_New" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >
-     <normaloff>:/main/add.png</normaloff>:/main/add.png</iconset>
+    <iconset resource="icons.qrc" >:/main/add.png</iconset>
    </property>
    <property name="text" >
     <string>&amp;New</string>
@@ -405,8 +380,7 @@
   </action>
   <action name="action_Pull" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >
-     <normaloff>:/main/extender_opened.png</normaloff>:/main/extender_opened.png</iconset>
+    <iconset resource="icons.qrc" >:/main/extender_opened.png</iconset>
    </property>
    <property name="text" >
     <string>&amp;Pull</string>
@@ -414,8 +388,7 @@
   </action>
   <action name="action_Refresh" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >
-     <normaloff>:/main/reload_page.png</normaloff>:/main/reload_page.png</iconset>
+    <iconset resource="icons.qrc" >:/main/reload_page.png</iconset>
    </property>
    <property name="text" >
     <string>&amp;Refresh</string>
@@ -423,8 +396,7 @@
   </action>
   <action name="action_Options" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >
-     <normaloff>:/main/configure.png</normaloff>:/main/configure.png</iconset>
+    <iconset resource="icons.qrc" >:/main/configure.png</iconset>
    </property>
    <property name="text" >
     <string>&amp;Options</string>
@@ -432,8 +404,7 @@
   </action>
   <action name="action_CherryPick" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >
-     <normaloff>:/main/redo.png</normaloff>:/main/redo.png</iconset>
+    <iconset resource="icons.qrc" >:/main/redo.png</iconset>
    </property>
    <property name="text" >
     <string>&amp;CherryPick</string>
@@ -441,8 +412,7 @@
   </action>
   <action name="action_Merge" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >
-     <normaloff>:/main/bookmark_toolbar.png</normaloff>:/main/bookmark_toolbar.png</iconset>
+    <iconset resource="icons.qrc" >:/main/bookmark_toolbar.png</iconset>
    </property>
    <property name="text" >
     <string>&amp;Merge</string>
@@ -455,8 +425,7 @@
   </action>
   <action name="actionAdd_Repositories" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >
-     <normaloff>:/main/adept_install.png</normaloff>:/main/adept_install.png</iconset>
+    <iconset resource="icons.qrc" >:/main/adept_install.png</iconset>
    </property>
    <property name="text" >
     <string>Add &amp;Repository</string>
@@ -469,8 +438,7 @@
   </action>
   <action name="actionDelete_Repository" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >
-     <normaloff>:/main/adept_remove.png</normaloff>:/main/adept_remove.png</iconset>
+    <iconset resource="icons.qrc" >:/main/adept_remove.png</iconset>
    </property>
    <property name="text" >
     <string>Remove Repository</string>
@@ -478,8 +446,7 @@
   </action>
   <action name="actionRemove_View" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >
-     <normaloff>:/main/remove.png</normaloff>:/main/remove.png</iconset>
+    <iconset resource="icons.qrc" >:/main/remove.png</iconset>
    </property>
    <property name="text" >
     <string>Remove View</string>
@@ -487,8 +454,7 @@
   </action>
   <action name="actionAbout" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >
-     <normaloff>:/main/messagebox_info.png</normaloff>:/main/messagebox_info.png</iconset>
+    <iconset resource="icons.qrc" >:/main/messagebox_info.png</iconset>
    </property>
    <property name="text" >
     <string>About</string>
