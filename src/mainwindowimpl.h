@@ -30,6 +30,8 @@ private:
 	NewProjectImpl *npd;
 	QStandardItemModel *logModel;
 	ProjectsModel *projectsModel;
+	ProjectsModel *stagedModel;
+	ProjectsModel *unstagedModel;
 	QProgressBar *progressBar;
 	OutputDialogImpl *opd;
 	
@@ -39,6 +41,11 @@ private:
 	void initSettings();
 	void checkWorkingDiff();
 	void hideLogReset();
+	void hideStaged();
+	void hideUnstaged();
+	
+	void showStaged();
+	void showUnstaged();
 	void showLogReset();
 	void populateProjects();
 	QStandardItemModel *parseLog2Model(QString log);
@@ -62,6 +69,7 @@ private slots:
 	void filesReceived(QString);
 	void progress(int);
 	void cloneComplete(QString);
+	void filesStatusReceived(QString);
 	
 	void commitDetails(QStringList);
 	

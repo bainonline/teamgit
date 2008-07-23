@@ -33,8 +33,38 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 	populateProjects();
 	
 	projectsModel = NULL;
+	stagedModel = NULL;
+	unstagedModel = NULL;
 	logModel = NULL;
 	hideLogReset();
+	hideStaged();
+	hideUnstaged();
+}
+
+
+void MainWindowImpl::hideStaged()
+{
+	stagedFilesView->hide();
+	unstageButton->hide();
+}
+
+void MainWindowImpl::hideUnstaged()
+{
+	unstagedFilesView->hide();
+	stageButton->hide();
+}
+
+
+void MainWindowImpl::showStaged()
+{
+	stagedFilesView->show();
+	unstageButton->show();
+}
+
+void MainWindowImpl::showUnstaged()
+{
+	unstagedFilesView->show();
+	stageButton->show();
 }
 
 void MainWindowImpl::populateProjects()
@@ -80,6 +110,7 @@ void MainWindowImpl::setupConnections()
 	connect(gt->git,SIGNAL(commitDetails(QStringList)),this,SLOT(commitDetails(QStringList)));
 	connect(gt->git,SIGNAL(userSettings(QString, QString)),this,SLOT(userSettings(QString, QString)));
 	connect(gt->git,SIGNAL(cloneComplete(QString)),this,SLOT(cloneComplete(QString)));
+	connect(gt->git,SIGNAL(filesStatus(QString)),this,SLOT(filesStatusReceived(QString)));
 
 	connect(gt->git,SIGNAL(initOutputDialog()),this,SLOT(initOutputDialog()));
 	connect(gt->git,SIGNAL(notifyOutputDialog(const QString &)),this,SLOT(notifyOutputDialog(const QString &)));
@@ -175,6 +206,7 @@ void MainWindowImpl::refresh()
 	hideLogReset();
 	GIT_INVOKE("getFiles");
 	GIT_INVOKE("getLog");
+	GIT_INVOKE("getStatus");
 }
 
 void MainWindowImpl::checkWorkingDiff()
@@ -276,6 +308,46 @@ void MainWindowImpl::fileLogReceived(QString log)
 		delete prevModel;
 	this->statusBar()->showMessage("Ready");
 	progress(100);
+}
+
+
+void MainWindowImpl::filesStatusReceived(QString status)
+{
+	QStringList lines=status.split("\n");
+	QString unstagedChanged,stagedChanged;
+	QString *curList;
+	for(int i=0;i<lines.size();i++) {
+		lines[i]=lines[i].simplified();
+		commit_diff->append(lines[i]);
+		if(lines[i].startsWith("# Changes to be committed:")) {
+			curList=&stagedChanged;
+		} else if(lines[i].startsWith("# Changed but not updated:")) {
+			curList=&unstagedChanged;
+		} else if(lines[i].startsWith("# modified: ")) {
+			lines[i].remove(0,sizeof("# modified:"));
+			curList->append(lines[i]+"\n");
+			//(( ProjectsModel *)projectFilesView->model())->setFilesModified(lines[i]);
+		}
+	}
+	
+	if(stagedChanged.size()) {
+		showStaged();
+		if(stagedModel)
+			delete stagedModel;
+		stagedModel = new ProjectsModel(stagedChanged,0,"Staged Files");
+		stagedFilesView->setModel(stagedModel);
+	} else {
+		hideStaged();
+	}
+	if(unstagedChanged.size()) {
+		showUnstaged();
+		if(unstagedModel)
+			delete unstagedModel;
+		unstagedModel = new ProjectsModel(unstagedChanged,0,"Untaged Files");
+		unstagedFilesView->setModel(unstagedModel);
+	} else {
+		hideUnstaged();
+	}
 }
 
 void MainWindowImpl::filesReceived(QString files)
@@ -397,7 +469,7 @@ void MainWindowImpl::commitDetails(QStringList cd)
 	commit_diff->setTextCursor(cursor);
 	commit_diff->ensureCursorVisible ();
 }
-
+//test
 void MainWindowImpl::progress(int i)
 {
 	if(i == 0) {

@@ -71,6 +71,7 @@ Q_OBJECT
 	void getCurDiff();
 	void getTags();
 	void getBranches();
+	void getStatus();
 	//void checkout(QString ref);
 	
 	//Async slots
@@ -105,7 +106,8 @@ Q_OBJECT
 	
 	void branchList(QString);
 	void tagList(QString);
-
+	
+	void filesStatus(QString);
 	void currentDiff(QString);
 };
 #endif

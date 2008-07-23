@@ -50,6 +50,7 @@
  {
      parentItem = parent;
      itemData = data;
+     status=0;
  }
 
  ProjectsItem::~ProjectsItem()
@@ -95,14 +96,11 @@
      return 0;
  }
 
-
-
-
- ProjectsModel::ProjectsModel(const QString &data,QObject *parent)
+ ProjectsModel::ProjectsModel(const QString &data,QObject *parent,const QString &title)
      : QAbstractItemModel(parent)
  {
      QList<QVariant> rootData;
-     rootData << "Title";
+     rootData << title;
      rootItem = new ProjectsItem(rootData);
 	 setupModelData(data.split(QString("\n")), rootItem);
  }
@@ -120,16 +118,46 @@
          return rootItem->columnCount();
  }
 
+void ProjectsModel::setFilesModified(QString file)
+{
+	QModelIndex index = search(file);
+	ProjectsItem *item = static_cast<ProjectsItem*>(index.internalPointer());	
+	item->status = 1;
+	while(item->parent()!=rootItem) {
+		item=item->parent();
+		item->status=1;
+	}
+}
+
+QModelIndex ProjectsModel::search(const QString &string)
+{
+	QStringList items=string.split("/");
+	ProjectsItem *item=rootItem;
+	for(int j=0;j < items.size();j++) {
+		for(int i =0;i<item->childItems.count();i++){
+			if(item->childItems[i]->data(0).toString() == items[j]) {
+				//found matching child
+				item = item->childItems[i];
+				break;
+			}
+		}
+	}
+	return createIndex(item->row(),0,item);
+}
+
  QVariant ProjectsModel::data(const QModelIndex &index, int role) const
  {
      if (!index.isValid())
          return QVariant();
 	ProjectsItem *item = static_cast<ProjectsItem*>(index.internalPointer());	
 	if (role == Qt::DecorationRole)  {
+		if(item->status)
+				return QIcon(":/main/contents.png");
 		if(item->childCount())
 			return QIcon(":/main/fileopen.png");
 		else 
 			return QIcon(":/main/contents2.png");
+			
 	} else if (role == Qt::DisplayRole) {
 		return item->data(index.column());
 	} else 

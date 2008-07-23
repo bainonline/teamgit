@@ -360,6 +360,24 @@ void GitProcess::getFiles()
 	emit progress(100);
 }
 
+void GitProcess::getStatus()
+{
+	QStringList args;
+	
+	emit notify("Gathering files");
+	emit progress(0);
+	args << "status";
+	
+	QByteArray array = runGit(args);
+	emit progress(50);
+	
+	QString status(array);
+	emit filesStatus(status);
+
+	emit notify("Ready");
+	emit progress(100);
+}
+
 void GitProcess::getBranches()
 {
 	QStringList args;

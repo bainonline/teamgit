@@ -64,10 +64,12 @@
      int columnCount() const;
      QVariant data(int column) const;
      int row() const;
+     int status;
      ProjectsItem *parent();
 
- private:
      QList<ProjectsItem*> childItems;
+     
+     private:
      QList<QVariant> itemData;
      ProjectsItem *parentItem;
  };
@@ -78,7 +80,7 @@
      Q_OBJECT
 
  public:
-     ProjectsModel(const QString &data,QObject *parent = 0);
+     ProjectsModel(const QString &data,QObject *parent = 0,const QString &title="title");
      ~ProjectsModel();
 
      QVariant data(const QModelIndex &index, int role) const;
@@ -90,10 +92,14 @@
      QModelIndex parent(const QModelIndex &index) const;
      int rowCount(const QModelIndex &parent = QModelIndex()) const;
      int columnCount(const QModelIndex &parent = QModelIndex()) const;
+     
+     void setFilesModified(QString files);
 
 private:
+	
+	QString modifiedFiles;
      void setupModelData(const QStringList &lines, ProjectsItem *parent);
-
+	QModelIndex search(const QString &string);
      ProjectsItem *rootItem;
  };
 
