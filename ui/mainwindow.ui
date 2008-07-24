@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1439</width>
-    <height>850</height>
+    <width>1430</width>
+    <height>846</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -167,7 +167,7 @@
         <property name="orientation" >
          <enum>Qt::Vertical</enum>
         </property>
-        <widget class="QTabWidget" name="tabWidget_2" >
+        <widget class="QTabWidget" name="commitLogTabs" >
          <property name="sizePolicy" >
           <sizepolicy vsizetype="Expanding" hsizetype="Minimum" >
            <horstretch>0</horstretch>
@@ -291,7 +291,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1439</width>
+     <width>1430</width>
      <height>30</height>
     </rect>
    </property>
