@@ -145,6 +145,26 @@ QModelIndex ProjectsModel::search(const QString &string)
 	return createIndex(item->row(),0,item);
 }
 
+QString ProjectsModel::filepath(const QModelIndex &index) 
+{
+	QStringList pathitems;
+	if (!index.isValid())
+         return QString();
+    ProjectsItem *item = static_cast<ProjectsItem*>(index.internalPointer());
+	while(item != rootItem){
+		pathitems << item->data(0).toString();
+		item = item->parent();
+	}
+	QString path;
+	for(int i = pathitems.size()-1;i>=0;i--) {
+		path.append(pathitems[i]);
+		if(i)
+			path.append("/");
+	}
+	return path;
+	
+}
+
  QVariant ProjectsModel::data(const QModelIndex &index, int role) const
  {
      if (!index.isValid())

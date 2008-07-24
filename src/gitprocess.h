@@ -64,6 +64,8 @@ Q_OBJECT
 	void getCommit(QString commitHash);
 	void getFiles();
 	void reset(QString ref,bool hard);
+	void stageFiles(QStringList files);
+	void unstageFiles(QStringList files);
 	void stageHunk(QString hunk);
 	void commit(QString commit_msg);
 	void tag(QString tag);

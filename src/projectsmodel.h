@@ -63,6 +63,7 @@
      int childCount() const;
      int columnCount() const;
      QVariant data(int column) const;
+
      int row() const;
      int status;
      ProjectsItem *parent();
@@ -83,6 +84,7 @@
      ProjectsModel(const QString &data,QObject *parent = 0,const QString &title="title");
      ~ProjectsModel();
 
+     QString filepath(const QModelIndex &index);
      QVariant data(const QModelIndex &index, int role) const;
      Qt::ItemFlags flags(const QModelIndex &index) const;
      QVariant headerData(int section, Qt::Orientation orientation,

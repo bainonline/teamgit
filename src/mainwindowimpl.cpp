@@ -13,7 +13,7 @@
 #include "settingsimpl.h"
 #include "gsettings.h"
 
-//
+
 MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 	: QMainWindow(parent, f)
 {
@@ -58,13 +58,15 @@ void MainWindowImpl::hideUnstaged()
 void MainWindowImpl::showStaged()
 {
 	stagedFilesView->show();
-	unstageButton->show();
+	stagedFilesView->expandAll();
+	//unstageButton->show();
 }
 
 void MainWindowImpl::showUnstaged()
 {
 	unstagedFilesView->show();
-	stageButton->show();
+	unstagedFilesView->expandAll();
+	//stageButton->show();
 }
 
 void MainWindowImpl::populateProjects()
@@ -120,6 +122,10 @@ void MainWindowImpl::setupConnections()
 	connect(projectFilesView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(projectFilesViewClicked(const QModelIndex &)));
 	connect(projectsComboBox,SIGNAL(activated(int)),this,SLOT(projectsComboBoxActivated(int)));
 	connect(ResetLogButton,SIGNAL(clicked()),this,SLOT(resetLog()));
+	connect(unstagedFilesView,SIGNAL(doubleClicked(const QModelIndex &)),this,SLOT(unstagedDoubleClicked(const QModelIndex &)));
+	connect(stagedFilesView,SIGNAL(doubleClicked(const QModelIndex &)),this,SLOT(stagedDoubleClicked(const QModelIndex &)));
+
+	connect(stageButton,SIGNAL(clicked()),this,SLOT(testSlot()));
 }
 
 MainWindowImpl::~MainWindowImpl()
@@ -278,8 +284,7 @@ void MainWindowImpl::doneOutputDialog()
 {
 	opd->doneOutputDialog();
 	QApplication::restoreOverrideCursor();
-	}
-
+}
 
 void MainWindowImpl::logReceived(QString log)
 {
@@ -293,7 +298,6 @@ void MainWindowImpl::logReceived(QString log)
 		delete prevModel;
 	logView->setColumnWidth(0,450);
 	logView->setColumnWidth(1,200);
-
 
 }
 
@@ -310,7 +314,6 @@ void MainWindowImpl::fileLogReceived(QString log)
 	progress(100);
 }
 
-
 void MainWindowImpl::filesStatusReceived(QString status)
 {
 	QStringList lines=status.split("\n");
@@ -318,7 +321,6 @@ void MainWindowImpl::filesStatusReceived(QString status)
 	QString *curList;
 	for(int i=0;i<lines.size();i++) {
 		lines[i]=lines[i].simplified();
-		commit_diff->append(lines[i]);
 		if(lines[i].startsWith("# Changes to be committed:")) {
 			curList=&stagedChanged;
 		} else if(lines[i].startsWith("# Changed but not updated:")) {
@@ -326,28 +328,29 @@ void MainWindowImpl::filesStatusReceived(QString status)
 		} else if(lines[i].startsWith("# modified: ")) {
 			lines[i].remove(0,sizeof("# modified:"));
 			curList->append(lines[i]+"\n");
-			//(( ProjectsModel *)projectFilesView->model())->setFilesModified(lines[i]);
 		}
 	}
 	
 	if(stagedChanged.size()) {
-		showStaged();
 		if(stagedModel)
 			delete stagedModel;
-		stagedModel = new ProjectsModel(stagedChanged,0,"Staged Files");
+		stagedModel = new ProjectsModel(stagedChanged,0,"Staged Modified Files");
 		stagedFilesView->setModel(stagedModel);
+		showStaged();
 	} else {
 		hideStaged();
 	}
 	if(unstagedChanged.size()) {
-		showUnstaged();
 		if(unstagedModel)
 			delete unstagedModel;
-		unstagedModel = new ProjectsModel(unstagedChanged,0,"Untaged Files");
+		unstagedModel = new ProjectsModel(unstagedChanged,0,"Unstaged Modified Files");
 		unstagedFilesView->setModel(unstagedModel);
+		showUnstaged();
 	} else {
 		hideUnstaged();
 	}
+	//Crazy stuff i could not find a quick way to do this cleanly
+	 QTimer::singleShot(200, this, SLOT(expandStagedUnstagedSlot()));
 }
 
 void MainWindowImpl::filesReceived(QString files)
@@ -496,6 +499,23 @@ void MainWindowImpl::userSettings(QString name, QString email)
 
 }
 
+void MainWindowImpl::stagedDoubleClicked(const QModelIndex &index)
+{
+	
+	QStringList files;
+	files << stagedModel->filepath(index);
+	QMetaObject::invokeMethod(gt->git,"unstageFiles",Qt::QueuedConnection,
+                           Q_ARG(QStringList,files));
+}
+
+void MainWindowImpl::unstagedDoubleClicked(const QModelIndex &index)
+{
+	QStringList files;
+	files << unstagedModel->filepath(index);
+	QMetaObject::invokeMethod(gt->git,"stageFiles",Qt::QueuedConnection,
+                           Q_ARG(QStringList,files));
+}
+
 void MainWindowImpl::logClicked(const QModelIndex &index)
 {
 	QStandardItemModel *model = (QStandardItemModel *)logView->model();
@@ -543,10 +563,15 @@ void MainWindowImpl::resetLog()
 	hideLogReset();
 }
 
+void MainWindowImpl::expandStagedUnstagedSlot()
+{
+	unstagedFilesView->expandAll();
+	stagedFilesView->expandAll();
+}
+
 //Used for connecting random things while devloping,
 //Usefull if you want to pop a dialog for debug from git thread etc.
 void MainWindowImpl::testSlot()
 {
-
 }
 //

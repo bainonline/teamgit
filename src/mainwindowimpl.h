@@ -79,13 +79,18 @@ private slots:
 	
 	void userSettings(QString, QString);
 	
+	void stagedDoubleClicked(const QModelIndex &);
+	void unstagedDoubleClicked(const QModelIndex &);
+	
 	void logClicked(const QModelIndex &);
 	void projectFilesViewClicked(const QModelIndex &);
 	void projectsComboBoxActivated(int);
 	void resetLog();
+	void expandStagedUnstagedSlot();
 	void testSlot();
-
+	
 signals:
+	void test();
 	void teamGitWorkingDirChanged(const QString &newDir);
 };
 #endif

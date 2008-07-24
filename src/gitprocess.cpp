@@ -76,6 +76,29 @@ again:
 	}
 }
 
+void GitProcess::unstageFiles(QStringList files)
+{
+	for(int i = 0;i<files.size();i++) {
+		QStringList args;
+		args << "reset";
+		args << "HEAD";
+		args << files[i];
+		runGit(args);
+	}
+	getStatus();
+}
+
+void GitProcess::stageFiles(QStringList files)
+{
+	QStringList args;
+	
+	args << "add";
+	args << files;
+	runGit(args);
+	getStatus();
+}
+
+
 void GitProcess::stageHunk(QString hunk)
 {
 	QTemporaryFile file;
