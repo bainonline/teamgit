@@ -11,6 +11,7 @@
 #include "newprojectimpl.h"
 #include "outputdialogimpl.h"
 #include "projectsmodel.h"
+#include "commitdialogimpl.h"
 
 //
 
@@ -34,6 +35,7 @@ private:
 	ProjectsModel *unstagedModel;
 	QProgressBar *progressBar;
 	OutputDialogImpl *opd;
+	CommitDialogImpl *cmd;
 	
 	void readSettings();
 	void writeSettings();
@@ -72,6 +74,8 @@ private slots:
 	void filesStatusReceived(QString);
 	
 	void commitDetails(QStringList);
+	
+	void commitSlot();
 	
 	void initOutputDialog();
 	void notifyOutputDialog(const QString &);

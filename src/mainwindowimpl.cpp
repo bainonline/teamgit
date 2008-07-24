@@ -14,6 +14,7 @@
 #include "gsettings.h"
 
 
+
 MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 	: QMainWindow(parent, f)
 {
@@ -24,7 +25,7 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 	sd = new SettingsImpl(this);
 	npd = new NewProjectImpl(this);
 	opd = new OutputDialogImpl(this);
-	
+	cmd = new CommitDialogImpl(this);
 	
 	QTimer::singleShot(0,this,SLOT(initSlot()));
 	readSettings();
@@ -45,13 +46,12 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 void MainWindowImpl::hideStaged()
 {
 	stagedFilesView->hide();
-	unstageButton->hide();
+	commitButton->hide();
 }
 
 void MainWindowImpl::hideUnstaged()
 {
 	unstagedFilesView->hide();
-	stageButton->hide();
 }
 
 
@@ -59,7 +59,7 @@ void MainWindowImpl::showStaged()
 {
 	stagedFilesView->show();
 	stagedFilesView->expandAll();
-	//unstageButton->show();
+	commitButton->show();
 }
 
 void MainWindowImpl::showUnstaged()
@@ -113,6 +113,7 @@ void MainWindowImpl::setupConnections()
 	connect(gt->git,SIGNAL(userSettings(QString, QString)),this,SLOT(userSettings(QString, QString)));
 	connect(gt->git,SIGNAL(cloneComplete(QString)),this,SLOT(cloneComplete(QString)));
 	connect(gt->git,SIGNAL(filesStatus(QString)),this,SLOT(filesStatusReceived(QString)));
+	connect(gt->git,SIGNAL(commitDone()),this,SLOT(refresh()));
 
 	connect(gt->git,SIGNAL(initOutputDialog()),this,SLOT(initOutputDialog()));
 	connect(gt->git,SIGNAL(notifyOutputDialog(const QString &)),this,SLOT(notifyOutputDialog(const QString &)));
@@ -125,7 +126,7 @@ void MainWindowImpl::setupConnections()
 	connect(unstagedFilesView,SIGNAL(doubleClicked(const QModelIndex &)),this,SLOT(unstagedDoubleClicked(const QModelIndex &)));
 	connect(stagedFilesView,SIGNAL(doubleClicked(const QModelIndex &)),this,SLOT(stagedDoubleClicked(const QModelIndex &)));
 
-	connect(stageButton,SIGNAL(clicked()),this,SLOT(testSlot()));
+	connect(commitButton,SIGNAL(clicked()),this,SLOT(commitSlot()));
 }
 
 MainWindowImpl::~MainWindowImpl()
@@ -231,6 +232,18 @@ void MainWindowImpl::newProjectDialog()
                            Q_ARG(QString, gSettings->teamGitWorkingDir));
 	}
 }	
+
+void MainWindowImpl::commitSlot()
+{
+	cmd->setAuthor(gSettings->userName,gSettings->userEmail);
+	int ret = cmd->exec();
+	if( ret == QDialog::Accepted) {
+		QMetaObject::invokeMethod(gt->git,"commit",Qt::QueuedConnection,
+						Q_ARG(QString, cmd->getCommitMessage()),
+						Q_ARG(QString, cmd->getAuthorName()),
+						Q_ARG(QString, cmd->getAuthorEmail()));
+	}
+}
 
 void MainWindowImpl::pullDialog()
 {
