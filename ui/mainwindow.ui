@@ -63,7 +63,10 @@
              <item>
               <widget class="QTreeView" name="stagedFilesView" >
                <property name="selectionMode" >
-                <enum>QAbstractItemView::MultiSelection</enum>
+                <enum>QAbstractItemView::SingleSelection</enum>
+               </property>
+               <property name="autoExpandDelay" >
+                <number>0</number>
                </property>
               </widget>
              </item>
@@ -81,7 +84,10 @@
              <item>
               <widget class="QTreeView" name="unstagedFilesView" >
                <property name="selectionMode" >
-                <enum>QAbstractItemView::MultiSelection</enum>
+                <enum>QAbstractItemView::SingleSelection</enum>
+               </property>
+               <property name="autoExpandDelay" >
+                <number>0</number>
                </property>
               </widget>
              </item>
