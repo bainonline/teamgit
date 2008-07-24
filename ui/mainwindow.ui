@@ -71,34 +71,21 @@
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="stageButton" >
+              <widget class="QPushButton" name="commitButton" >
                <property name="text" >
-                <string>&amp;Stage Selected</string>
+                <string>&amp;Commit Staged</string>
                </property>
               </widget>
              </item>
             </layout>
            </widget>
-           <widget class="QWidget" name="layoutWidget" >
-            <layout class="QVBoxLayout" >
-             <item>
-              <widget class="QTreeView" name="unstagedFilesView" >
-               <property name="selectionMode" >
-                <enum>QAbstractItemView::SingleSelection</enum>
-               </property>
-               <property name="autoExpandDelay" >
-                <number>0</number>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="unstageButton" >
-               <property name="text" >
-                <string>&amp;Unstage Selected</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
+           <widget class="QTreeView" name="unstagedFilesView" >
+            <property name="selectionMode" >
+             <enum>QAbstractItemView::SingleSelection</enum>
+            </property>
+            <property name="autoExpandDelay" >
+             <number>0</number>
+            </property>
            </widget>
           </widget>
          </item>
