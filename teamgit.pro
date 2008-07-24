@@ -5,7 +5,11 @@ DESTDIR = bin
 OBJECTS_DIR = build
 MOC_DIR = build
 UI_DIR = build
-FORMS = ui/mainwindow.ui ui/settings.ui ui/newproject.ui ui/outputdialog.ui
+FORMS = ui/mainwindow.ui \
+ ui/settings.ui \
+ ui/newproject.ui \
+ ui/outputdialog.ui \
+ ui/commitdialog.ui
 HEADERS = src/mainwindowimpl.h \
  src/gitthread.h \
  src/gitprocess.h \
@@ -17,7 +21,8 @@ HEADERS = src/mainwindowimpl.h \
  src/outputdialogimpl.h \
  src/kpty_p.h \
  src/kpty.h \
- src/projectsmodel.h
+ src/projectsmodel.h \
+ src/commitdialogimpl.h
 SOURCES = src/mainwindowimpl.cpp \
  src/main.cpp \
  src/gitprocess.cpp \
@@ -26,5 +31,6 @@ SOURCES = src/mainwindowimpl.cpp \
  src/newprojectimpl.cpp \
  src/outputdialogimpl.cpp \
  src/kpty.cpp \
- src/projectsmodel.cpp
+ src/projectsmodel.cpp \
+ src/commitdialogimpl.cpp
 RESOURCES += ui/icons.qrc
