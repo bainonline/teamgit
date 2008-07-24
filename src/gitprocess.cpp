@@ -272,13 +272,14 @@ void GitProcess::setUserSettings()
 	emit notify("Ready");
 }
 
-void GitProcess::getCurDiff()
+void GitProcess::getDiff(QString file)
 {
 	QStringList args;
 	args << "diff";
+	args << file;
 	QByteArray array = runGit(args);
 	QString diff(array);
-	emit currentDiff(diff);
+	emit fileDiff(diff);
 
 }
 

@@ -68,9 +68,9 @@ Q_OBJECT
 	void unstageFiles(QStringList files);
 	void stageHunk(QString hunk);
 	void commit(QString commit_msg,QString author_name,QString author_email);
-	void tag(QString tag);
-	void addFiles(QStringList files);
-	void getCurDiff();
+	void tag(QString);
+	void addFiles(QStringList);
+	void getDiff(QString);
 	void getTags();
 	void getBranches();
 	void getStatus();
@@ -110,6 +110,6 @@ Q_OBJECT
 	void tagList(QString);
 	
 	void filesStatus(QString);
-	void currentDiff(QString);
+	void fileDiff(QString);
 };
 #endif

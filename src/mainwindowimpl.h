@@ -51,6 +51,7 @@ private:
 	void showLogReset();
 	void populateProjects();
 	QStandardItemModel *parseLog2Model(QString log);
+	void setDiffText(QString diff);
 	
 public:
 	GitThread *gt;
@@ -74,6 +75,7 @@ private slots:
 	void filesStatusReceived(QString);
 	
 	void commitDetails(QStringList);
+	void fileDiffReceived(QString);
 	
 	void commitSlot();
 	
@@ -85,6 +87,8 @@ private slots:
 	
 	void stagedDoubleClicked(const QModelIndex &);
 	void unstagedDoubleClicked(const QModelIndex &);
+	void stagedClicked(const QModelIndex &index);
+	void unstagedClicked(const QModelIndex &index);
 	
 	void logClicked(const QModelIndex &);
 	void projectFilesViewClicked(const QModelIndex &);

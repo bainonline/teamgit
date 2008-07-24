@@ -114,6 +114,7 @@ void MainWindowImpl::setupConnections()
 	connect(gt->git,SIGNAL(cloneComplete(QString)),this,SLOT(cloneComplete(QString)));
 	connect(gt->git,SIGNAL(filesStatus(QString)),this,SLOT(filesStatusReceived(QString)));
 	connect(gt->git,SIGNAL(commitDone()),this,SLOT(refresh()));
+	connect(gt->git,SIGNAL(fileDiff(QString)),this,SLOT(fileDiffReceived(QString)));
 
 	connect(gt->git,SIGNAL(initOutputDialog()),this,SLOT(initOutputDialog()));
 	connect(gt->git,SIGNAL(notifyOutputDialog(const QString &)),this,SLOT(notifyOutputDialog(const QString &)));
@@ -125,7 +126,9 @@ void MainWindowImpl::setupConnections()
 	connect(ResetLogButton,SIGNAL(clicked()),this,SLOT(resetLog()));
 	connect(unstagedFilesView,SIGNAL(doubleClicked(const QModelIndex &)),this,SLOT(unstagedDoubleClicked(const QModelIndex &)));
 	connect(stagedFilesView,SIGNAL(doubleClicked(const QModelIndex &)),this,SLOT(stagedDoubleClicked(const QModelIndex &)));
-
+	connect(unstagedFilesView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(unstagedClicked(const QModelIndex &)));
+	connect(stagedFilesView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(stagedClicked(const QModelIndex &)));
+	
 	connect(commitButton,SIGNAL(clicked()),this,SLOT(commitSlot()));
 }
 
@@ -428,8 +431,23 @@ void MainWindowImpl::commitDetails(QStringList cd)
 	commit_author->setText(cd[1].remove(0,8));
 	commit_date->setText(cd[2].remove(0,6));
 	commit_log->setText(cd[3]);
-	commit_diff->clear();
 	QString diff=cd.at(4);
+	setDiffText(diff);
+}
+void MainWindowImpl::fileDiffReceived(QString diff)
+{
+	commit_author->clear();
+	commit_date->clear();
+	commit_log->clear();
+	setDiffText(diff);
+	commitLogTabs->setCurrentIndex(1);
+}
+
+
+void MainWindowImpl::setDiffText(QString diff)
+{
+	commit_diff->clear();
+	
 	if(diff.size() > DIFF_LIMIT) {
 		diff.remove(DIFF_LIMIT,diff.size()-(DIFF_LIMIT));
 		diff.append("\n- Commit too huge: trimmed!");
@@ -485,6 +503,7 @@ void MainWindowImpl::commitDetails(QStringList cd)
 	commit_diff->setTextCursor(cursor);
 	commit_diff->ensureCursorVisible ();
 }
+
 //test
 void MainWindowImpl::progress(int i)
 {
@@ -527,6 +546,23 @@ void MainWindowImpl::unstagedDoubleClicked(const QModelIndex &index)
 	files << unstagedModel->filepath(index);
 	QMetaObject::invokeMethod(gt->git,"stageFiles",Qt::QueuedConnection,
                            Q_ARG(QStringList,files));
+}
+
+void MainWindowImpl::stagedClicked(const QModelIndex &index)
+{
+	QString file;
+	file = stagedModel->filepath(index);
+	QMetaObject::invokeMethod(gt->git,"getDiff",Qt::QueuedConnection,
+                           Q_ARG(QString,file));
+}
+
+
+void MainWindowImpl::unstagedClicked(const QModelIndex &index)
+{
+	QString file;
+	file = unstagedModel->filepath(index);
+	QMetaObject::invokeMethod(gt->git,"getDiff",Qt::QueuedConnection,
+                           Q_ARG(QString,file));
 }
 
 void MainWindowImpl::logClicked(const QModelIndex &index)
