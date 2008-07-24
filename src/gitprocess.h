@@ -71,6 +71,7 @@ Q_OBJECT
 	void tag(QString);
 	void addFiles(QStringList);
 	void getDiff(QString);
+	void getDiffCached(QString);
 	void getTags();
 	void getBranches();
 	void getStatus();

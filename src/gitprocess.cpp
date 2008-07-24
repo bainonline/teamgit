@@ -272,6 +272,19 @@ void GitProcess::setUserSettings()
 	emit notify("Ready");
 }
 
+void GitProcess::getDiffCached(QString file)
+{
+	QStringList args;
+	args << "diff";
+	args << "--cached";
+	args << file;
+	QByteArray array = runGit(args);
+	QString diff(array);
+	emit fileDiff(diff);
+
+}
+
+
 void GitProcess::getDiff(QString file)
 {
 	QStringList args;

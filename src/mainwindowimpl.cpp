@@ -552,7 +552,7 @@ void MainWindowImpl::stagedClicked(const QModelIndex &index)
 {
 	QString file;
 	file = stagedModel->filepath(index);
-	QMetaObject::invokeMethod(gt->git,"getDiff",Qt::QueuedConnection,
+	QMetaObject::invokeMethod(gt->git,"getDiffCached",Qt::QueuedConnection,
                            Q_ARG(QString,file));
 }
 
