@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1440</width>
-    <height>849</height>
+    <width>825</width>
+    <height>686</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -93,27 +93,29 @@
        </widget>
        <widget class="QWidget" name="tab_2" >
         <attribute name="title" >
-         <string>&amp;Branches</string>
+         <string>&amp;Branches/tags</string>
         </attribute>
         <layout class="QVBoxLayout" >
          <item>
-          <widget class="QTreeView" name="branchesView" />
-         </item>
-        </layout>
-       </widget>
-       <widget class="QWidget" name="tab_7" >
-        <attribute name="title" >
-         <string>&amp;Tags</string>
-        </attribute>
-        <layout class="QVBoxLayout" >
-         <item>
-          <widget class="QTreeView" name="tagsView" />
-         </item>
-         <item>
-          <widget class="QPushButton" name="newTagButton" >
-           <property name="text" >
-            <string>Add &amp;tag</string>
+          <widget class="QSplitter" name="splitter_2" >
+           <property name="orientation" >
+            <enum>Qt::Vertical</enum>
            </property>
+           <widget class="QTreeView" name="branchesView" />
+           <widget class="QWidget" name="" >
+            <layout class="QVBoxLayout" >
+             <item>
+              <widget class="QTreeView" name="tagsView" />
+             </item>
+             <item>
+              <widget class="QPushButton" name="newTagButton" >
+               <property name="text" >
+                <string>Add &amp;tag</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
           </widget>
          </item>
         </layout>
@@ -298,7 +300,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1440</width>
+     <width>825</width>
      <height>27</height>
     </rect>
    </property>
