@@ -336,6 +336,7 @@
     </property>
     <addaction name="action_New" />
     <addaction name="action_Pull" />
+    <addaction name="actionNew_Tag" />
    </widget>
    <widget class="QMenu" name="menu_Help" >
     <property name="title" >
@@ -369,6 +370,8 @@
    <addaction name="action_Merge" />
    <addaction name="separator" />
    <addaction name="action_Options" />
+   <addaction name="separator" />
+   <addaction name="actionNew_Tag" />
   </widget>
   <action name="action_New" >
    <property name="icon" >
@@ -458,6 +461,14 @@
    </property>
    <property name="text" >
     <string>About</string>
+   </property>
+  </action>
+  <action name="actionNew_Tag" >
+   <property name="icon" >
+    <iconset resource="icons.qrc" >:/main/identity.png</iconset>
+   </property>
+   <property name="text" >
+    <string>New &amp;Tag</string>
    </property>
   </action>
  </widget>
