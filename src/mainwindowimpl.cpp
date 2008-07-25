@@ -20,6 +20,7 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 {
 	setupUi(this);
 	
+	setWindowIcon(QIcon(":/main/icon.png"));
 	gt = new GitThread();
 	gt->start();
 	sd = new SettingsImpl(this);
