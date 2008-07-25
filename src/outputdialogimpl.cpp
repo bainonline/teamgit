@@ -12,7 +12,7 @@ OutputDialogImpl::OutputDialogImpl(QWidget *parent)
 {
 	setModal(true);
 	setupUi(this);
-
+	cancelButton->setEnabled(false);
 
 }
 
