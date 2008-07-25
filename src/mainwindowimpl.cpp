@@ -6,6 +6,7 @@
 #include <QVariant>
 #include <QMetaType>
 #include <QMessageBox> 
+#include <QInputDialog>
 
 #include "defs.h"
 #include "mainwindowimpl.h"
@@ -38,6 +39,9 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 	stagedModel = NULL;
 	unstagedModel = NULL;
 	logModel = NULL;
+	tagsModel=NULL;
+	branchModel=NULL;
+	
 	hideLogReset();
 	hideStaged();
 	hideUnstaged();
@@ -121,6 +125,9 @@ void MainWindowImpl::setupConnections()
 	connect(gt->git,SIGNAL(notifyOutputDialog(const QString &)),this,SLOT(notifyOutputDialog(const QString &)));
 	connect(gt->git,SIGNAL(doneOutputDialog()),this,SLOT(doneOutputDialog()));
 	
+	connect(gt->git,SIGNAL(tagList(QString)),this,SLOT(tagsListReceived(QString)));
+	connect(gt->git,SIGNAL(branchList(QString)),this,SLOT(branchListReceived(QString)));
+	
 	connect(logView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(logClicked(const QModelIndex &)));
 	connect(projectFilesView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(projectFilesViewClicked(const QModelIndex &)));
 	connect(projectsComboBox,SIGNAL(activated(int)),this,SLOT(projectsComboBoxActivated(int)));
@@ -129,6 +136,8 @@ void MainWindowImpl::setupConnections()
 	connect(stagedFilesView,SIGNAL(doubleClicked(const QModelIndex &)),this,SLOT(stagedDoubleClicked(const QModelIndex &)));
 	connect(unstagedFilesView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(unstagedClicked(const QModelIndex &)));
 	connect(stagedFilesView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(stagedClicked(const QModelIndex &)));
+	
+	connect(newTagButton,SIGNAL(clicked()),this,SLOT(newTag()));
 	
 	connect(commitButton,SIGNAL(clicked()),this,SLOT(commitSlot()));
 }
@@ -218,6 +227,8 @@ void MainWindowImpl::refresh()
 	GIT_INVOKE("getFiles");
 	GIT_INVOKE("getLog");
 	GIT_INVOKE("getStatus");
+	GIT_INVOKE("getTags");
+	GIT_INVOKE("getBranches");
 }
 
 void MainWindowImpl::checkWorkingDiff()
@@ -377,6 +388,38 @@ void MainWindowImpl::filesReceived(QString files)
 	projectsModel = new ProjectsModel(files);
 	projectFilesView->setModel(projectsModel);
 	
+}
+
+void MainWindowImpl::branchListReceived(QString branch)
+{
+	if(branchModel)
+		delete branchModel;
+	branchModel = new QStandardItemModel(0,1);
+	QStandardItem *it = new QStandardItem(QString("Branches"));
+	branchModel->setHorizontalHeaderItem(0,it);
+	QStringList branchList = branch.split("\n");
+	for(int i=0;i < branchList.size()-1;i++) {
+		QStandardItem *item1 = new QStandardItem(branchList[i]);
+		item1->setEditable(false);
+		branchModel->appendRow(item1);
+	}
+	branchesView->setModel(branchModel);
+}
+
+void MainWindowImpl::tagsListReceived(QString tags)
+{
+	if(tagsModel)
+		delete tagsModel;
+	tagsModel = new QStandardItemModel(0,1);
+	QStandardItem *it = new QStandardItem(QString("Tags"));
+	tagsModel->setHorizontalHeaderItem(0,it);
+	QStringList tagsList = tags.split("\n");
+	for(int i=0;i < tagsList.size()-1;i++) {
+		QStandardItem *item1 = new QStandardItem(tagsList[i]);
+		item1->setEditable(false);
+		tagsModel->appendRow(item1);
+	}
+	tagsView->setModel(tagsModel);
 }
 
 QStandardItemModel *MainWindowImpl::parseLog2Model(QString log)
@@ -572,6 +615,18 @@ void MainWindowImpl::logClicked(const QModelIndex &index)
 	QStandardItem *item = model->itemFromIndex(index);
 	QMetaObject::invokeMethod(gt->git,"getCommit",Qt::QueuedConnection,
                            Q_ARG(QString,model->item(item->row(),3)->text()));
+}
+
+
+void MainWindowImpl::newTag()
+{
+	bool ok;
+	QString tag = QInputDialog::getText(this, tr("Add New Tag"),
+										tr("Please enter the tag name :"), QLineEdit::Normal,
+										"", &ok);
+	QMetaObject::invokeMethod(gt->git,"tag",Qt::QueuedConnection,
+								Q_ARG(QString,tag));
+	GIT_INVOKE("getTags");
 }
 
 void MainWindowImpl::projectFilesViewClicked(const QModelIndex &index)

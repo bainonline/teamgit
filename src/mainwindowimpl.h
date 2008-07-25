@@ -30,6 +30,9 @@ private:
 	SettingsImpl *sd;
 	NewProjectImpl *npd;
 	QStandardItemModel *logModel;
+	QStandardItemModel *tagsModel;
+	QStandardItemModel *branchModel;
+	
 	ProjectsModel *projectsModel;
 	ProjectsModel *stagedModel;
 	ProjectsModel *unstagedModel;
@@ -74,6 +77,9 @@ private slots:
 	void cloneComplete(QString);
 	void filesStatusReceived(QString);
 	
+	void branchListReceived(QString);
+	void tagsListReceived(QString);
+	
 	void commitDetails(QStringList);
 	void fileDiffReceived(QString);
 	
@@ -96,6 +102,8 @@ private slots:
 	void resetLog();
 	void expandStagedUnstagedSlot();
 	void testSlot();
+	
+	void newTag();
 	
 signals:
 	void test();
