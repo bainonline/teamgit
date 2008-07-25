@@ -334,7 +334,7 @@ void MainWindowImpl::filesStatusReceived(QString status)
 {
 	QStringList lines=status.split("\n");
 	QString unstagedChanged,stagedChanged;
-	QString *curList;
+	QString *curList=NULL;
 	for(int i=0;i<lines.size();i++) {
 		lines[i]=lines[i].simplified();
 		if(lines[i].startsWith("# Changes to be committed:")) {
