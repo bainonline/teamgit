@@ -108,6 +108,7 @@ void MainWindowImpl::setupConnections()
 	connect(action_New,SIGNAL(triggered()),this,SLOT(newProjectDialog()));
 	connect(action_Pull,SIGNAL(triggered()),this,SLOT(pullDialog()));
 	connect(action_Refresh,SIGNAL(triggered()),this,SLOT(refresh()));
+	connect(actionNew_Tag,SIGNAL(triggered()),this,SLOT(newTag()));
 
 	connect(gt->git,SIGNAL(notify(const QString &)),this->statusBar(),SLOT(showMessage(const QString &)));
 	connect(gt->git,SIGNAL(progress(int)),this,SLOT(progress(int)));
