@@ -656,17 +656,7 @@ void MainWindowImpl::projectFilesViewClicked(const QModelIndex &index)
 	QModelIndex i;
 	i=index;
 	QStringList path;
-	
-	while(i.isValid()) {
-		path << projectsModel->data(i,0).toString();
-		i = projectsModel->parent(i);
-	}
-	QString text;
-	for(int j=path.size()-1;j>=0;j--) {
-		text += path[j];
-		if(j)
-			text+= "/";
-	}
+	QString text =  projectsModel->filepath(index);
 	QMetaObject::invokeMethod(gt->git,"getNamedLog",Qt::QueuedConnection,
                            Q_ARG(QString,text));
 }
