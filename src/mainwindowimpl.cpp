@@ -109,6 +109,7 @@ void MainWindowImpl::setupConnections()
 	connect(action_Pull,SIGNAL(triggered()),this,SLOT(pullDialog()));
 	connect(action_Refresh,SIGNAL(triggered()),this,SLOT(refresh()));
 	connect(actionNew_Tag,SIGNAL(triggered()),this,SLOT(newTag()));
+	connect(action_CherryPick,SIGNAL(triggered()),this,SLOT(cherryPickSelectedCommit()));
 
 	connect(gt->git,SIGNAL(notify(const QString &)),this->statusBar(),SLOT(showMessage(const QString &)));
 	connect(gt->git,SIGNAL(progress(int)),this,SLOT(progress(int)));
@@ -121,6 +122,7 @@ void MainWindowImpl::setupConnections()
 	connect(gt->git,SIGNAL(filesStatus(QString)),this,SLOT(filesStatusReceived(QString)));
 	connect(gt->git,SIGNAL(commitDone()),this,SLOT(refresh()));
 	connect(gt->git,SIGNAL(fileDiff(QString)),this,SLOT(fileDiffReceived(QString)));
+	connect(gt->git,SIGNAL(refresh()),this,SLOT(refresh()));
 
 	connect(gt->git,SIGNAL(initOutputDialog()),this,SLOT(initOutputDialog()));
 	connect(gt->git,SIGNAL(notifyOutputDialog(const QString &)),this,SLOT(notifyOutputDialog(const QString &)));
@@ -628,6 +630,8 @@ void MainWindowImpl::branchesViewClicked(const QModelIndex &index)
 		resetLog();
 		return;
 	}
+	text = text.trimmed();
+	commit_diff->append(text);
 	QMetaObject::invokeMethod(gt->git,"getNamedLog",Qt::QueuedConnection,
                            Q_ARG(QString,text));
 }
@@ -682,6 +686,18 @@ void MainWindowImpl::expandStagedUnstagedSlot()
 {
 	unstagedFilesView->expandAll();
 	stagedFilesView->expandAll();
+}
+
+
+void MainWindowImpl::cherryPickSelectedCommit()
+{
+	QModelIndex index = logView->selectionModel()->currentIndex();
+	if(!index.isValid())
+		return;
+	QStandardItemModel *model=(QStandardItemModel *)logView->model();
+	QStandardItem *item = model->itemFromIndex(index);
+	QMetaObject::invokeMethod(gt->git,"cherryPick",Qt::QueuedConnection,
+                           Q_ARG(QString,model->item(item->row(),3)->text()));
 }
 
 //Used for connecting random things while devloping,
