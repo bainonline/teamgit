@@ -296,7 +296,7 @@ void GitProcess::getDiff(QString file)
 
 }
 
-void GitProcess::getFileLog(QString files)
+void GitProcess::getNamedLog(QString ref)
 {
 	QStringList args;
 	QString s;
@@ -305,7 +305,7 @@ void GitProcess::getFileLog(QString files)
 	emit progress(0);
 	args << "log";
 	args.append("--pretty=format:%sTEAMGITFIELDMARKER%an<%ae>TEAMGITFIELDMARKER%adTEAMGITFIELDMARKER%HTEAMGITFIELDEND");
-	args << files;
+	args << ref;
 	
 	QByteArray array = runGit(args);
 	
@@ -313,7 +313,7 @@ void GitProcess::getFileLog(QString files)
 	emit progress(50);
 	
 	QString log(array);
-	emit fileLogReceived(log);
+	emit namedLogReceived(ref,log);
 }
 
 void GitProcess::getLog(int numLog)

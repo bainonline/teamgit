@@ -113,7 +113,7 @@ void MainWindowImpl::setupConnections()
 	connect(gt->git,SIGNAL(notify(const QString &)),this->statusBar(),SLOT(showMessage(const QString &)));
 	connect(gt->git,SIGNAL(progress(int)),this,SLOT(progress(int)));
 	connect(gt->git,SIGNAL(logReceived(QString)),this,SLOT(logReceived(QString)));
-	connect(gt->git,SIGNAL(fileLogReceived(QString)),this,SLOT(fileLogReceived(QString)));
+	connect(gt->git,SIGNAL(namedLogReceived(QString,QString)),this,SLOT(namedLogReceived(QString,QString)));
 	connect(gt->git,SIGNAL(projectFiles(QString)),this,SLOT(filesReceived(QString)));
 	connect(gt->git,SIGNAL(commitDetails(QStringList)),this,SLOT(commitDetails(QStringList)));
 	connect(gt->git,SIGNAL(userSettings(QString, QString)),this,SLOT(userSettings(QString, QString)));
@@ -137,6 +137,8 @@ void MainWindowImpl::setupConnections()
 	connect(stagedFilesView,SIGNAL(doubleClicked(const QModelIndex &)),this,SLOT(stagedDoubleClicked(const QModelIndex &)));
 	connect(unstagedFilesView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(unstagedClicked(const QModelIndex &)));
 	connect(stagedFilesView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(stagedClicked(const QModelIndex &)));
+	connect(branchesView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(branchesViewClicked(const QModelIndex &)));
+	connect(tagsView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(tagsViewClicked(const QModelIndex &)));
 	
 	connect(newTagButton,SIGNAL(clicked()),this,SLOT(newTag()));
 	
@@ -330,7 +332,7 @@ void MainWindowImpl::logReceived(QString log)
 
 }
 
-void MainWindowImpl::fileLogReceived(QString log)
+void MainWindowImpl::namedLogReceived(QString ref,QString log)
 {	
 	QStandardItemModel *prevModel;
 	prevModel = (QStandardItemModel *)logView->model();
@@ -340,6 +342,8 @@ void MainWindowImpl::fileLogReceived(QString log)
 	if(prevModel != logModel)
 		delete prevModel;
 	this->statusBar()->showMessage("Ready");
+	LogMessage->setText("Showing log for : " + ref);
+	showLogReset();;
 	progress(100);
 }
 
@@ -610,6 +614,23 @@ void MainWindowImpl::unstagedClicked(const QModelIndex &index)
                            Q_ARG(QString,file));
 }
 
+void MainWindowImpl::tagsViewClicked(const QModelIndex &index)
+{
+	QString text = tagsModel->itemFromIndex(index)->text();
+	QMetaObject::invokeMethod(gt->git,"getNamedLog",Qt::QueuedConnection,
+                           Q_ARG(QString,text));
+}
+
+void MainWindowImpl::branchesViewClicked(const QModelIndex &index)
+{
+	QString text = branchModel->itemFromIndex(index)->text();
+	if(text.startsWith("*")) {
+		resetLog();
+		return;
+	}
+	QMetaObject::invokeMethod(gt->git,"getNamedLog",Qt::QueuedConnection,
+                           Q_ARG(QString,text));
+}
 void MainWindowImpl::logClicked(const QModelIndex &index)
 {
 	QStandardItemModel *model = (QStandardItemModel *)logView->model();
@@ -646,9 +667,7 @@ void MainWindowImpl::projectFilesViewClicked(const QModelIndex &index)
 		if(j)
 			text+= "/";
 	}
-	LogMessage->setText("Showing log for : " + text);
-	showLogReset();;
-	QMetaObject::invokeMethod(gt->git,"getFileLog",Qt::QueuedConnection,
+	QMetaObject::invokeMethod(gt->git,"getNamedLog",Qt::QueuedConnection,
                            Q_ARG(QString,text));
 }
 void MainWindowImpl::projectsComboBoxActivated(int index)

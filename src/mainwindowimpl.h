@@ -71,7 +71,7 @@ private slots:
 	void pullDialog();
 	
 	void logReceived(QString);
-	void fileLogReceived(QString);
+	void namedLogReceived(QString,QString);
 	void filesReceived(QString);
 	void progress(int);
 	void cloneComplete(QString);
@@ -79,6 +79,9 @@ private slots:
 	
 	void branchListReceived(QString);
 	void tagsListReceived(QString);
+	
+	void branchesViewClicked(const QModelIndex &);
+	void tagsViewClicked(const QModelIndex &);
 	
 	void commitDetails(QStringList);
 	void fileDiffReceived(QString);

@@ -60,7 +60,7 @@ Q_OBJECT
 	public slots:
 	void setGitBinaryPath(const QString &path); 
 	void getLog(int numLog=1000);
-	void getFileLog(QString);
+	void getNamedLog(QString);
 	void getCommit(QString commitHash);
 	void getFiles();
 	void reset(QString ref,bool hard);
@@ -86,7 +86,7 @@ Q_OBJECT
 	
 	signals:
 	void logReceived(QString);
-	void fileLogReceived(QString);
+	void namedLogReceived(QString,QString);
 	void notify(const QString &);
 	
 	void initOutputDialog();
