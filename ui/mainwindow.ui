@@ -16,6 +16,14 @@
    <enum>Qt::LeftToRight</enum>
   </property>
   <widget class="QWidget" name="centralwidget" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>57</y>
+     <width>825</width>
+     <height>605</height>
+    </rect>
+   </property>
    <layout class="QVBoxLayout" >
     <item>
      <widget class="QSplitter" name="verticalSplitter1" >
@@ -45,6 +53,14 @@
         <number>0</number>
        </property>
        <widget class="QWidget" name="tab" >
+        <property name="geometry" >
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>383</width>
+          <height>557</height>
+         </rect>
+        </property>
         <attribute name="title" >
          <string>&amp;Files</string>
         </attribute>
@@ -92,6 +108,14 @@
         </layout>
        </widget>
        <widget class="QWidget" name="tab_2" >
+        <property name="geometry" >
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>383</width>
+          <height>557</height>
+         </rect>
+        </property>
         <attribute name="title" >
          <string>&amp;Branches/tags</string>
         </attribute>
@@ -102,7 +126,7 @@
             <enum>Qt::Vertical</enum>
            </property>
            <widget class="QTreeView" name="branchesView" />
-           <widget class="QWidget" name="" >
+           <widget class="QWidget" name="layoutWidget" >
             <layout class="QVBoxLayout" >
              <item>
               <widget class="QTreeView" name="tagsView" />
@@ -205,6 +229,14 @@
           <number>0</number>
          </property>
          <widget class="QWidget" name="tab_3" >
+          <property name="geometry" >
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>404</width>
+            <height>309</height>
+           </rect>
+          </property>
           <attribute name="title" >
            <string>&amp;Info</string>
           </attribute>
@@ -275,6 +307,14 @@
           </layout>
          </widget>
          <widget class="QWidget" name="tab_4" >
+          <property name="geometry" >
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>404</width>
+            <height>309</height>
+           </rect>
+          </property>
           <attribute name="title" >
            <string>&amp;Diff</string>
           </attribute>
@@ -308,12 +348,13 @@
     <property name="title" >
      <string>&amp;File</string>
     </property>
-    <addaction name="action_Refresh" />
+    <addaction name="action_New" />
    </widget>
    <widget class="QMenu" name="menu_Edit" >
     <property name="title" >
      <string>&amp;Edit</string>
     </property>
+    <addaction name="action_Pull" />
     <addaction name="action_CherryPick" />
     <addaction name="action_Merge" />
     <addaction name="action_Options" />
@@ -322,6 +363,7 @@
     <property name="title" >
      <string>&amp;View</string>
     </property>
+    <addaction name="action_Refresh" />
    </widget>
    <widget class="QMenu" name="menu_Connection" >
     <property name="title" >
@@ -336,9 +378,11 @@
     <property name="title" >
      <string>&amp;Tools</string>
     </property>
-    <addaction name="action_New" />
-    <addaction name="action_Pull" />
     <addaction name="actionNew_Tag" />
+    <addaction name="actionNew_Branch" />
+    <addaction name="action_Delete_Branch" />
+    <addaction name="action_Remote_branches" />
+    <addaction name="actionPush" />
    </widget>
    <widget class="QMenu" name="menu_Help" >
     <property name="title" >
@@ -353,8 +397,25 @@
    <addaction name="menu_Tools" />
    <addaction name="menu_Help" />
   </widget>
-  <widget class="QStatusBar" name="statusbar" />
+  <widget class="QStatusBar" name="statusbar" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>662</y>
+     <width>825</width>
+     <height>24</height>
+    </rect>
+   </property>
+  </widget>
   <widget class="QToolBar" name="toolBar" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>27</y>
+     <width>825</width>
+     <height>30</height>
+    </rect>
+   </property>
    <property name="windowTitle" >
     <string>toolBar</string>
    </property>
@@ -374,10 +435,15 @@
    <addaction name="action_Options" />
    <addaction name="separator" />
    <addaction name="actionNew_Tag" />
+   <addaction name="actionNew_Branch" />
+   <addaction name="action_Delete_Branch" />
+   <addaction name="separator" />
+   <addaction name="actionPush" />
   </widget>
   <action name="action_New" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >:/main/add.png</iconset>
+    <iconset resource="icons.qrc" >
+     <normaloff>:/main/add.png</normaloff>:/main/add.png</iconset>
    </property>
    <property name="text" >
     <string>&amp;New</string>
@@ -385,15 +451,17 @@
   </action>
   <action name="action_Pull" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >:/main/extender_opened.png</iconset>
+    <iconset resource="icons.qrc" >
+     <normaloff>:/main/bottom.png</normaloff>:/main/bottom.png</iconset>
    </property>
    <property name="text" >
-    <string>&amp;Pull</string>
+    <string>&amp;Quick Pull</string>
    </property>
   </action>
   <action name="action_Refresh" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >:/main/reload_page.png</iconset>
+    <iconset resource="icons.qrc" >
+     <normaloff>:/main/reload_page.png</normaloff>:/main/reload_page.png</iconset>
    </property>
    <property name="text" >
     <string>&amp;Refresh</string>
@@ -401,7 +469,8 @@
   </action>
   <action name="action_Options" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >:/main/configure.png</iconset>
+    <iconset resource="icons.qrc" >
+     <normaloff>:/main/configure.png</normaloff>:/main/configure.png</iconset>
    </property>
    <property name="text" >
     <string>&amp;Options</string>
@@ -409,7 +478,8 @@
   </action>
   <action name="action_CherryPick" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >:/main/redo.png</iconset>
+    <iconset resource="icons.qrc" >
+     <normaloff>:/main/today.png</normaloff>:/main/today.png</iconset>
    </property>
    <property name="text" >
     <string>&amp;CherryPick</string>
@@ -417,7 +487,8 @@
   </action>
   <action name="action_Merge" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >:/main/bookmark_toolbar.png</iconset>
+    <iconset resource="icons.qrc" >
+     <normaloff>:/main/bookmark_toolbar.png</normaloff>:/main/bookmark_toolbar.png</iconset>
    </property>
    <property name="text" >
     <string>&amp;Merge</string>
@@ -430,20 +501,26 @@
   </action>
   <action name="actionAdd_Repositories" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >:/main/adept_install.png</iconset>
+    <iconset resource="icons.qrc" >
+     <normaloff>:/main/adept_install.png</normaloff>:/main/adept_install.png</iconset>
    </property>
    <property name="text" >
     <string>Add &amp;Repository</string>
    </property>
   </action>
   <action name="actionAdd_View" >
+   <property name="icon" >
+    <iconset resource="icons.qrc" >
+     <normaloff>:/main/view_fit_window.png</normaloff>:/main/view_fit_window.png</iconset>
+   </property>
    <property name="text" >
     <string>Add &amp;View</string>
    </property>
   </action>
   <action name="actionDelete_Repository" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >:/main/adept_remove.png</iconset>
+    <iconset resource="icons.qrc" >
+     <normaloff>:/main/adept_remove.png</normaloff>:/main/adept_remove.png</iconset>
    </property>
    <property name="text" >
     <string>Remove Repository</string>
@@ -451,7 +528,8 @@
   </action>
   <action name="actionRemove_View" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >:/main/remove.png</iconset>
+    <iconset resource="icons.qrc" >
+     <normaloff>:/main/remove.png</normaloff>:/main/remove.png</iconset>
    </property>
    <property name="text" >
     <string>Remove View</string>
@@ -459,7 +537,8 @@
   </action>
   <action name="actionAbout" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >:/main/messagebox_info.png</iconset>
+    <iconset resource="icons.qrc" >
+     <normaloff>:/main/messagebox_info.png</normaloff>:/main/messagebox_info.png</iconset>
    </property>
    <property name="text" >
     <string>About</string>
@@ -467,10 +546,47 @@
   </action>
   <action name="actionNew_Tag" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >:/main/identity.png</iconset>
+    <iconset resource="icons.qrc" >
+     <normaloff>:/main/rss_tag.png</normaloff>:/main/rss_tag.png</iconset>
    </property>
    <property name="text" >
     <string>New &amp;Tag</string>
+   </property>
+  </action>
+  <action name="actionNew_Branch" >
+   <property name="icon" >
+    <iconset resource="icons.qrc" >
+     <normaloff>:/main/view_tree.png</normaloff>:/main/view_tree.png</iconset>
+   </property>
+   <property name="text" >
+    <string>New &amp;Branch</string>
+   </property>
+  </action>
+  <action name="action_Delete_Branch" >
+   <property name="icon" >
+    <iconset resource="icons.qrc" >
+     <normaloff>:/main/button_cancel.png</normaloff>:/main/button_cancel.png</iconset>
+   </property>
+   <property name="text" >
+    <string>&amp;Delete Branch</string>
+   </property>
+  </action>
+  <action name="action_Remote_branches" >
+   <property name="icon" >
+    <iconset resource="icons.qrc" >
+     <normaloff>:/main/view_sidetree.png</normaloff>:/main/view_sidetree.png</iconset>
+   </property>
+   <property name="text" >
+    <string>&amp;Remote Branches</string>
+   </property>
+  </action>
+  <action name="actionPush" >
+   <property name="icon" >
+    <iconset resource="icons.qrc" >
+     <normaloff>:/main/top.png</normaloff>:/main/top.png</iconset>
+   </property>
+   <property name="text" >
+    <string>Push</string>
    </property>
   </action>
  </widget>
