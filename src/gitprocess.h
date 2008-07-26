@@ -75,6 +75,7 @@ Q_OBJECT
 	void getTags();
 	void getBranches();
 	void getStatus();
+	void cherryPick(QString);
 	//void checkout(QString ref);
 	
 	//Async slots
@@ -112,5 +113,7 @@ Q_OBJECT
 	
 	void filesStatus(QString);
 	void fileDiff(QString);
+	
+	void refresh();
 };
 #endif

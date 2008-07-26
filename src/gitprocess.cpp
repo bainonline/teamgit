@@ -419,6 +419,30 @@ void GitProcess::getStatus()
 	emit notify("Ready");
 	emit progress(100);
 }
+void GitProcess::cherryPick(QString ref)
+{
+	QStringList args;
+
+	args << "cherry-pick";
+	args << ref;
+
+	emit notify("Cherry pick");
+	emit initOutputDialog();
+	QByteArray array = runGit(args,false,true);
+	notifyOutputDialog(QString(array));	
+	while(state()) {
+		array = readAllStandardOutput();
+		if(array.size())
+			notifyOutputDialog(QString(array));
+		array = readAllStandardError();
+		if(array.size())
+			notifyOutputDialog(QString(array));
+		waitForFinished(100);
+	}
+	emit doneOutputDialog();
+	emit notify("Ready");
+	emit refresh();
+}
 
 void GitProcess::getBranches()
 {
