@@ -64,7 +64,7 @@
         <attribute name="title" >
          <string>&amp;Files</string>
         </attribute>
-        <layout class="QVBoxLayout" >
+        <layout class="QVBoxLayout" name="verticalLayout" >
          <item>
           <widget class="QComboBox" name="projectsComboBox" />
          </item>
@@ -74,26 +74,13 @@
             <enum>Qt::Vertical</enum>
            </property>
            <widget class="QTreeView" name="projectFilesView" />
-           <widget class="QWidget" name="layoutWidget" >
-            <layout class="QVBoxLayout" >
-             <item>
-              <widget class="QTreeView" name="stagedFilesView" >
-               <property name="selectionMode" >
-                <enum>QAbstractItemView::SingleSelection</enum>
-               </property>
-               <property name="autoExpandDelay" >
-                <number>0</number>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="commitButton" >
-               <property name="text" >
-                <string>&amp;Commit Staged</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
+           <widget class="QTreeView" name="stagedFilesView" >
+            <property name="selectionMode" >
+             <enum>QAbstractItemView::SingleSelection</enum>
+            </property>
+            <property name="autoExpandDelay" >
+             <number>0</number>
+            </property>
            </widget>
            <widget class="QTreeView" name="unstagedFilesView" >
             <property name="selectionMode" >
@@ -119,27 +106,15 @@
         <attribute name="title" >
          <string>&amp;Branches/tags</string>
         </attribute>
-        <layout class="QVBoxLayout" >
+        <layout class="QVBoxLayout" name="verticalLayout_2" >
          <item>
           <widget class="QSplitter" name="splitter_2" >
            <property name="orientation" >
             <enum>Qt::Vertical</enum>
            </property>
            <widget class="QTreeView" name="branchesView" />
-           <widget class="QWidget" name="layoutWidget" >
-            <layout class="QVBoxLayout" >
-             <item>
-              <widget class="QTreeView" name="tagsView" />
-             </item>
-             <item>
-              <widget class="QPushButton" name="newTagButton" >
-               <property name="text" >
-                <string>Add &amp;tag</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
+           <widget class="QTreeView" name="remoteBranchesView" />
+           <widget class="QTreeView" name="tagsView" />
           </widget>
          </item>
         </layout>
@@ -381,7 +356,6 @@
     <addaction name="actionNew_Tag" />
     <addaction name="actionNew_Branch" />
     <addaction name="action_Delete_Branch" />
-    <addaction name="action_Remote_branches" />
     <addaction name="actionPush" />
    </widget>
    <widget class="QMenu" name="menu_Help" >
@@ -426,6 +400,7 @@
     <bool>false</bool>
    </attribute>
    <addaction name="action_New" />
+   <addaction name="action_Commit" />
    <addaction name="action_Pull" />
    <addaction name="action_Refresh" />
    <addaction name="separator" />
@@ -436,6 +411,7 @@
    <addaction name="separator" />
    <addaction name="actionNew_Tag" />
    <addaction name="actionNew_Branch" />
+   <addaction name="action_Remote_branches" />
    <addaction name="action_Delete_Branch" />
    <addaction name="separator" />
    <addaction name="actionPush" />
@@ -587,6 +563,15 @@
    </property>
    <property name="text" >
     <string>Push</string>
+   </property>
+  </action>
+  <action name="action_Commit" >
+   <property name="icon" >
+    <iconset resource="icons.qrc" >
+     <normaloff>:/main/adept_commit.png</normaloff>:/main/adept_commit.png</iconset>
+   </property>
+   <property name="text" >
+    <string>&amp;Commit</string>
    </property>
   </action>
  </widget>
