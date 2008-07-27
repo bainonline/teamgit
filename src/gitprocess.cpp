@@ -522,7 +522,6 @@ void GitProcess::push()
 	sendGitOutput();
 	emit doneOutputDialog();
 	emit notify("Ready");
-	emit refresh();
 }
 
 void GitProcess::sendGitOutput()
