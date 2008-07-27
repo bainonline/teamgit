@@ -76,6 +76,26 @@ again:
 	}
 }
 
+void GitProcess::sendGitOutput()
+{
+	QByteArray array;
+	while(state()) {
+		array = readAllStandardOutput();
+		if(array.size())
+			notifyOutputDialog(QString(array));
+		array = readAllStandardError();
+		if(array.size())
+			notifyOutputDialog(QString(array));
+		waitForFinished(100);
+	}
+	array = readAllStandardOutput();
+	if(array.size())
+		notifyOutputDialog(QString(array));
+	array = readAllStandardError();
+	if(array.size())
+		notifyOutputDialog(QString(array));
+}
+
 void GitProcess::unstageFiles(QStringList files)
 {
 	for(int i = 0;i<files.size();i++) {
@@ -524,25 +544,7 @@ void GitProcess::push()
 	emit notify("Ready");
 }
 
-void GitProcess::sendGitOutput()
-{
-	QByteArray array;
-	while(state()) {
-		array = readAllStandardOutput();
-		if(array.size())
-			notifyOutputDialog(QString(array));
-		array = readAllStandardError();
-		if(array.size())
-			notifyOutputDialog(QString(array));
-		waitForFinished(100);
-	}
-	array = readAllStandardOutput();
-	if(array.size())
-		notifyOutputDialog(QString(array));
-	array = readAllStandardError();
-	if(array.size())
-		notifyOutputDialog(QString(array));
-}
+
 
 void GitProcess::newBranch(QString branch,QString ref)
 {
