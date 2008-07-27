@@ -3,8 +3,8 @@ QT = gui core
 CONFIG += qt \
  warn_on \
  console \
- debug_and_release \
- build_all
+ build_all \
+ release
 DESTDIR = bin
 OBJECTS_DIR = build
 MOC_DIR = build
@@ -38,3 +38,5 @@ SOURCES = src/mainwindowimpl.cpp \
  src/projectsmodel.cpp \
  src/commitdialogimpl.cpp
 RESOURCES += ui/icons.qrc
+target.path=/usr/bin
+INSTALLS+=target
