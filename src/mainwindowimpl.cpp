@@ -51,7 +51,6 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 void MainWindowImpl::hideStaged()
 {
 	stagedFilesView->hide();
-	commitButton->hide();
 }
 
 void MainWindowImpl::hideUnstaged()
@@ -64,7 +63,6 @@ void MainWindowImpl::showStaged()
 {
 	stagedFilesView->show();
 	stagedFilesView->expandAll();
-	commitButton->show();
 }
 
 void MainWindowImpl::showUnstaged()
@@ -110,7 +108,8 @@ void MainWindowImpl::setupConnections()
 	connect(action_Refresh,SIGNAL(triggered()),this,SLOT(refresh()));
 	connect(actionNew_Tag,SIGNAL(triggered()),this,SLOT(newTag()));
 	connect(action_CherryPick,SIGNAL(triggered()),this,SLOT(cherryPickSelectedCommit()));
-
+	connect(action_Commit,SIGNAL(triggered()),this,SLOT(commitSlot()));
+	
 	connect(gt->git,SIGNAL(notify(const QString &)),this->statusBar(),SLOT(showMessage(const QString &)));
 	connect(gt->git,SIGNAL(progress(int)),this,SLOT(progress(int)));
 	connect(gt->git,SIGNAL(logReceived(QString)),this,SLOT(logReceived(QString)));
@@ -141,10 +140,7 @@ void MainWindowImpl::setupConnections()
 	connect(stagedFilesView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(stagedClicked(const QModelIndex &)));
 	connect(branchesView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(branchesViewClicked(const QModelIndex &)));
 	connect(tagsView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(tagsViewClicked(const QModelIndex &)));
-	
-	connect(newTagButton,SIGNAL(clicked()),this,SLOT(newTag()));
-	
-	connect(commitButton,SIGNAL(clicked()),this,SLOT(commitSlot()));
+
 }
 
 MainWindowImpl::~MainWindowImpl()
@@ -255,6 +251,8 @@ void MainWindowImpl::newProjectDialog()
 
 void MainWindowImpl::commitSlot()
 {
+	if(!stagedFilesView->isVisible())
+		return;
 	cmd->setAuthor(gSettings->userName,gSettings->userEmail);
 	int ret = cmd->exec();
 	if( ret == QDialog::Accepted) {
