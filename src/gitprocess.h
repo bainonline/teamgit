@@ -93,7 +93,7 @@ Q_OBJECT
 	void merge(QString);
 	
 	void newBranch(QString,QString);
-	void newRemoteBranch(QString);
+	void newRemoteBranch(QString,QString);
 	void deleteBranch(QString);
 	
 	signals:
