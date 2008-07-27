@@ -367,7 +367,7 @@
     <addaction name="actionNew_Branch" />
     <addaction name="action_Delete_Branch" />
     <addaction name="action_Pull" />
-    <addaction name="actionPush" />
+    <addaction name="action_Push" />
    </widget>
    <widget class="QMenu" name="menu_Help" >
     <property name="title" >
@@ -425,7 +425,7 @@
    <addaction name="action_Delete_Branch" />
    <addaction name="separator" />
    <addaction name="action_Pull" />
-   <addaction name="actionPush" />
+   <addaction name="action_Push" />
    <addaction name="separator" />
    <addaction name="action_Options" />
   </widget>
@@ -569,7 +569,7 @@
     <string>&amp;Remote Branches</string>
    </property>
   </action>
-  <action name="actionPush" >
+  <action name="action_Push" >
    <property name="icon" >
     <iconset resource="icons.qrc" >
      <normaloff>:/main/top.png</normaloff>:/main/top.png</iconset>
