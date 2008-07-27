@@ -70,7 +70,6 @@ void MainWindowImpl::showUnstaged()
 {
 	unstagedFilesView->show();
 	unstagedFilesView->expandAll();
-	//stageButton->show();
 }
 
 void MainWindowImpl::populateProjects()
@@ -159,7 +158,6 @@ void MainWindowImpl::writeSettings()
 	settings.setValue("size", size());
 	settings.setValue("pos", pos());
 	settings.setValue("horizontalSplitter1", horizontalSplitter1->saveState());
-//	settings.setValue("horizontalSplitter2_2", horizontalSplitter2_2->saveState());
 	settings.setValue("verticalSplitter1", verticalSplitter1->saveState());
 	settings.endGroup();
 	settings.beginGroup("Git");
@@ -181,11 +179,6 @@ void MainWindowImpl::readSettings()
      move(settings.value("pos", QPoint(200, 200)).toPoint());
      horizontalSplitter1->restoreState(settings.value("horizontalSplitter1").toByteArray());
      verticalSplitter1->restoreState(settings.value("verticalSplitter1").toByteArray());
-//     horizontalSplitter2_2->restoreState(settings.value("horizontalSplitter2_2").toByteArray());
-     QList<int> list;
-     list << 1;
-     list << 0;
-//     horizontalSplitter2_2->setSizes(list);
      settings.endGroup();
      settings.beginGroup("Git");
      gt->git->setGitBinaryPath(settings.value("gitbinary").toString());
