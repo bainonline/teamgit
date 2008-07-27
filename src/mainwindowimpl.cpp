@@ -103,7 +103,6 @@ void MainWindowImpl::showLogReset()
 
 void MainWindowImpl::setupConnections()
 {
-//	connect(pushButton,SIGNAL(clicked()),this,SLOT(testSlot()));
 
 	connect(action_Options,SIGNAL(triggered()),this,SLOT(settingsDialog()));
 	connect(action_New,SIGNAL(triggered()),this,SLOT(newProjectDialog()));
