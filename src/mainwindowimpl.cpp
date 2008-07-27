@@ -210,9 +210,9 @@ void MainWindowImpl::readSettings()
 
 void MainWindowImpl::initSettings()
 {
-	if(gSettings->teamGitWorkingDir == "notset") {
-		settingsDialog();
-	} 
+	//if(gSettings->teamGitWorkingDir == "notset") {
+	//	settingsDialog();
+	//} 
 }
 
 
