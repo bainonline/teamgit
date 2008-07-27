@@ -193,15 +193,7 @@ void GitProcess::pull(QString repo, QString branch, QString mergeStrategy)
 	emit initOutputDialog();
 	QByteArray array = runGit(args,false,true);
 	notifyOutputDialog(QString(array));	
-	while(state()) {
-		array = readAllStandardOutput();
-		if(array.size())
-			notifyOutputDialog(QString(array));
-		array = readAllStandardError();
-		if(array.size())
-			notifyOutputDialog(QString(array));
-		waitForFinished(100);
-	}
+	sendGitOutput();
 	emit doneOutputDialog();
 	emit notify("Ready");
 }
@@ -226,16 +218,7 @@ void GitProcess::clone(QString repo, QString target, QString refRepo,QString dir
 	emit initOutputDialog();
 	QByteArray array = runGit(args,false,true);
 	notifyOutputDialog(QString(array));	
-
-	while(state()) {
-		array = readAllStandardOutput();
-		if(array.size())
-			notifyOutputDialog(QString(array));
-		//array = readAllStandardError();
-		//if(array.size())
-			//notifyOutputDialog(QString(array));
-		waitForFinished(100);
-	}
+	sendGitOutput();
 	
 	emit cloneComplete(target);
 	emit notify("Ready");
@@ -430,15 +413,7 @@ void GitProcess::cherryPick(QString ref)
 	emit initOutputDialog();
 	QByteArray array = runGit(args,false,true);
 	notifyOutputDialog(QString(array));	
-	while(state()) {
-		array = readAllStandardOutput();
-		if(array.size())
-			notifyOutputDialog(QString(array));
-		array = readAllStandardError();
-		if(array.size())
-			notifyOutputDialog(QString(array));
-		waitForFinished(100);
-	}
+	sendGitOutput();
 	emit doneOutputDialog();
 	emit notify("Ready");
 	emit refresh();
@@ -500,3 +475,75 @@ void GitProcess::getTags()
 	emit progress(100);
 }
 
+void  GitProcess::checkout(QString ref)
+{
+	QStringList args;
+
+	args << "checkout";
+	args << ref;
+
+	emit notify("Checking out");
+	emit initOutputDialog();
+	QByteArray array = runGit(args,false,true);
+	notifyOutputDialog(QString(array));	
+	sendGitOutput();
+	emit doneOutputDialog();
+	emit notify("Ready");
+	emit refresh();
+}
+
+void  GitProcess::merge(QString ref)
+{
+	
+}
+
+void GitProcess::push()
+{
+	QStringList args;
+
+	args << "push";
+
+	emit notify("Checking out");
+	emit initOutputDialog();
+	QByteArray array = runGit(args,false,true);
+	notifyOutputDialog(QString(array));	
+	sendGitOutput();
+	emit doneOutputDialog();
+	emit notify("Ready");
+	emit refresh();
+}
+
+void GitProcess::sendGitOutput()
+{
+	QByteArray array;
+	while(state()) {
+		array = readAllStandardOutput();
+		if(array.size())
+			notifyOutputDialog(QString(array));
+		array = readAllStandardError();
+		if(array.size())
+			notifyOutputDialog(QString(array));
+		waitForFinished(100);
+	}
+	array = readAllStandardOutput();
+	if(array.size())
+		notifyOutputDialog(QString(array));
+	array = readAllStandardError();
+	if(array.size())
+		notifyOutputDialog(QString(array));
+}
+
+void GitProcess::newBranch(QString branch,QString ref)
+{
+	
+}
+
+void GitProcess::newRemoteBranch(QString repo)
+{
+	
+}
+
+void GitProcess::deleteBranch(QString branch)
+{
+	
+}

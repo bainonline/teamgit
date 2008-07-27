@@ -188,13 +188,13 @@ void MainWindowImpl::readSettings()
 	 QSettings settings(COMPANY, "Teamgit");
 
      settings.beginGroup("MainWindow");
-     resize(settings.value("size", QSize(400, 400)).toSize());
-     move(settings.value("pos", QPoint(200, 200)).toPoint());
+     resize(settings.value("size", QSize(800, 600)).toSize());
+     move(settings.value("pos", QPoint(200,200)).toPoint());
      horizontalSplitter1->restoreState(settings.value("horizontalSplitter1").toByteArray());
      verticalSplitter1->restoreState(settings.value("verticalSplitter1").toByteArray());
      settings.endGroup();
      settings.beginGroup("Git");
-     gt->git->setGitBinaryPath(settings.value("gitbinary").toString());
+     gt->git->setGitBinaryPath(settings.value("gitbinary",QString("/usr/bin/git")).toString());
      settings.endGroup();
      
 	settings.beginGroup("TeamGit");
@@ -264,7 +264,26 @@ void MainWindowImpl::newProjectDialog()
 
 void MainWindowImpl::checkoutSlot()
 {
-	
+	QModelIndex index = tagsView->selectionModel()->currentIndex();
+	if(index.isValid()) {
+		QMetaObject::invokeMethod(gt->git,"checkout",Qt::QueuedConnection,
+                           Q_ARG(QString,tagsModel->itemFromIndex(index)->text().trimmed()));
+	} else {
+		index = branchesView->selectionModel()->currentIndex();
+		if(index.isValid()){
+			QMetaObject::invokeMethod(gt->git,"checkout",Qt::QueuedConnection,
+									Q_ARG(QString,branchModel->itemFromIndex(index)->text().trimmed()));
+		} else  {
+			index = remoteBranchesView->selectionModel()->currentIndex();
+			if(index.isValid()) {
+				QString branch;
+				branch = remoteBranchesModel->filepath(index);
+				branch = branch.trimmed();
+				QMetaObject::invokeMethod(gt->git,"checkout",Qt::QueuedConnection,
+											Q_ARG(QString,branch));
+			}
+		}
+	}
 }
 
 
@@ -673,7 +692,6 @@ void MainWindowImpl::remoteBranchesViewClicked(const QModelIndex &index)
 	QString branch;
 	branch = remoteBranchesModel->filepath(index);
 	branch = branch.trimmed();
-	commit_diff->append(branch);
 	QMetaObject::invokeMethod(gt->git,"getNamedLog",Qt::QueuedConnection,
                            Q_ARG(QString,branch));
 }

@@ -44,6 +44,8 @@ Q_OBJECT
 
 	QString workingDir;
 	
+	void sendGitOutput();
+	
 	public:
 	GitProcess();
 
@@ -85,6 +87,14 @@ Q_OBJECT
 	void clone(QString,QString,QString,QString);
 	void pull();
 	void pull(QString,QString,QString);
+	void push();
+	
+	void checkout(QString);
+	void merge(QString);
+	
+	void newBranch(QString,QString);
+	void newRemoteBranch(QString);
+	void deleteBranch(QString);
 	
 	signals:
 	void logReceived(QString);
