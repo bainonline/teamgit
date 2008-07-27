@@ -1,6 +1,6 @@
 #ifndef __DEFS_H__
 #define __DEFS_H__
 
-#define COMPANY "BAINConsulting"
+#define COMPANY "www.devslashzero.com"
 
 #endif // __DEFS_H__
