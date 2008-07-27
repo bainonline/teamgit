@@ -288,12 +288,11 @@ void MainWindowImpl::checkoutSlot()
 	}
 }
 
-
 void MainWindowImpl::commitSlot()
 {
 	if(!stagedFilesView->isVisible())
 		return;
-	cmd->setAuthor(gSettings->userName,gSettings->userEmail);
+	cmd->init(gSettings->userName,gSettings->userEmail);
 	int ret = cmd->exec();
 	if( ret == QDialog::Accepted) {
 		QMetaObject::invokeMethod(gt->git,"commit",Qt::QueuedConnection,

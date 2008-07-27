@@ -9,8 +9,10 @@ CommitDialogImpl::CommitDialogImpl(QWidget *parent)
 	signofftext->hide();
 }
 
-void CommitDialogImpl::setAuthor(const QString &author,const QString &email)
+void CommitDialogImpl::init(const QString &author,const QString &email)
 {
+	commitMessage->selectAll();
+	commitMessage->setFocus();
 	author_name->setText(author);
 	author_email->setText(email);
 }

@@ -8,7 +8,7 @@ class CommitDialogImpl : public QDialog, public Ui::commitDialog
 {
 	public:
 		CommitDialogImpl(QWidget *parent = 0);
-		void setAuthor(const QString &author,const QString &email);
+		void init(const QString &author,const QString &email);
 		QString getCommitMessage();
 		QString getAuthorName() {
 			return author_name->text();
