@@ -74,6 +74,7 @@ Q_OBJECT
 	void getDiffCached(QString);
 	void getTags();
 	void getBranches();
+	void getRemoteBranches();
 	void getStatus();
 	void cherryPick(QString);
 	//void checkout(QString ref);
@@ -108,7 +109,8 @@ Q_OBJECT
 	void addDone();
 	void commitDone();
 	
-	void branchList(QString);
+	void branchList(QString);	
+	void remoteBranchesList(QString);
 	void tagList(QString);
 	
 	void filesStatus(QString);

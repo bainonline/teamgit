@@ -32,6 +32,7 @@ private:
 	QStandardItemModel *logModel;
 	QStandardItemModel *tagsModel;
 	QStandardItemModel *branchModel;
+	ProjectsModel *remoteBranchesModel;
 	
 	ProjectsModel *projectsModel;
 	ProjectsModel *stagedModel;
@@ -78,15 +79,19 @@ private slots:
 	void filesStatusReceived(QString);
 	
 	void branchListReceived(QString);
+	void remoteBranchListReceived(QString);
 	void tagsListReceived(QString);
 	
 	void branchesViewClicked(const QModelIndex &);
+	void remoteBranchesViewClicked(const QModelIndex &);
 	void tagsViewClicked(const QModelIndex &);
 	
 	void commitDetails(QStringList);
 	void fileDiffReceived(QString);
 	
 	void commitSlot();
+	
+	void checkoutSlot();
 	
 	void initOutputDialog();
 	void notifyOutputDialog(const QString &);

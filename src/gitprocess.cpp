@@ -462,6 +462,26 @@ void GitProcess::getBranches()
 	emit progress(100);
 }
 
+void GitProcess::getRemoteBranches()
+{
+	QStringList args;
+
+	emit notify("Gathering branches");
+	emit progress(0);
+	args << "branch";
+	args << "-r";
+
+	QByteArray array = runGit(args);
+	emit progress(50);
+	
+	QString branches(array);
+	emit remoteBranchesList(branches);
+
+	emit notify("Ready");
+	emit progress(100);
+}
+
+
 void GitProcess::getTags()
 {
 	QStringList args;

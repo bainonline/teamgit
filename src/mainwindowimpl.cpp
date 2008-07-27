@@ -41,6 +41,7 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 	logModel = NULL;
 	tagsModel=NULL;
 	branchModel=NULL;
+	remoteBranchesModel=NULL;
 	
 	hideLogReset();
 	hideStaged();
@@ -74,15 +75,17 @@ void MainWindowImpl::showUnstaged()
 
 void MainWindowImpl::populateProjects()
 {
-	projectsComboBox->clear();
-	QDir dir(gSettings->teamGitWorkingDir);
-	dir.setFilter(QDir::AllDirs);
-	QStringList filter;
-	QStringList projects = dir.entryList(filter);
-	for(int i = 0;i < projects.size();i++) {
-		if(projects.at(i) != "." && projects.at(i) != "..")
-			projectsComboBox->addItem(projects.at(i));
-	}
+	//{
+	//projectsComboBox->clear();	projectsComboBox->clear();
+	//QDir dir(gSettings->teamGitWorkingDir);	QDir dir(gSettings->teamGitWorkingDir);
+	//dir.setFilter(QDir::AllDirs);	dir.setFilter(QDir::AllDirs);
+	//QStringList filter;	QStringList filter;
+	//QStringList projects = dir.entryList(filter);	QStringList projects = dir.entryList(filter);
+	//for(int i = 0;i < projects.size();i++) {	for(int i = 0;i < projects.size();i++) {
+		//if(projects.at(i) != "." && projects.at(i) != "..")		if(projects.at(i) != "." && projects.at(i) != "..")
+			//projectsComboBox->addItem(projects.at(i));			projectsComboBox->addItem(projects.at(i));
+	//}	}
+	projectsComboBox->setVisible(false);
 }
 
 void MainWindowImpl::hideLogReset()
@@ -109,6 +112,7 @@ void MainWindowImpl::setupConnections()
 	connect(actionNew_Tag,SIGNAL(triggered()),this,SLOT(newTag()));
 	connect(action_CherryPick,SIGNAL(triggered()),this,SLOT(cherryPickSelectedCommit()));
 	connect(action_Commit,SIGNAL(triggered()),this,SLOT(commitSlot()));
+	connect(actionCheck_Out,SIGNAL(triggered()),this,SLOT(checkoutSlot()));
 	
 	connect(gt->git,SIGNAL(notify(const QString &)),this->statusBar(),SLOT(showMessage(const QString &)));
 	connect(gt->git,SIGNAL(progress(int)),this,SLOT(progress(int)));
@@ -129,6 +133,7 @@ void MainWindowImpl::setupConnections()
 	
 	connect(gt->git,SIGNAL(tagList(QString)),this,SLOT(tagsListReceived(QString)));
 	connect(gt->git,SIGNAL(branchList(QString)),this,SLOT(branchListReceived(QString)));
+	connect(gt->git,SIGNAL(remoteBranchesList(QString)),this,SLOT(remoteBranchListReceived(QString)));
 	
 	connect(logView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(logClicked(const QModelIndex &)));
 	connect(projectFilesView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(projectFilesViewClicked(const QModelIndex &)));
@@ -140,7 +145,7 @@ void MainWindowImpl::setupConnections()
 	connect(stagedFilesView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(stagedClicked(const QModelIndex &)));
 	connect(branchesView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(branchesViewClicked(const QModelIndex &)));
 	connect(tagsView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(tagsViewClicked(const QModelIndex &)));
-
+	connect(remoteBranchesView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(remoteBranchesViewClicked(const QModelIndex &)));
 }
 
 MainWindowImpl::~MainWindowImpl()
@@ -192,7 +197,7 @@ void MainWindowImpl::readSettings()
 	if(!gSettings->teamGitWorkingDir.endsWith("/")) {
 		gSettings->teamGitWorkingDir.append("/");
 	}
-	gSettings->currProjectPath = settings.value("current_project",QString("notset")).toString();
+	gSettings->currProjectPath = QString();//settings.value("current_project",QString("notset")).toString();
 	settings.endGroup();	
 	
 	GIT_INVOKE("getUserSettings");
@@ -230,6 +235,8 @@ void MainWindowImpl::refresh()
 	GIT_INVOKE("getStatus");
 	GIT_INVOKE("getTags");
 	GIT_INVOKE("getBranches");
+	GIT_INVOKE("getRemoteBranches");
+
 }
 
 void MainWindowImpl::checkWorkingDiff()
@@ -248,6 +255,13 @@ void MainWindowImpl::newProjectDialog()
                            Q_ARG(QString, gSettings->teamGitWorkingDir));
 	}
 }	
+
+
+void MainWindowImpl::checkoutSlot()
+{
+	
+}
+
 
 void MainWindowImpl::commitSlot()
 {
@@ -409,6 +423,14 @@ void MainWindowImpl::branchListReceived(QString branch)
 		branchModel->appendRow(item1);
 	}
 	branchesView->setModel(branchModel);
+}
+
+void MainWindowImpl::remoteBranchListReceived(QString branches)
+{
+	if(remoteBranchesModel)
+		delete remoteBranchesModel;
+	remoteBranchesModel = new ProjectsModel(branches,0,"Remote brnaches");
+	remoteBranchesView->setModel(remoteBranchesModel);
 }
 
 void MainWindowImpl::tagsListReceived(QString tags)
@@ -616,6 +638,9 @@ void MainWindowImpl::unstagedClicked(const QModelIndex &index)
 
 void MainWindowImpl::tagsViewClicked(const QModelIndex &index)
 {
+	branchesView->selectionModel()->clear();
+	remoteBranchesView->selectionModel()->clear();
+	
 	QString text = tagsModel->itemFromIndex(index)->text();
 	QMetaObject::invokeMethod(gt->git,"getNamedLog",Qt::QueuedConnection,
                            Q_ARG(QString,text));
@@ -623,6 +648,9 @@ void MainWindowImpl::tagsViewClicked(const QModelIndex &index)
 
 void MainWindowImpl::branchesViewClicked(const QModelIndex &index)
 {
+	remoteBranchesView->selectionModel()->clear();
+	tagsView->selectionModel()->clear();
+	
 	QString text = branchModel->itemFromIndex(index)->text();
 	if(text.startsWith("*")) {
 		resetLog();
@@ -633,6 +661,19 @@ void MainWindowImpl::branchesViewClicked(const QModelIndex &index)
 	QMetaObject::invokeMethod(gt->git,"getNamedLog",Qt::QueuedConnection,
                            Q_ARG(QString,text));
 }
+
+void MainWindowImpl::remoteBranchesViewClicked(const QModelIndex &index)
+{
+	branchesView->selectionModel()->clear();
+	tagsView->selectionModel()->clear();
+	QString branch;
+	branch = remoteBranchesModel->filepath(index);
+	branch = branch.trimmed();
+	commit_diff->append(branch);
+	QMetaObject::invokeMethod(gt->git,"getNamedLog",Qt::QueuedConnection,
+                           Q_ARG(QString,branch));
+}
+
 void MainWindowImpl::logClicked(const QModelIndex &index)
 {
 	QStandardItemModel *model = (QStandardItemModel *)logView->model();
