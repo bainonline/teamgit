@@ -11,8 +11,6 @@ SettingsImpl::SettingsImpl(QWidget *parent)
 {
 	setupUi(this);
 	connect(pickPathButton,SIGNAL(clicked()),this,SLOT(getFilePath()));
-	connect(pickWorkingDir,SIGNAL(clicked()),this,SLOT(getWorkingDirPath()));	
-	
 	gSettings = &GlobalSettings;//(gsettings *)malloc(sizeof(gsettings));
 }
 
@@ -32,6 +30,7 @@ QString SettingsImpl::getUserEmail()
 {
 	return userEmail->text();
 }
+
 void SettingsImpl::setGitBinaryPath(const QString &path)
 {
 	gitBinaryPath->setText(path);
@@ -54,22 +53,6 @@ void SettingsImpl::getFilePath()
 
 void SettingsImpl::getWorkingDirPath()
 {
-	QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
-                                                 "/home",
-                                                 QFileDialog::ShowDirsOnly
-                                                 | QFileDialog::DontResolveSymlinks);
-	if(!dir.isNull())
-    	teamGitWorkingDir->setText(dir);
-}
-
-void SettingsImpl::setTeamGitWorkingDir(const QString &dir)
-{
-	teamGitWorkingDir->setText(dir);
-}
-
-QString SettingsImpl::getTeamGitWorkingDir()
-{
-	return teamGitWorkingDir->text();
 }
 
 

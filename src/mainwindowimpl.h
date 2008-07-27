@@ -65,6 +65,7 @@ public:
 private slots:
 	void initSlot();
 	
+	void openRepo();
 	void refresh();
 	
 	void settingsDialog();

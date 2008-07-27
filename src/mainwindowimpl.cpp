@@ -7,6 +7,7 @@
 #include <QMetaType>
 #include <QMessageBox> 
 #include <QInputDialog>
+#include <QFileDialog>
 
 #include "defs.h"
 #include "mainwindowimpl.h"
@@ -111,6 +112,7 @@ void MainWindowImpl::setupConnections()
 	connect(action_CherryPick,SIGNAL(triggered()),this,SLOT(cherryPickSelectedCommit()));
 	connect(action_Commit,SIGNAL(triggered()),this,SLOT(commitSlot()));
 	connect(actionCheck_Out,SIGNAL(triggered()),this,SLOT(checkoutSlot()));
+	connect(action_Open,SIGNAL(triggered()),this,SLOT(openRepo()));
 	
 	connect(gt->git,SIGNAL(notify(const QString &)),this->statusBar(),SLOT(showMessage(const QString &)));
 	connect(gt->git,SIGNAL(progress(int)),this,SLOT(progress(int)));
@@ -151,6 +153,17 @@ MainWindowImpl::~MainWindowImpl()
 	writeSettings();
 }
 
+void MainWindowImpl::openRepo()
+{
+	QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
+												"/home",
+												QFileDialog::ShowDirsOnly
+												| QFileDialog::DontResolveSymlinks);
+	if(!dir.isNull())
+		gSettings->teamGitWorkingDir= dir;
+	refresh();
+}
+
 void MainWindowImpl::writeSettings()
 {
 	QSettings settings(COMPANY, "Teamgit");
@@ -186,9 +199,9 @@ void MainWindowImpl::readSettings()
      
 	settings.beginGroup("TeamGit");
 	gSettings->teamGitWorkingDir = settings.value("workspace",QString("notset")).toString();
-	if(!gSettings->teamGitWorkingDir.endsWith("/")) {
-		gSettings->teamGitWorkingDir.append("/");
-	}
+	//if(!gSettings->teamGitWorkingDir.endsWith("/")) {
+	//	gSettings->teamGitWorkingDir.append("/");
+	//}
 	gSettings->currProjectPath = QString();//settings.value("current_project",QString("notset")).toString();
 	settings.endGroup();	
 	
@@ -280,16 +293,15 @@ void MainWindowImpl::pullDialog()
 
 void MainWindowImpl::settingsDialog()
 {
-	sd->setTeamGitWorkingDir(gSettings->teamGitWorkingDir);
 	sd->setGitBinaryPath(gt->git->getGitBinaryPath());
 	sd->refreshUi();
 	int ret = sd->exec();
 	if( ret == QDialog::Accepted) {
 		gt->git->setGitBinaryPath(sd->getGitBinaryPath());
-		if(gSettings->teamGitWorkingDir != sd->getTeamGitWorkingDir()) {
-			gSettings->teamGitWorkingDir = sd->getTeamGitWorkingDir();
-			emit teamGitWorkingDirChanged(gSettings->teamGitWorkingDir);
-		}
+		//if(gSettings->teamGitWorkingDir != sd->getTeamGitWorkingDir()) {
+		//	gSettings->teamGitWorkingDir = sd->getTeamGitWorkingDir();
+		//	emit teamGitWorkingDirChanged(gSettings->teamGitWorkingDir);
+		//}
 		GIT_INVOKE("setUserSettings");
 	}
 }
