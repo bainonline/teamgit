@@ -66,7 +66,11 @@
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout" >
          <item>
-          <widget class="QComboBox" name="projectsComboBox" />
+          <widget class="QComboBox" name="projectsComboBox" >
+           <property name="enabled" >
+            <bool>true</bool>
+           </property>
+          </widget>
          </item>
          <item>
           <widget class="QSplitter" name="splitter" >
@@ -421,7 +425,7 @@
   </widget>
   <action name="action_New" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >
+    <iconset>
      <normaloff>:/main/add.png</normaloff>:/main/add.png</iconset>
    </property>
    <property name="text" >
@@ -430,7 +434,7 @@
   </action>
   <action name="action_Pull" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >
+    <iconset>
      <normaloff>:/main/bottom.png</normaloff>:/main/bottom.png</iconset>
    </property>
    <property name="text" >
@@ -439,7 +443,7 @@
   </action>
   <action name="action_Refresh" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >
+    <iconset>
      <normaloff>:/main/reload_page.png</normaloff>:/main/reload_page.png</iconset>
    </property>
    <property name="text" >
@@ -448,7 +452,7 @@
   </action>
   <action name="action_Options" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >
+    <iconset>
      <normaloff>:/main/configure.png</normaloff>:/main/configure.png</iconset>
    </property>
    <property name="text" >
@@ -457,7 +461,7 @@
   </action>
   <action name="action_CherryPick" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >
+    <iconset>
      <normaloff>:/main/today.png</normaloff>:/main/today.png</iconset>
    </property>
    <property name="text" >
@@ -466,7 +470,7 @@
   </action>
   <action name="action_Merge" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >
+    <iconset>
      <normaloff>:/main/bookmark_toolbar.png</normaloff>:/main/bookmark_toolbar.png</iconset>
    </property>
    <property name="text" >
@@ -480,7 +484,7 @@
   </action>
   <action name="actionAdd_Repositories" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >
+    <iconset>
      <normaloff>:/main/adept_install.png</normaloff>:/main/adept_install.png</iconset>
    </property>
    <property name="text" >
@@ -489,7 +493,7 @@
   </action>
   <action name="actionAdd_View" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >
+    <iconset>
      <normaloff>:/main/view_fit_window.png</normaloff>:/main/view_fit_window.png</iconset>
    </property>
    <property name="text" >
@@ -498,7 +502,7 @@
   </action>
   <action name="actionDelete_Repository" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >
+    <iconset>
      <normaloff>:/main/adept_remove.png</normaloff>:/main/adept_remove.png</iconset>
    </property>
    <property name="text" >
@@ -507,7 +511,7 @@
   </action>
   <action name="actionRemove_View" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >
+    <iconset>
      <normaloff>:/main/remove.png</normaloff>:/main/remove.png</iconset>
    </property>
    <property name="text" >
@@ -516,7 +520,7 @@
   </action>
   <action name="actionAbout" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >
+    <iconset>
      <normaloff>:/main/messagebox_info.png</normaloff>:/main/messagebox_info.png</iconset>
    </property>
    <property name="text" >
@@ -525,7 +529,7 @@
   </action>
   <action name="actionNew_Tag" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >
+    <iconset>
      <normaloff>:/main/rss_tag.png</normaloff>:/main/rss_tag.png</iconset>
    </property>
    <property name="text" >
@@ -534,7 +538,7 @@
   </action>
   <action name="actionNew_Branch" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >
+    <iconset>
      <normaloff>:/main/view_tree.png</normaloff>:/main/view_tree.png</iconset>
    </property>
    <property name="text" >
@@ -543,7 +547,7 @@
   </action>
   <action name="action_Delete_Branch" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >
+    <iconset>
      <normaloff>:/main/button_cancel.png</normaloff>:/main/button_cancel.png</iconset>
    </property>
    <property name="text" >
@@ -552,7 +556,7 @@
   </action>
   <action name="action_Remote_branches" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >
+    <iconset>
      <normaloff>:/main/view_sidetree.png</normaloff>:/main/view_sidetree.png</iconset>
    </property>
    <property name="text" >
@@ -561,7 +565,7 @@
   </action>
   <action name="actionPush" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >
+    <iconset>
      <normaloff>:/main/top.png</normaloff>:/main/top.png</iconset>
    </property>
    <property name="text" >
@@ -570,7 +574,7 @@
   </action>
   <action name="action_Commit" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >
+    <iconset>
      <normaloff>:/main/adept_commit.png</normaloff>:/main/adept_commit.png</iconset>
    </property>
    <property name="text" >
@@ -579,7 +583,7 @@
   </action>
   <action name="actionCheck_Out" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >
+    <iconset>
      <normaloff>:/main/presence_online.png</normaloff>:/main/presence_online.png</iconset>
    </property>
    <property name="text" >
@@ -588,7 +592,7 @@
   </action>
   <action name="action_Open" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >
+    <iconset>
      <normaloff>:/main/fileopen.png</normaloff>:/main/fileopen.png</iconset>
    </property>
    <property name="text" >
