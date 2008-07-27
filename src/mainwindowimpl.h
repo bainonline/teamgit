@@ -114,6 +114,9 @@ private slots:
 	
 	void newTag();
 	void cherryPickSelectedCommit();
+	
+	void pushSlot();
+	
 signals:
 	void test();
 	void teamGitWorkingDirChanged(const QString &newDir);

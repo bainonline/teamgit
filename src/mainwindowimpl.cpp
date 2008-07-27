@@ -113,6 +113,8 @@ void MainWindowImpl::setupConnections()
 	connect(action_Commit,SIGNAL(triggered()),this,SLOT(commitSlot()));
 	connect(actionCheck_Out,SIGNAL(triggered()),this,SLOT(checkoutSlot()));
 	connect(action_Open,SIGNAL(triggered()),this,SLOT(openRepo()));
+	connect(action_Push,SIGNAL(triggered()),this,SLOT(pushSlot()));
+
 	
 	connect(gt->git,SIGNAL(notify(const QString &)),this->statusBar(),SLOT(showMessage(const QString &)));
 	connect(gt->git,SIGNAL(progress(int)),this,SLOT(progress(int)));
@@ -761,6 +763,11 @@ void MainWindowImpl::cherryPickSelectedCommit()
                            Q_ARG(QString,model->item(item->row(),3)->text()));
 }
 
+
+void MainWindowImpl::pushSlot()
+{
+	GIT_INVOKE("push");
+}
 //Used for connecting random things while devloping,
 //Usefull if you want to pop a dialog for debug from git thread etc.
 void MainWindowImpl::testSlot()
