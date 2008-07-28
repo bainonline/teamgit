@@ -114,8 +114,10 @@ void MainWindowImpl::setupConnections()
 	connect(actionCheck_Out,SIGNAL(triggered()),this,SLOT(checkoutSlot()));
 	connect(action_Open,SIGNAL(triggered()),this,SLOT(openRepo()));
 	connect(action_Push,SIGNAL(triggered()),this,SLOT(pushSlot()));
+	connect(action_New_Branch,SIGNAL(triggered()),this,SLOT(newBranchSlot()));
+	connect(action_Delete_Branch,SIGNAL(triggered()),this,SLOT(deleteBranchSlot()));
+	connect(action_Push,SIGNAL(triggered()),this,SLOT(newRemoteBranchSlot()));
 
-	
 	connect(gt->git,SIGNAL(notify(const QString &)),this->statusBar(),SLOT(showMessage(const QString &)));
 	connect(gt->git,SIGNAL(progress(int)),this,SLOT(progress(int)));
 	connect(gt->git,SIGNAL(logReceived(QString)),this,SLOT(logReceived(QString)));
@@ -767,6 +769,23 @@ void MainWindowImpl::pushSlot()
 {
 	GIT_INVOKE("push");
 }
+
+
+void MainWindowImpl::newBranchSlot()
+{
+	
+}
+
+void MainWindowImpl::deleteBranchSlot()
+{
+	
+}
+
+void MainWindowImpl::newRemoteBranchSlot()
+{
+	
+}
+
 //Used for connecting random things while devloping,
 //Usefull if you want to pop a dialog for debug from git thread etc.
 void MainWindowImpl::testSlot()

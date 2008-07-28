@@ -117,6 +117,10 @@ private slots:
 	
 	void pushSlot();
 	
+	void newBranchSlot();
+	void deleteBranchSlot();
+	void newRemoteBranchSlot();
+	
 signals:
 	void test();
 	void teamGitWorkingDirChanged(const QString &newDir);
