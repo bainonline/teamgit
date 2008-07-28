@@ -364,7 +364,7 @@
      <string>&amp;Tools</string>
     </property>
     <addaction name="actionNew_Tag" />
-    <addaction name="actionNew_Branch" />
+    <addaction name="action_New_Branch" />
     <addaction name="action_Delete_Branch" />
     <addaction name="action_Pull" />
     <addaction name="action_Push" />
@@ -420,8 +420,8 @@
    <addaction name="action_Merge" />
    <addaction name="separator" />
    <addaction name="actionNew_Tag" />
-   <addaction name="actionNew_Branch" />
-   <addaction name="action_Remote_branches" />
+   <addaction name="action_New_Branch" />
+   <addaction name="action_New_Remote_branch" />
    <addaction name="action_Delete_Branch" />
    <addaction name="separator" />
    <addaction name="action_Pull" />
@@ -542,7 +542,7 @@
     <string>New &amp;Tag</string>
    </property>
   </action>
-  <action name="actionNew_Branch" >
+  <action name="action_New_Branch" >
    <property name="icon" >
     <iconset resource="icons.qrc" >
      <normaloff>:/main/view_tree.png</normaloff>:/main/view_tree.png</iconset>
@@ -560,7 +560,7 @@
     <string>&amp;Delete Branch</string>
    </property>
   </action>
-  <action name="action_Remote_branches" >
+  <action name="action_New_Remote_branch" >
    <property name="icon" >
     <iconset resource="icons.qrc" >
      <normaloff>:/main/view_sidetree.png</normaloff>:/main/view_sidetree.png</iconset>
