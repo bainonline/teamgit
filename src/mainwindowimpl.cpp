@@ -22,6 +22,9 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 {
 	setupUi(this);
 	
+	delete commit_diff1;
+	commit_diff = new DiffViewer(this);
+	hboxLayout5->addWidget(commit_diff);
 	setWindowIcon(QIcon(":/main/icon.png"));
 	gt = new GitThread();
 	gt->start();
@@ -151,6 +154,7 @@ void MainWindowImpl::setupConnections()
 	connect(branchesView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(branchesViewClicked(const QModelIndex &)));
 	connect(tagsView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(tagsViewClicked(const QModelIndex &)));
 	connect(remoteBranchesView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(remoteBranchesViewClicked(const QModelIndex &)));
+	
 }
 
 MainWindowImpl::~MainWindowImpl()

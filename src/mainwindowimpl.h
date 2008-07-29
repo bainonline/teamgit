@@ -12,7 +12,7 @@
 #include "outputdialogimpl.h"
 #include "projectsmodel.h"
 #include "commitdialogimpl.h"
-
+#include "diffviewer.h"
 //
 
 #define GIT_INVOKE(action_slot)	\
@@ -27,6 +27,7 @@ class MainWindowImpl : public QMainWindow, public Ui::MainWindow
 Q_OBJECT
 private:
 	
+	DiffViewer *commit_diff;
 	SettingsImpl *sd;
 	NewProjectImpl *npd;
 	QStandardItemModel *logModel;
