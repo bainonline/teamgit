@@ -187,7 +187,7 @@
           <enum>QTabWidget::Triangular</enum>
          </property>
          <property name="currentIndex" >
-          <number>0</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="tab_3" >
           <attribute name="title" >
@@ -265,7 +265,7 @@
           </attribute>
           <layout class="QHBoxLayout" >
            <item>
-            <widget class="QTextEdit" name="commit_diff" >
+            <widget class="QTextEdit" name="commit_diff1" >
              <property name="readOnly" >
               <bool>true</bool>
              </property>
