@@ -4,7 +4,7 @@ CONFIG += qt \
  warn_on \
  console \
  build_all \
- release
+ debug_and_release
 DESTDIR = bin
 OBJECTS_DIR = build
 MOC_DIR = build
@@ -26,7 +26,8 @@ HEADERS = src/mainwindowimpl.h \
  src/kpty_p.h \
  src/kpty.h \
  src/projectsmodel.h \
- src/commitdialogimpl.h
+ src/commitdialogimpl.h \
+ src/diffviewer.h
 SOURCES = src/mainwindowimpl.cpp \
  src/main.cpp \
  src/gitprocess.cpp \
@@ -36,7 +37,8 @@ SOURCES = src/mainwindowimpl.cpp \
  src/outputdialogimpl.cpp \
  src/kpty.cpp \
  src/projectsmodel.cpp \
- src/commitdialogimpl.cpp
+ src/commitdialogimpl.cpp \
+ src/diffviewer.cpp
 RESOURCES += ui/icons.qrc
-target.path=/usr/bin
-INSTALLS+=target
+target.path = /usr/bin
+INSTALLS += target
