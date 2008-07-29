@@ -88,6 +88,7 @@ Q_OBJECT
 	void pull();
 	void pull(QString,QString,QString);
 	void push();
+	void fetch(QString);
 	
 	void checkout(QString);
 	void merge(QString);

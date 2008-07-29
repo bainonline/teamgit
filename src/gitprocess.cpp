@@ -554,7 +554,8 @@ void GitProcess::newBranch(QString branch,QString ref)
 	emit progress(0);
 	args << "branch";
 	args << branch;
-	args << ref;
+	if(!ref.isEmpty())
+		args << ref;
 	
 	QByteArray array = runGit(args);
 	emit progress(100);
@@ -569,9 +570,10 @@ void GitProcess::newRemoteBranch(QString name,QString repo)
 	
 	QStringList args;
 	
-	emit notify("Creating new branch");
+	emit notify("Creating new remote branch");
 	emit progress(0);
-	args << "branch";
+	args << "remote";
+	args << "add";
 	args << name;
 	args << repo;
 	
@@ -587,7 +589,7 @@ void GitProcess::deleteBranch(QString branch)
 {
 	QStringList args;
 	
-	emit notify("Creating new branch");
+	emit notify("Deleting branch");
 	emit progress(0);
 	args << "branch";
 	args << "-d";
@@ -599,4 +601,20 @@ void GitProcess::deleteBranch(QString branch)
 	emit refresh();
 	emit notify("Ready");
 	emit progress(100);
+}
+
+void GitProcess::fetch(QString ref)
+{
+	QStringList args;
+	
+	emit notify("fetching");
+	args << "fetch";
+	args << ref;
+	
+	emit initOutputDialog();
+	QByteArray array = runGit(args,false,true);
+	notifyOutputDialog(QString(array));	
+	sendGitOutput();
+	emit doneOutputDialog();
+	emit notify("Ready");
 }

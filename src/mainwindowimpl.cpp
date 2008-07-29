@@ -116,8 +116,9 @@ void MainWindowImpl::setupConnections()
 	connect(action_Push,SIGNAL(triggered()),this,SLOT(pushSlot()));
 	connect(action_New_Branch,SIGNAL(triggered()),this,SLOT(newBranchSlot()));
 	connect(action_Delete_Branch,SIGNAL(triggered()),this,SLOT(deleteBranchSlot()));
-	connect(action_Push,SIGNAL(triggered()),this,SLOT(newRemoteBranchSlot()));
-
+	connect(action_New_Remote_branch,SIGNAL(triggered()),this,SLOT(newRemoteBranchSlot()));
+	connect(action_Fetch_Remote_Branch,SIGNAL(triggered()),this,SLOT(fetchRemoteBranchSlot()));
+	
 	connect(gt->git,SIGNAL(notify(const QString &)),this->statusBar(),SLOT(showMessage(const QString &)));
 	connect(gt->git,SIGNAL(progress(int)),this,SLOT(progress(int)));
 	connect(gt->git,SIGNAL(logReceived(QString)),this,SLOT(logReceived(QString)));
@@ -773,22 +774,101 @@ void MainWindowImpl::pushSlot()
 
 void MainWindowImpl::newBranchSlot()
 {
-	
+	QString ref;
+	QModelIndex index = tagsView->selectionModel()->currentIndex();
+	if(index.isValid()) {
+		ref=tagsModel->itemFromIndex(index)->text().trimmed();
+	} else {
+		index = branchesView->selectionModel()->currentIndex();
+		if(index.isValid()){
+			ref=branchModel->itemFromIndex(index)->text().trimmed();
+			if(ref.startsWith("*")) {
+				ref = QString();
+			}
+		} else  {
+			index = remoteBranchesView->selectionModel()->currentIndex();
+			if(index.isValid()) {
+				ref = remoteBranchesModel->filepath(index);
+				ref = ref.trimmed();
+			}
+		}
+	}
+	bool ok;
+	QString branch = QInputDialog::getText(this, tr("Add New Branch"),
+										tr("Please enter the branch name :"), QLineEdit::Normal,
+										"", &ok);
+	if(ok) {
+		QMetaObject::invokeMethod(gt->git,"newBranch",Qt::QueuedConnection,
+								Q_ARG(QString,branch),
+								Q_ARG(QString,ref));
+		GIT_INVOKE("getBranch");
+	}
 }
 
 void MainWindowImpl::deleteBranchSlot()
 {
-	
+	QString branch;
+	QModelIndex index = branchesView->selectionModel()->currentIndex();
+	if(index.isValid()){
+		branch=branchModel->itemFromIndex(index)->text().trimmed();
+		if(branch.startsWith("*")) {
+			return;
+		}
+		branch.trimmed();
+	}
+	 int ret = QMessageBox::warning(this, tr("TeamGit"),
+							"The branch " + branch + " will be deleted\n Do you want to continue?",
+							QMessageBox::Ok | QMessageBox::Cancel,
+							QMessageBox::Cancel);
+	if(ret == QMessageBox::Ok )
+		QMetaObject::invokeMethod(gt->git,"deleteBranch",Qt::QueuedConnection,
+								Q_ARG(QString,branch));
 }
 
 void MainWindowImpl::newRemoteBranchSlot()
 {
+	bool ok;
+	QString branch = QInputDialog::getText(this, tr("Add New Remote branch"),
+										tr("Please enter the branch name (for local referece):"), QLineEdit::Normal,
+										"", &ok);
+	if(!ok) 
+		return;
+
+	QString url = QInputDialog::getText(this, tr("Add New Remote branch"),
+									tr("Please enter the branch url:"), QLineEdit::Normal,
+									"", &ok);
+	url=url.trimmed();
+	if(!ok) 
+		return;
+		
+	QMetaObject::invokeMethod(gt->git,"newRemoteBranch",Qt::QueuedConnection,
+							Q_ARG(QString,branch),
+							Q_ARG(QString,url));
 	
+	QMetaObject::invokeMethod(gt->git,"fetch",Qt::QueuedConnection,
+							Q_ARG(QString,branch));
+	GIT_INVOKE("getRemoteBranches");
+}
+
+void MainWindowImpl::fetchRemoteBranchSlot()
+{
+	QString branch;
+	QModelIndex index = remoteBranchesView->selectionModel()->currentIndex();
+	if(index.isValid()) {
+		branch = remoteBranchesModel->filepath(index);
+		branch = branch.trimmed();
+		if(branch.indexOf("/") >= 0)
+			branch.remove(branch.indexOf("/"),branch.size()-branch.indexOf("/"));
+		QMetaObject::invokeMethod(gt->git,"fetch",Qt::QueuedConnection,
+							Q_ARG(QString,branch));
+		GIT_INVOKE("getRemoteBranches");
+	}
 }
 
 //Used for connecting random things while devloping,
 //Usefull if you want to pop a dialog for debug from git thread etc.
 void MainWindowImpl::testSlot()
 {
+	
 }
 //

@@ -116,7 +116,7 @@ private slots:
 	void cherryPickSelectedCommit();
 	
 	void pushSlot();
-	
+	void fetchRemoteBranchSlot();
 	void newBranchSlot();
 	void deleteBranchSlot();
 	void newRemoteBranchSlot();
