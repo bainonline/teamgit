@@ -151,9 +151,9 @@ void MainWindowImpl::setupConnections()
 	connect(stagedFilesView,SIGNAL(doubleClicked(const QModelIndex &)),this,SLOT(stagedDoubleClicked(const QModelIndex &)));
 	connect(unstagedFilesView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(unstagedClicked(const QModelIndex &)));
 	connect(stagedFilesView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(stagedClicked(const QModelIndex &)));
-	connect(branchesView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(branchesViewClicked(const QModelIndex &)));
-	connect(tagsView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(tagsViewClicked(const QModelIndex &)));
-	connect(remoteBranchesView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(remoteBranchesViewClicked(const QModelIndex &)));
+	connect(branchesView,SIGNAL(doubleClicked(const QModelIndex &)),this,SLOT(branchesViewClicked(const QModelIndex &)));
+	connect(tagsView,SIGNAL(doubleClicked(const QModelIndex &)),this,SLOT(tagsViewClicked(const QModelIndex &)));
+	connect(remoteBranchesView,SIGNAL(doubleClicked(const QModelIndex &)),this,SLOT(remoteBranchesViewClicked(const QModelIndex &)));
 	
 }
 
