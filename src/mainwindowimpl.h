@@ -43,6 +43,7 @@ private:
 	CommitDialogImpl *cmd;
 	
 	void readSettings();
+	void checkAndSetWorkingDir(QString dir);
 	void writeSettings();
 	void setupConnections();
 	void initSettings();

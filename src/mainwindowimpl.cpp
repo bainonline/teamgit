@@ -50,8 +50,26 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 	hideLogReset();
 	hideStaged();
 	hideUnstaged();
+	
+	QStringList args = QCoreApplication::arguments ();
+	if(args.size() > 1) {
+		//Check the first argument and see if its a git directory
+		checkAndSetWorkingDir(args[1]);
+	} else {
+		//Check if working directory is a git repo
+		checkAndSetWorkingDir(QDir::currentPath());
+	} //else the last path is already loaded
+		
 }
 
+void MainWindowImpl::checkAndSetWorkingDir(QString dir)
+{
+	QString gitPath = dir + "/.git";
+	QDir gitDir(gitPath);
+	if(gitDir.exists()) {
+		gSettings->teamGitWorkingDir = dir;
+	}
+}
 
 void MainWindowImpl::hideStaged()
 {
