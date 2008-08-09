@@ -57,7 +57,6 @@ private:
 	void showLogReset();
 	void populateProjects();
 	QStandardItemModel *parseLog2Model(QString log);
-	void setDiffText(QString diff);
 	
 public:
 	GitThread *gt;

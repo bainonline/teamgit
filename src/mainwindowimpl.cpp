@@ -526,7 +526,7 @@ QStandardItemModel *MainWindowImpl::parseLog2Model(QString log)
 	return model;
 }
 
-#define DIFF_LIMIT (1024 * 1024)
+
 void MainWindowImpl::commitDetails(QStringList cd)
 {
 	commit_author->setText(cd[1].remove(0,8));
@@ -540,69 +540,8 @@ void MainWindowImpl::fileDiffReceived(QString diff)
 	commit_author->clear();
 	commit_date->clear();
 	commit_log->clear();
-	setDiffText(diff);
+	commit_diff->setDiffText(diff);
 	commitLogTabs->setCurrentIndex(1);
-}
-
-
-void MainWindowImpl::setDiffText(QString diff)
-{
-	commit_diff->clear();
-	
-	if(diff.size() > DIFF_LIMIT) {
-		diff.remove(DIFF_LIMIT,diff.size()-(DIFF_LIMIT));
-		diff.append("\n- Commit too huge: trimmed!");
-	}
-	QStringList diffLines=diff.split(QChar('\n'));
-	 
-	for (int i = 0; i < diffLines.size(); ++i) {
-		QString line = diffLines.at(i);
-		/* preprocess */
-		if(line.startsWith("+")) {
-			commit_diff->setTextColor(QColor("darkgreen"));
-		} else if (line.startsWith("-")){
-			commit_diff->setTextColor(QColor("darkred"));
-	 	} else if (line.startsWith("@@")){
-			commit_diff->setTextColor(QColor("blue"));
-		} else if (line.startsWith("commit")){
-			commit_diff->clear();
-			commit_diff->setFontWeight(QFont::Bold);
-		} else if (line.startsWith("Author:")){
-			commit_diff->setFontWeight(QFont::Bold);
-		} else if (line.startsWith("Date:")){
-			commit_diff->setFontWeight(QFont::Bold);
-		} else if (line.startsWith("diff")){
-			commit_diff->setFontWeight(QFont::Bold);
-		} else if (line.startsWith("index")){
-			commit_diff->setFontWeight(QFont::Bold);
-		} 
-
-		commit_diff->append(line);
-	
-		/* post process */
-		if(line.startsWith("+")) {
-			commit_diff->setTextColor(QColor("black"));
-		} else if (line.startsWith("-")){
-			commit_diff->setTextColor(QColor("black"));
-	 	} else if (line.startsWith("@@")){
-			commit_diff->setTextColor(QColor("black"));
-		} else if (line.startsWith("commit")){
-			commit_diff->setFontWeight(QFont::Normal);
-		} else if (line.startsWith("Author:")){
-			commit_diff->setFontWeight(QFont::Normal);
-		} else if (line.startsWith("Date:")){
-			commit_diff->setFontWeight(QFont::Normal);
-			commit_diff->insertPlainText("\n");
-		} else if (line.startsWith("diff")){
-			commit_diff->setFontWeight(QFont::Normal);
-		} else if (line.startsWith("index")){
-			commit_diff->setFontWeight(QFont::Normal);
-		}
-	}
-	QTextCursor cursor = commit_diff->textCursor();
-	cursor.movePosition(QTextCursor::Start);
-	commit_diff->setTextCursor(cursor);
-	commit_diff->ensureCursorVisible ();
 }
 
 //test
