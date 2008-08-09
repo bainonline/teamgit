@@ -24,6 +24,9 @@ void DiffViewer::setDiffText(QString diff)
 	}
 	QStringList diffLines=diff.split(QChar('\n'));
 	 
+	setTextColor(QColor("black"));
+	setFontWeight(QFont::Normal);
+	
 	for (int i = 0; i < diffLines.size(); ++i) {
 		QString line = diffLines.at(i);
 		/* preprocess */
@@ -47,26 +50,8 @@ void DiffViewer::setDiffText(QString diff)
 		} 
 
 		append(line);
-	
-		/* post process */
-		if(line.startsWith("+")) {
-			setTextColor(QColor("black"));
-		} else if (line.startsWith("-")){
-			setTextColor(QColor("black"));
-	 	} else if (line.startsWith("@@")){
-			setTextColor(QColor("black"));
-		} else if (line.startsWith("commit")){
-			setFontWeight(QFont::Normal);
-		} else if (line.startsWith("Author:")){
-			setFontWeight(QFont::Normal);
-		} else if (line.startsWith("Date:")){
-			setFontWeight(QFont::Normal);
-			insertPlainText("\n");
-		} else if (line.startsWith("diff")){
-			setFontWeight(QFont::Normal);
-		} else if (line.startsWith("index")){
-			setFontWeight(QFont::Normal);
-		}
+		setTextColor(QColor("black"));
+		setFontWeight(QFont::Normal);
 	}
 	QTextCursor cursor = textCursor();
 	cursor.movePosition(QTextCursor::Start);
