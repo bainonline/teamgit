@@ -96,16 +96,6 @@ void MainWindowImpl::showUnstaged()
 
 void MainWindowImpl::populateProjects()
 {
-	//{
-	//projectsComboBox->clear();	projectsComboBox->clear();
-	//QDir dir(gSettings->teamGitWorkingDir);	QDir dir(gSettings->teamGitWorkingDir);
-	//dir.setFilter(QDir::AllDirs);	dir.setFilter(QDir::AllDirs);
-	//QStringList filter;	QStringList filter;
-	//QStringList projects = dir.entryList(filter);	QStringList projects = dir.entryList(filter);
-	//for(int i = 0;i < projects.size();i++) {	for(int i = 0;i < projects.size();i++) {
-		//if(projects.at(i) != "." && projects.at(i) != "..")		if(projects.at(i) != "." && projects.at(i) != "..")
-			//projectsComboBox->addItem(projects.at(i));			projectsComboBox->addItem(projects.at(i));
-	//}	}
 	projectsComboBox->setVisible(false);
 }
 
@@ -226,10 +216,7 @@ void MainWindowImpl::readSettings()
      
 	settings.beginGroup("TeamGit");
 	gSettings->teamGitWorkingDir = settings.value("workspace",QString("notset")).toString();
-	//if(!gSettings->teamGitWorkingDir.endsWith("/")) {
-	//	gSettings->teamGitWorkingDir.append("/");
-	//}
-	gSettings->currProjectPath = QString();//settings.value("current_project",QString("notset")).toString();
+	gSettings->currProjectPath = QString();
 	settings.endGroup();	
 	
 	GIT_INVOKE("getUserSettings");
@@ -237,9 +224,7 @@ void MainWindowImpl::readSettings()
 
 void MainWindowImpl::initSettings()
 {
-	//if(gSettings->teamGitWorkingDir == "notset") {
-	//	settingsDialog();
-	//} 
+
 }
 
 
@@ -343,10 +328,6 @@ void MainWindowImpl::settingsDialog()
 	int ret = sd->exec();
 	if( ret == QDialog::Accepted) {
 		gt->git->setGitBinaryPath(sd->getGitBinaryPath());
-		//if(gSettings->teamGitWorkingDir != sd->getTeamGitWorkingDir()) {
-		//	gSettings->teamGitWorkingDir = sd->getTeamGitWorkingDir();
-		//	emit teamGitWorkingDirChanged(gSettings->teamGitWorkingDir);
-		//}
 		GIT_INVOKE("setUserSettings");
 	}
 }
