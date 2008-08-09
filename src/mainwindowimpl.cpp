@@ -8,6 +8,8 @@
 #include <QMessageBox> 
 #include <QInputDialog>
 #include <QFileDialog>
+#include <QTextBlock>
+#include <QTextDocumentFragment>
 
 #include "defs.h"
 #include "mainwindowimpl.h"
@@ -140,8 +142,9 @@ void MainWindowImpl::setupConnections()
 	connect(gt->git,SIGNAL(cloneComplete(QString)),this,SLOT(cloneComplete(QString)));
 	connect(gt->git,SIGNAL(filesStatus(QString)),this,SLOT(filesStatusReceived(QString)));
 	connect(gt->git,SIGNAL(commitDone()),this,SLOT(refresh()));
-	connect(gt->git,SIGNAL(fileDiff(QString)),this,SLOT(fileDiffReceived(QString)));
+	connect(gt->git,SIGNAL(fileDiff(QString,int)),this,SLOT(fileDiffReceived(QString,int)));
 	connect(gt->git,SIGNAL(refresh()),this,SLOT(refresh()));
+	connect(gt->git,SIGNAL(patchApplied()),this,SLOT(patchApplied()));
 
 	connect(gt->git,SIGNAL(initOutputDialog()),this,SLOT(initOutputDialog()));
 	connect(gt->git,SIGNAL(notifyOutputDialog(const QString &)),this,SLOT(notifyOutputDialog(const QString &)));
@@ -162,6 +165,7 @@ void MainWindowImpl::setupConnections()
 	connect(branchesView,SIGNAL(doubleClicked(const QModelIndex &)),this,SLOT(branchesViewClicked(const QModelIndex &)));
 	connect(tagsView,SIGNAL(doubleClicked(const QModelIndex &)),this,SLOT(tagsViewClicked(const QModelIndex &)));
 	connect(remoteBranchesView,SIGNAL(doubleClicked(const QModelIndex &)),this,SLOT(remoteBranchesViewClicked(const QModelIndex &)));
+	connect(commit_diff,SIGNAL(doubleClicked()),this,SLOT(diffDoubleClicked()));
 	
 }
 
@@ -533,16 +537,38 @@ void MainWindowImpl::commitDetails(QStringList cd)
 	commit_date->setText(cd[2].remove(0,6));
 	commit_log->setText(cd[3]);
 	QString diff=cd.at(4);
-	setDiffText(diff);
+	commit_diff->setDiffText(diff);
+	commit_diff->setDiffType(commitDiff);
 }
-void MainWindowImpl::fileDiffReceived(QString diff)
+
+void MainWindowImpl::fileDiffReceived(QString diff,int type)
 {
 	commit_author->clear();
 	commit_date->clear();
 	commit_log->clear();
 	commit_diff->setDiffText(diff);
 	commitLogTabs->setCurrentIndex(1);
+	commit_diff->setDiffType(type);
 }
+
+void MainWindowImpl::diffDoubleClicked()
+{
+	if(!commit_diff->getDiffType()) {
+		return;
+	}
+	QString patch;
+	patch.append(commit_diff->document()->findBlockByNumber(0).text());
+	patch.append("\n");
+	patch.append(commit_diff->document()->findBlockByNumber(1).text());
+	patch.append("\n");
+	patch.append(commit_diff->document()->findBlockByNumber(2).text());
+	patch.append("\n");
+	patch.append(commit_diff->document()->findBlockByNumber(3).text());
+	patch.append("\n");
+	patch.append(commit_diff->textCursor().selection().toPlainText());
+	QMetaObject::invokeMethod(gt->git,"stageHunk",Qt::QueuedConnection,
+                           Q_ARG(QString,patch));
+ }
 
 //test
 void MainWindowImpl::progress(int i)
@@ -671,6 +697,7 @@ void MainWindowImpl::projectFilesViewClicked(const QModelIndex &index)
 	QMetaObject::invokeMethod(gt->git,"getNamedLog",Qt::QueuedConnection,
                            Q_ARG(QString,text));
 }
+
 void MainWindowImpl::projectsComboBoxActivated(int index)
 {
 	gSettings->currProjectPath=projectsComboBox->itemText(index);
@@ -805,6 +832,13 @@ void MainWindowImpl::fetchRemoteBranchSlot()
 							Q_ARG(QString,branch));
 		GIT_INVOKE("getRemoteBranches");
 	}
+}
+
+void MainWindowImpl::patchApplied()
+{
+	QModelIndex index = unstagedFilesView->selectionModel()->currentIndex();
+	unstagedClicked(index);
+	GIT_INVOKE("getStatus");
 }
 
 //Used for connecting random things while devloping,

@@ -89,7 +89,7 @@ private slots:
 	void tagsViewClicked(const QModelIndex &);
 	
 	void commitDetails(QStringList);
-	void fileDiffReceived(QString);
+	void fileDiffReceived(QString,int);
 	
 	void commitSlot();
 	
@@ -106,6 +106,8 @@ private slots:
 	void stagedClicked(const QModelIndex &index);
 	void unstagedClicked(const QModelIndex &index);
 	
+	void diffDoubleClicked();
+	
 	void logClicked(const QModelIndex &);
 	void projectFilesViewClicked(const QModelIndex &);
 	void projectsComboBoxActivated(int);
@@ -121,6 +123,8 @@ private slots:
 	void newBranchSlot();
 	void deleteBranchSlot();
 	void newRemoteBranchSlot();
+	
+	void patchApplied();
 	
 signals:
 	void test();

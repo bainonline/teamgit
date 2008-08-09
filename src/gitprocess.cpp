@@ -121,8 +121,8 @@ void GitProcess::stageFiles(QStringList files)
 
 void GitProcess::stageHunk(QString hunk)
 {
-	QTemporaryFile file;
- 	if (file.open()) {
+	QFile file("/tmp/teamgitpatchdonotcreateafilelikethis");
+ 	if (file.open(QIODevice::ReadWrite)) {
 		QTextStream stream( &file );
         	stream << hunk;
 	}
@@ -130,14 +130,12 @@ void GitProcess::stageHunk(QString hunk)
 	QStringList args;
 	
 	args << "apply";
-	args << "--index";
 	args << "--cached";
 	args << file.fileName();
 	
 	runGit(args);
-	
-     // the QTemporaryFile destructor removes the temporary file
-     emit patchApplied();
+	file.remove();
+	emit patchApplied();
 }
 
 //Used to unstage all staged changes
@@ -283,7 +281,7 @@ void GitProcess::getDiffCached(QString file)
 	args << file;
 	QByteArray array = runGit(args);
 	QString diff(array);
-	emit fileDiff(diff);
+	emit fileDiff(diff,stagedDiff);
 
 }
 
@@ -295,7 +293,7 @@ void GitProcess::getDiff(QString file)
 	args << file;
 	QByteArray array = runGit(args);
 	QString diff(array);
-	emit fileDiff(diff);
+	emit fileDiff(diff,unstagedDiff);
 
 }
 

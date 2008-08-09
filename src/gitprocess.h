@@ -12,6 +12,8 @@
 #include "kpty.h"
 //
 
+enum gitDiffType {commitDiff=0,stagedDiff,unstagedDiff};
+
 //Used byg git and main thread to sync on event delivery;
 extern QWaitCondition eventDelivered; 
 extern QMutex mutex;
@@ -125,7 +127,7 @@ Q_OBJECT
 	void tagList(QString);
 	
 	void filesStatus(QString);
-	void fileDiff(QString);
+	void fileDiff(QString,int);
 	
 	void refresh();
 };

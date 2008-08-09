@@ -1,9 +1,12 @@
 #include "diffviewer.h"
-
+#include <QTextDocument>
+#include <QTextCursor>
+#include <QTextBlock>
+#include <QMouseEvent>
 // place your code here
 DiffViewer::DiffViewer(QWidget * parent) : QTextEdit(parent)
 {
-	
+	this->setReadOnly(true);
 }
 
 DiffViewer::~DiffViewer()
@@ -69,4 +72,86 @@ void DiffViewer::setDiffText(QString diff)
 	cursor.movePosition(QTextCursor::Start);
 	setTextCursor(cursor);
 	ensureCursorVisible ();
+}
+
+
+void DiffViewer::cursorPosChanged(QTextCursor cursor)
+{
+	if(!diffType)
+		return;
+	int pos= cursor.position();
+	QTextDocument *doc= this->document();
+	QString paraText;
+	int paraFrom=-1,paraTo=-1;
+	int para; 
+	int tmp;
+	int totalPara=doc->blockCount();
+	para = doc->findBlock(pos).blockNumber();
+	
+	/* if a diff line is clicked select entire file */
+	if(doc->findBlockByNumber(para).text().startsWith("diff")) {
+		paraFrom = para;
+		paraTo=totalPara-1;	
+		tmp=para+1;
+		while(tmp<totalPara) {
+			paraText = doc->findBlockByNumber(tmp).text();
+			if(paraText.startsWith("diff")) {
+				paraTo = tmp;
+				break;
+			}
+			tmp++;
+		}
+	} else {	 
+		/* Find starting line */
+		tmp=para;
+		while(tmp) {
+			paraText = doc->findBlockByNumber(tmp).text();
+			if(paraText.startsWith("@@")) {
+				paraFrom = tmp;
+				break;
+			} else if(paraText.startsWith("diff")) {
+				return;
+			}
+			tmp--;
+		}
+	
+		paraTo=totalPara-1;
+		tmp=para;
+		while(tmp<totalPara) {
+			paraText = doc->findBlockByNumber(tmp).text();
+			if(paraText.startsWith("@@")
+			   || paraText.startsWith("diff")) {
+				paraTo = tmp;
+				break;
+			}
+			tmp++;
+		}
+	}
+	select(doc->findBlockByNumber(paraFrom).position(),doc->findBlockByNumber(paraTo).position());
+}
+
+void DiffViewer::select(int from,int to)
+{
+	QTextCursor cursor = this->textCursor();
+	cursor.setPosition(from);
+	cursor.setPosition(to,QTextCursor::KeepAnchor);
+	setTextCursor(cursor);
+}
+
+void DiffViewer::mouseReleaseEvent(QMouseEvent *event)
+{
+	if (event->button() == Qt::LeftButton) {
+		cursorPosChanged(cursorForPosition(event->pos()));
+	} else {
+		// pass on other buttons to base class
+		QTextEdit::mousePressEvent(event);
+	}
+}
+
+void DiffViewer::mouseDoubleClickEvent(QMouseEvent *event)
+{
+	if (event->button() == Qt::LeftButton) {
+		emit doubleClicked();
+	}
+		QTextEdit::mouseDoubleClickEvent(event);
 }
