@@ -118,6 +118,25 @@ void GitProcess::stageFiles(QStringList files)
 	getStatus();
 }
 
+void GitProcess::unStageHunk(QString hunk)
+{
+	QFile file("/tmp/teamgitpatchdonotcreateafilelikethis");
+ 	if (file.open(QIODevice::ReadWrite)) {
+		QTextStream stream( &file );
+        	stream << hunk;
+	}
+	file.close();
+	QStringList args;
+	
+	args << "apply";
+	args << "--cached";
+	args << "--reverse";
+	args << file.fileName();
+	
+	runGit(args);
+	file.remove();
+	emit patchApplied();
+}
 
 void GitProcess::stageHunk(QString hunk)
 {

@@ -566,9 +566,14 @@ void MainWindowImpl::diffDoubleClicked()
 	patch.append(commit_diff->document()->findBlockByNumber(3).text());
 	patch.append("\n");
 	patch.append(commit_diff->textCursor().selection().toPlainText());
-	QMetaObject::invokeMethod(gt->git,"stageHunk",Qt::QueuedConnection,
+	if(commit_diff->getDiffType()==stagedDiff) {
+			QMetaObject::invokeMethod(gt->git,"unStageHunk",Qt::QueuedConnection,
                            Q_ARG(QString,patch));
- }
+	} else {
+			QMetaObject::invokeMethod(gt->git,"stageHunk",Qt::QueuedConnection,
+                           Q_ARG(QString,patch));
+	}
+}
 
 //test
 void MainWindowImpl::progress(int i)

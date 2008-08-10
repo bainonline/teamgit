@@ -71,6 +71,7 @@ Q_OBJECT
 	void stageFiles(QStringList files);
 	void unstageFiles(QStringList files);
 	void stageHunk(QString hunk);
+	void unStageHunk(QString hunk);
 	void commit(QString commit_msg,QString author_name,QString author_email);
 	void tag(QString);
 	void addFiles(QStringList);
