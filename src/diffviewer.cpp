@@ -138,5 +138,4 @@ void DiffViewer::mouseDoubleClickEvent(QMouseEvent *event)
 	if (event->button() == Qt::LeftButton) {
 		emit doubleClicked();
 	}
-		QTextEdit::mouseDoubleClickEvent(event);
 }
