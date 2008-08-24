@@ -550,7 +550,7 @@ void GitProcess::push()
 
 	args << "push";
 
-	emit notify("Checking out");
+	emit notify("Pushing out");
 	emit initOutputDialog();
 	QByteArray array = runGit(args,false,true);
 	notifyOutputDialog(QString(array));	
