@@ -62,7 +62,7 @@ QByteArray GitProcess::readAllStandardOutput()
 		char data[1024]={
 			0,};
 		int	ret;
-		while(1){
+		while(1) {
 			ret =::read(pty.masterFd(),data,1023);
 			array.append(data);
 			if(ret != 0)
