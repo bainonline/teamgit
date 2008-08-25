@@ -605,17 +605,31 @@ void MainWindowImpl::stagedDoubleClicked(const QModelIndex &index)
 {
 	
 	QStringList files;
+	QModelIndexList indexes = stagedFilesView->selectionModel()->selectedIndexes();
+
+	for(int i=0;i < indexes.size();i++) {	
+		if(!stagedModel->rowCount(indexes[i]))
+			files << stagedModel->filepath(indexes[i]);
+	}
 	files << stagedModel->filepath(index);
+	
 	QMetaObject::invokeMethod(gt->git,"unstageFiles",Qt::QueuedConnection,
-                           Q_ARG(QStringList,files));
+							Q_ARG(QStringList,files));
 }
 
 void MainWindowImpl::unstagedDoubleClicked(const QModelIndex &index)
 {
 	QStringList files;
+	QModelIndexList indexes = unstagedFilesView->selectionModel()->selectedIndexes();
+
+	for(int i=0;i < indexes.size();i++) {	
+		if(!unstagedModel->rowCount(indexes[i]))
+			files << unstagedModel->filepath(indexes[i]);
+	}
 	files << unstagedModel->filepath(index);
+	
 	QMetaObject::invokeMethod(gt->git,"stageFiles",Qt::QueuedConnection,
-                           Q_ARG(QStringList,files));
+							Q_ARG(QStringList,files));
 }
 
 void MainWindowImpl::stagedClicked(const QModelIndex &index)
