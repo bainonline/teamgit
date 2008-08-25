@@ -575,7 +575,6 @@ void MainWindowImpl::diffDoubleClicked()
 	}
 }
 
-//test
 void MainWindowImpl::progress(int i)
 {
 	if(i == 0) {
