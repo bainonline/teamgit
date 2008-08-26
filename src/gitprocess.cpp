@@ -155,22 +155,6 @@ void GitProcess::stageHunk(QString hunk)
 	emit patchApplied();
 }
 
-//Used to unstage all staged changes
-void  GitProcess::reset(QString ref,bool hard)
-{
-	QStringList args;
-	args << "reset";
-	if(hard)
-		args << "--hard";
-	else 
-		args << "--soft";
-	if(!ref.isEmpty())
-		args << ref;
-	runGit(args);
-	emit resetDone();
-}
-
-
 void  GitProcess::addFiles(QStringList files)
 {
 	QStringList args;
@@ -624,6 +608,25 @@ void GitProcess::fetch(QString ref)
 	
 	emit notify("fetching");
 	args << "fetch";
+	args << ref;
+	
+	emit initOutputDialog();
+	QByteArray array = runGit(args,false,true);
+	notifyOutputDialog(QString(array));	
+	sendGitOutput();
+	emit doneOutputDialog();
+	emit notify("Ready");
+}
+
+void GitProcess::reset(QString ref,int type)
+{
+	QStringList args;
+	
+	emit notify("reset");
+	if(type==soft)
+		args << "--soft";
+	else if (type==hard)
+		args << "--hard";
 	args << ref;
 	
 	emit initOutputDialog();

@@ -13,6 +13,7 @@
 //
 
 enum gitDiffType {commitDiff=0,stagedDiff,unstagedDiff};
+enum gitResetType {simple=0,soft,hard};
 
 //Used byg git and main thread to sync on event delivery;
 extern QWaitCondition eventDelivered; 
@@ -67,7 +68,6 @@ Q_OBJECT
 	void getNamedLog(QString);
 	void getCommit(QString commitHash);
 	void getFiles();
-	void reset(QString ref,bool hard);
 	void stageFiles(QStringList files);
 	void unstageFiles(QStringList files);
 	void stageHunk(QString hunk);
@@ -83,6 +83,7 @@ Q_OBJECT
 	void getStatus();
 	void cherryPick(QString);
 	//void checkout(QString ref);
+	void reset(QString ref,int type=0);
 	
 	//Async slots
 	void getUserSettings();
