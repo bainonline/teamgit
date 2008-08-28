@@ -131,6 +131,8 @@ void MainWindowImpl::setupConnections()
 	connect(action_Delete_Branch,SIGNAL(triggered()),this,SLOT(deleteBranchSlot()));
 	connect(action_New_Remote_branch,SIGNAL(triggered()),this,SLOT(newRemoteBranchSlot()));
 	connect(action_Fetch_Remote_Branch,SIGNAL(triggered()),this,SLOT(fetchRemoteBranchSlot()));
+	connect(action_Reset,SIGNAL(triggered()),this,SLOT(resetToCommit()));
+
 	
 	connect(gt->git,SIGNAL(notify(const QString &)),this->statusBar(),SLOT(showMessage(const QString &)));
 	connect(gt->git,SIGNAL(progress(int)),this,SLOT(progress(int)));
