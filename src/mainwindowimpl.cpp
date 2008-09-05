@@ -45,6 +45,7 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 	projectsModel = NULL;
 	stagedModel = NULL;
 	unstagedModel = NULL;
+	untrackedModel = NULL;
 	logModel = NULL;
 	tagsModel=NULL;
 	branchModel=NULL;
@@ -53,6 +54,7 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 	hideLogReset();
 	hideStaged();
 	hideUnstaged();
+	hideUntracked();
 	
 	QStringList args = QCoreApplication::arguments ();
 	if(args.size() > 1) {
@@ -74,6 +76,14 @@ void MainWindowImpl::checkAndSetWorkingDir(QString dir)
 	}
 }
 
+void MainWindowImpl::hideShowUntracked()
+{
+	if(actionShow_Untracked->isChecked())
+		showUntracked();
+	else
+		hideUntracked();
+}
+
 void MainWindowImpl::hideStaged()
 {
 	stagedFilesView->hide();
@@ -84,6 +94,10 @@ void MainWindowImpl::hideUnstaged()
 	unstagedFilesView->hide();
 }
 
+void MainWindowImpl::hideUntracked()
+{
+	untrackedFilesView->hide();
+}
 
 void MainWindowImpl::showStaged()
 {
@@ -95,6 +109,12 @@ void MainWindowImpl::showUnstaged()
 {
 	unstagedFilesView->show();
 	unstagedFilesView->expandAll();
+}
+
+void MainWindowImpl::showUntracked()
+{
+	untrackedFilesView->show();
+	untrackedFilesView->expandAll();
 }
 
 void MainWindowImpl::populateProjects()

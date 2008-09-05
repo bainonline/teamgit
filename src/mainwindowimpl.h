@@ -55,9 +55,12 @@ private:
 	void hideLogReset();
 	void hideStaged();
 	void hideUnstaged();
+	void hideUntracked();
 	
 	void showStaged();
 	void showUnstaged();
+	void showUntracked();
+	
 	void showLogReset();
 	void populateProjects();
 	QStandardItemModel *parseLog2Model(QString log);
