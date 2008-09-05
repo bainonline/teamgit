@@ -13,7 +13,8 @@ FORMS = ui/mainwindow.ui \
  ui/settings.ui \
  ui/newproject.ui \
  ui/outputdialog.ui \
- ui/commitdialog.ui
+ ui/commitdialog.ui \
+ ui/resetdialog.ui
 HEADERS = src/mainwindowimpl.h \
  src/gitthread.h \
  src/gitprocess.h \
@@ -27,7 +28,8 @@ HEADERS = src/mainwindowimpl.h \
  src/kpty.h \
  src/projectsmodel.h \
  src/commitdialogimpl.h \
- src/diffviewer.h
+ src/diffviewer.h \
+ src/resetdialogimpl.h
 SOURCES = src/mainwindowimpl.cpp \
  src/main.cpp \
  src/gitprocess.cpp \
@@ -38,7 +40,8 @@ SOURCES = src/mainwindowimpl.cpp \
  src/kpty.cpp \
  src/projectsmodel.cpp \
  src/commitdialogimpl.cpp \
- src/diffviewer.cpp
+ src/diffviewer.cpp \
+ src/resetdialogimpl.cpp
 RESOURCES += ui/icons.qrc
 target.path = /usr/bin
 INSTALLS += target
