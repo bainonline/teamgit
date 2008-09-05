@@ -13,6 +13,7 @@
 #include "projectsmodel.h"
 #include "commitdialogimpl.h"
 #include "diffviewer.h"
+#include "resetdialogimpl.h"
 //
 
 #define GIT_INVOKE(action_slot)	\
@@ -38,9 +39,12 @@ private:
 	ProjectsModel *projectsModel;
 	ProjectsModel *stagedModel;
 	ProjectsModel *unstagedModel;
+	ProjectsModel *untrackedModel;
+
 	QProgressBar *progressBar;
 	OutputDialogImpl *opd;
 	CommitDialogImpl *cmd;
+	ResetDialogImpl *rsd;
 	
 	void readSettings();
 	void checkAndSetWorkingDir(QString dir);
@@ -90,9 +94,10 @@ private slots:
 	
 	void commitDetails(QStringList);
 	void fileDiffReceived(QString,int);
+	void hideShowUntracked();
 	
 	void commitSlot();
-	
+	void resetSlot();
 	void checkoutSlot();
 	
 	void initOutputDialog();

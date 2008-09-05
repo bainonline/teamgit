@@ -34,6 +34,7 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 	npd = new NewProjectImpl(this);
 	opd = new OutputDialogImpl(this);
 	cmd = new CommitDialogImpl(this);
+	rsd = new ResetDialogImpl(this);
 	
 	QTimer::singleShot(0,this,SLOT(initSlot()));
 	readSettings();
@@ -860,6 +861,37 @@ void MainWindowImpl::patchApplied()
 	QModelIndex index = unstagedFilesView->selectionModel()->currentIndex();
 	unstagedClicked(index);
 	GIT_INVOKE("getStatus");
+}
+
+void MainWindowImpl::resetSlot()
+{
+	QString ref;
+	QModelIndex index = tagsView->selectionModel()->currentIndex();
+	if(index.isValid()) {
+		ref=tagsModel->itemFromIndex(index)->text().trimmed();
+	} else {
+		index = branchesView->selectionModel()->currentIndex();
+		if(index.isValid()){
+			ref=branchModel->itemFromIndex(index)->text().trimmed();
+			if(ref.startsWith("*")) {
+				ref = QString();
+			}
+		} else  {
+			index = remoteBranchesView->selectionModel()->currentIndex();
+			if(index.isValid()) {
+				ref = remoteBranchesModel->filepath(index);
+				ref = ref.trimmed();
+			}
+		}
+	}
+	rsd->reset(ref);
+	int ret = rsd->exec();
+	if( ret == QDialog::Accepted) {
+		int opt = rsd->getOption();
+		QMetaObject::invokeMethod(gt->git,"reset",Qt::QueuedConnection,
+ 					Q_ARG(QString, ref),                       
+ 					Q_ARG(int, opt));
+ 	}
 }
 
 //Used for connecting random things while devloping,
