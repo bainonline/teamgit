@@ -157,9 +157,7 @@ void  GitProcess::addFiles(QStringList files)
 {
 	QStringList args;
 	args << "add";
-	for(int i=0;i < files.size();i++) {
-		args << files[i];
-	}
+	args << files;
 	runGit(args);
 	emit addDone();
 }
