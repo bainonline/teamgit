@@ -191,6 +191,23 @@ void MainWindowImpl::setupConnections()
 	connect(remoteBranchesView,SIGNAL(doubleClicked(const QModelIndex &)),this,SLOT(remoteBranchesViewClicked(const QModelIndex &)));
 	connect(commit_diff,SIGNAL(doubleClicked()),this,SLOT(diffDoubleClicked()));
 	
+	//UI tweaks
+	connect(logView,SIGNAL(clicked(const QModelIndex &)),branchesView,SLOT(clearSelection()));
+	connect(logView,SIGNAL(clicked(const QModelIndex &)),remoteBranchesView,SLOT(clearSelection()));
+	connect(logView,SIGNAL(clicked(const QModelIndex &)),tagsView,SLOT(clearSelection()));
+	
+	connect(tagsView,SIGNAL(clicked(const QModelIndex &)),branchesView,SLOT(clearSelection()));
+	connect(tagsView,SIGNAL(clicked(const QModelIndex &)),remoteBranchesView,SLOT(clearSelection()));
+	connect(tagsView,SIGNAL(clicked(const QModelIndex &)),logView,SLOT(clearSelection()));
+
+	connect(branchesView,SIGNAL(clicked(const QModelIndex &)),logView,SLOT(clearSelection()));
+	connect(branchesView,SIGNAL(clicked(const QModelIndex &)),remoteBranchesView,SLOT(clearSelection()));
+	connect(branchesView,SIGNAL(clicked(const QModelIndex &)),tagsView,SLOT(clearSelection()));
+	
+	connect(remoteBranchesView,SIGNAL(clicked(const QModelIndex &)),branchesView,SLOT(clearSelection()));
+	connect(remoteBranchesView,SIGNAL(clicked(const QModelIndex &)),logView,SLOT(clearSelection()));
+	connect(remoteBranchesView,SIGNAL(clicked(const QModelIndex &)),tagsView,SLOT(clearSelection()));
+
 }
 
 MainWindowImpl::~MainWindowImpl()
