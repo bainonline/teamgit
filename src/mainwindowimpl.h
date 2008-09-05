@@ -114,6 +114,8 @@ private slots:
 	void stagedClicked(const QModelIndex &index);
 	void unstagedClicked(const QModelIndex &index);
 	
+	void untrackedDoubleClicked(const QModelIndex &index);
+	
 	void diffDoubleClicked();
 	
 	void logClicked(const QModelIndex &);

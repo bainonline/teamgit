@@ -113,8 +113,10 @@ void MainWindowImpl::showUnstaged()
 
 void MainWindowImpl::showUntracked()
 {
-	untrackedFilesView->show();
-	untrackedFilesView->expandAll();
+	if(actionShow_Untracked->isChecked()) {
+		untrackedFilesView->show();
+		untrackedFilesView->expandAll();
+	}
 }
 
 void MainWindowImpl::populateProjects()
@@ -190,6 +192,7 @@ void MainWindowImpl::setupConnections()
 	connect(tagsView,SIGNAL(doubleClicked(const QModelIndex &)),this,SLOT(tagsViewClicked(const QModelIndex &)));
 	connect(remoteBranchesView,SIGNAL(doubleClicked(const QModelIndex &)),this,SLOT(remoteBranchesViewClicked(const QModelIndex &)));
 	connect(commit_diff,SIGNAL(doubleClicked()),this,SLOT(diffDoubleClicked()));
+	connect(untrackedFilesView,SIGNAL(doubleClicked(const QModelIndex &)),this,SLOT(untrackedDoubleClicked(const QModelIndex &)));
 	
 	//UI tweaks
 	connect(logView,SIGNAL(clicked(const QModelIndex &)),branchesView,SLOT(clearSelection()));
@@ -439,7 +442,7 @@ void MainWindowImpl::namedLogReceived(QString ref,QString log)
 void MainWindowImpl::filesStatusReceived(QString status)
 {
 	QStringList lines=status.split("\n");
-	QString unstagedChanged,stagedChanged;
+	QString unstagedChanged,stagedChanged,untrackedChanged;
 	QString *curList=NULL;
 	for(int i=0;i<lines.size();i++) {
 		lines[i]=lines[i].simplified();
@@ -447,9 +450,22 @@ void MainWindowImpl::filesStatusReceived(QString status)
 			curList=&stagedChanged;
 		} else if(lines[i].startsWith("# Changed but not updated:")) {
 			curList=&unstagedChanged;
+		} else if(lines[i].startsWith("# Untracked files:")) {
+			curList=&untrackedChanged;
 		} else if(lines[i].startsWith("# modified: ")) {
 			lines[i].remove(0,sizeof("# modified:"));
 			curList->append(lines[i]+"\n");
+		} else if(lines[i].startsWith("# new file: ")) {
+			lines[i].remove(0,sizeof("# new file:"));
+			curList->append(lines[i]+"\n");
+		} else {
+			if(curList == &untrackedChanged) {
+				if(lines[i].startsWith("# ") && 
+				   !lines[i].startsWith("# (use ")) {
+					lines[i].remove(0,sizeof("#"));
+					curList->append(lines[i]+"\n");
+				}
+			}
 		}
 	}
 	
@@ -470,6 +486,16 @@ void MainWindowImpl::filesStatusReceived(QString status)
 		showUnstaged();
 	} else {
 		hideUnstaged();
+	}
+	
+	if(untrackedChanged.size()) {
+		if(untrackedModel)
+			delete untrackedModel;
+		untrackedModel = new ProjectsModel(untrackedChanged,0,"Untracked Files");
+		untrackedFilesView->setModel(untrackedModel);
+		showUntracked();
+	} else {
+		hideUntracked();
 	}
 	//Crazy stuff i could not find a quick way to do this cleanly
 	 QTimer::singleShot(200, this, SLOT(expandStagedUnstagedSlot()));
@@ -640,6 +666,22 @@ void MainWindowImpl::userSettings(QString name, QString email)
 	gSettings->userName = name;
 	gSettings->userEmail = email;
 
+}
+
+
+void MainWindowImpl::untrackedDoubleClicked(const QModelIndex &index)
+{
+	QStringList files;
+	QModelIndexList indexes = untrackedFilesView->selectionModel()->selectedIndexes();
+
+	for(int i=0;i < indexes.size();i++) {	
+		if(!untrackedModel->rowCount(indexes[i]))
+			files << untrackedModel->filepath(indexes[i]);
+	}
+	files << untrackedModel->filepath(index);
+	
+	QMetaObject::invokeMethod(gt->git,"stageFiles",Qt::QueuedConnection,
+							Q_ARG(QStringList,files));
 }
 
 void MainWindowImpl::stagedDoubleClicked(const QModelIndex &index)
