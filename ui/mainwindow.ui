@@ -341,8 +341,8 @@
     <property name="title" >
      <string>&amp;File</string>
     </property>
-    <addaction name="action_New" />
     <addaction name="action_Open" />
+    <addaction name="action_New" />
    </widget>
    <widget class="QMenu" name="menu_Edit" >
     <property name="title" >
