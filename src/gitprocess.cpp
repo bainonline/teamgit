@@ -619,6 +619,7 @@ void GitProcess::reset(QString ref,int type)
 	QStringList args;
 	
 	emit notify("reset");
+	args << "reset";
 	if(type==soft)
 		args << "--soft";
 	else if (type==hard)
