@@ -632,4 +632,5 @@ void GitProcess::reset(QString ref,int type)
 	sendGitOutput();
 	emit doneOutputDialog();
 	emit notify("Ready");
+	emit refresh();
 }
