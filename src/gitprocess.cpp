@@ -404,7 +404,7 @@ void GitProcess::getStatus()
 {
 	QStringList args;
 	
-	emit notify("Gathering files");
+	emit notify("Gathering files status");
 	emit progress(0);
 	args << "status";
 	
