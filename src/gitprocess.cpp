@@ -38,7 +38,7 @@ QByteArray GitProcess::runGit(QStringList arguments,bool block,bool usePseudoTer
 	start(gitBinary,arguments);
 
 	if(block)
-		waitForFinished();
+		waitForFinished(-1);
 	return readAllStandardOutput();
 }
 
