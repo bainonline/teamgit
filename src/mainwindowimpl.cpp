@@ -953,16 +953,25 @@ void MainWindowImpl::resetSlot()
 		if(index.isValid()){
 			ref=branchModel->itemFromIndex(index)->text().trimmed();
 			if(ref.startsWith("*")) {
-				ref = QString();
+				ref = ref.remove(0,1);
 			}
 		} else  {
 			index = remoteBranchesView->selectionModel()->currentIndex();
 			if(index.isValid()) {
 				ref = remoteBranchesModel->filepath(index);
 				ref = ref.trimmed();
+			} else {
+				index = logView->selectionModel()->currentIndex();
+				if(index.isValid()) {
+					QStandardItemModel *model = (QStandardItemModel *)logView->model();
+					QStandardItem *item = model->itemFromIndex(index);
+					ref = model->item(item->row(),3)->text();
+				}
 			}
 		}
 	}
+	if(ref.isEmpty())
+		return;
 	rsd->reset(ref);
 	int ret = rsd->exec();
 	if( ret == QDialog::Accepted) {
