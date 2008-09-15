@@ -232,8 +232,12 @@ MainWindowImpl::~MainWindowImpl()
 
 void MainWindowImpl::openRepo()
 {
+	QString startDir=gSettings->teamGitWorkingDir;
+	if(startDir == "notset")
+		startDir = "/home";
+	
 	QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
-												"/home",
+												startDir,
 												QFileDialog::ShowDirsOnly
 												| QFileDialog::DontResolveSymlinks);
 	if(!dir.isNull())
