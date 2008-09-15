@@ -35,6 +35,16 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 	opd = new OutputDialogImpl(this);
 	cmd = new CommitDialogImpl(this);
 	rsd = new ResetDialogImpl(this);
+	QAction *separator= new QAction((QObject *)this);
+	separator->setSeparator(true);
+	separator->setText("Recent Repositories");
+	menuFile->addAction(separator);
+	for(int i=0;i < MAX_RECENT;i++){
+		recentRepos[i] = new QAction(this);
+		recentRepos[i]->setVisible(false);
+		menuFile->addAction(recentRepos[i]);
+		connect(recentRepos[i],SIGNAL(triggered()),this,SLOT(openRecent()));
+	}
 	
 	QTimer::singleShot(0,this,SLOT(initSlot()));
 	readSettings();
@@ -65,16 +75,7 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 		checkAndSetWorkingDir(QDir::currentPath());
 	} //else the last path is already loaded
 		
-	QAction *separator= new QAction((QObject *)this);
-	separator->setSeparator(true);
-	separator->setText("Recent Repositories");
-	menuFile->addAction(separator);
-	for(int i=0;i < MAX_RECENT;i++){
-		recentRepos[i] = new QAction(this);
-		recentRepos[i]->setVisible(false);
-		menuFile->addAction(recentRepos[i]);
-		connect(recentRepos[i],SIGNAL(triggered()),this,SLOT(openRecent()));
-	}
+	
 	updateRecentlyOpened();
 }
 
