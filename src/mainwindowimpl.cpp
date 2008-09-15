@@ -343,7 +343,7 @@ void MainWindowImpl::initSlot()
 void MainWindowImpl::refresh()
 {
 	gt->git->setWorkingDir(gSettings->teamGitWorkingDir + gSettings->currProjectPath);
-	setWindowTitle("TeamGit - " + gSettings->teamGitWorkingDir);
+	setWindowTitle(gSettings->teamGitWorkingDir + " - TeamGit");
 	commit_author->clear();
 	commit_date->clear();
 	commit_log->clear();
