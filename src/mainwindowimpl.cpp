@@ -65,6 +65,17 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 		checkAndSetWorkingDir(QDir::currentPath());
 	} //else the last path is already loaded
 		
+	QAction *separator= new QAction((QObject *)this);
+	separator->setSeparator(true);
+	separator->setText("Recent Repositories");
+	menuFile->addAction(separator);
+	for(int i=0;i < MAX_RECENT;i++){
+		recentRepos[i] = new QAction(this);
+		recentRepos[i]->setVisible(false);
+		menuFile->addAction(recentRepos[i]);
+		connect(recentRepos[i],SIGNAL(triggered()),this,SLOT(openRecent()));
+	}
+	updateRecentlyOpened();
 }
 
 void MainWindowImpl::checkAndSetWorkingDir(QString dir)
@@ -73,6 +84,7 @@ void MainWindowImpl::checkAndSetWorkingDir(QString dir)
 	QDir gitDir(gitPath);
 	if(gitDir.exists()) {
 		gSettings->teamGitWorkingDir = dir;
+		addRecentlyOpened(dir);
 	}
 }
 
@@ -156,7 +168,6 @@ void MainWindowImpl::setupConnections()
 	connect(action_Fetch_Remote_Branch,SIGNAL(triggered()),this,SLOT(fetchRemoteBranchSlot()));
 	connect(action_Reset,SIGNAL(triggered()),this,SLOT(resetSlot()));
 	connect(actionShow_Untracked,SIGNAL(triggered()),this,SLOT(hideShowUntracked()));
-
 	
 	connect(gt->git,SIGNAL(notify(const QString &)),this->statusBar(),SLOT(showMessage(const QString &)));
 	connect(gt->git,SIGNAL(progress(int)),this,SLOT(progress(int)));
@@ -226,8 +237,43 @@ void MainWindowImpl::openRepo()
 												| QFileDialog::DontResolveSymlinks);
 	if(!dir.isNull())
 		gSettings->teamGitWorkingDir= dir;
+	addRecentlyOpened(dir);
 	refresh();
 }
+
+void MainWindowImpl::openRecent()
+{
+	QAction *action = qobject_cast<QAction *>(sender());
+	gSettings->teamGitWorkingDir = action->data().toString();
+	refresh();
+}
+
+void MainWindowImpl::addRecentlyOpened(QString dir)
+{
+	for(int i=0;i < gSettings->recentlyOpened.size();i++) {
+		if(gSettings->recentlyOpened[i] == dir)
+			return;
+	}
+	gSettings->recentlyOpened << dir;
+	if(gSettings->recentlyOpened.size() > 5) {
+		gSettings->recentlyOpened.removeFirst ();
+	}
+	updateRecentlyOpened();
+}
+
+void MainWindowImpl::updateRecentlyOpened()
+{
+	for(int i=0;i < MAX_RECENT;i++) {
+		if(i < gSettings->recentlyOpened.size()) {
+			recentRepos[i]->setText(gSettings->recentlyOpened[i]);
+			recentRepos[i]->setData(gSettings->recentlyOpened[i]);
+			recentRepos[i]->setVisible(true);
+		} else {
+			recentRepos[i]->setVisible(false);
+		}
+	}
+}
+
 
 void MainWindowImpl::writeSettings()
 {
@@ -245,6 +291,7 @@ void MainWindowImpl::writeSettings()
 	settings.beginGroup("TeamGit");
 	settings.setValue("workspace",gSettings->teamGitWorkingDir);
 	settings.setValue("current_project",gSettings->currProjectPath);
+	settings.setValue("RecentlyOpened",gSettings->recentlyOpened);
 	settings.endGroup();
 }
 
@@ -265,6 +312,7 @@ void MainWindowImpl::readSettings()
 	settings.beginGroup("TeamGit");
 	gSettings->teamGitWorkingDir = settings.value("workspace",QString("notset")).toString();
 	gSettings->currProjectPath = QString();
+	gSettings->recentlyOpened = settings.value("RecentlyOpened",QStringList()).toStringList();	
 	settings.endGroup();	
 	
 	GIT_INVOKE("getUserSettings");

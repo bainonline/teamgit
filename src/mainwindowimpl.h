@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QStandardItemModel>
 #include <QProgressBar>
+#include <QAction>
 
 #include "ui_mainwindow.h"
 #include "gitthread.h"
@@ -16,6 +17,7 @@
 #include "resetdialogimpl.h"
 //
 
+#define MAX_RECENT 5
 #define GIT_INVOKE(action_slot)	\
 		do {			\
 				QMetaObject::invokeMethod(gt->git,action_slot,Qt::QueuedConnection); \
@@ -27,6 +29,8 @@ class MainWindowImpl : public QMainWindow, public Ui::MainWindow
 {
 Q_OBJECT
 private:
+	
+	QAction *recentRepos[5];
 	
 	DiffViewer *commit_diff;
 	SettingsImpl *sd;
@@ -65,6 +69,9 @@ private:
 	void populateProjects();
 	QStandardItemModel *parseLog2Model(QString log);
 	
+	void addRecentlyOpened(QString dir);
+	void updateRecentlyOpened();
+	
 public:
 	GitThread *gt;
 	MainWindowImpl( QWidget * parent = 0, Qt::WFlags f = 0 );
@@ -74,6 +81,7 @@ private slots:
 	void initSlot();
 	
 	void openRepo();
+	void openRecent();
 	void refresh();
 	
 	void settingsDialog();
