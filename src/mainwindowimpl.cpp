@@ -182,6 +182,7 @@ void MainWindowImpl::showLogReset()
 
 void MainWindowImpl::setupConnections()
 {
+	connect(searchText,SIGNAL(returnPressed()),searchNext,SIGNAL(triggered()));
 	connect(searchText,SIGNAL(textChanged(const QString &)),this,SLOT(textSearch(const QString &))); 
 	connect(searchNext,SIGNAL(triggered()),this,SLOT(nextSearch()));
 	connect(searchPrevious,SIGNAL(triggered()),this,SLOT(prevSearch())); 
