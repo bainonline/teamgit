@@ -288,6 +288,8 @@ void MainWindowImpl::openRecent()
 
 void MainWindowImpl::addRecentlyOpened(QString dir)
 {
+	if(dir.isEmpty())
+		return;
 	for(int i=0;i < gSettings->recentlyOpened.size();i++) {
 		if(gSettings->recentlyOpened[i] == dir)
 			return;
