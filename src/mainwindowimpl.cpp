@@ -101,8 +101,9 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 		//Check if working directory is a git repo
 		checkAndSetWorkingDir(QDir::currentPath());
 	} //else the last path is already loaded
-		
-	
+	if(gSettings->teamGitWorkingDir.isEmpty()){
+		QTimer::singleShot(0,this,SLOT(openRepo()));
+	}
 	updateRecentlyOpened();
 }
 
