@@ -46,6 +46,33 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 		connect(recentRepos[i],SIGNAL(triggered()),this,SLOT(openRecent()));
 	}
 	
+	searchClear = new QAction(QIcon(":/main/locationbar_erase.png"),"Reset Search",this);
+	searchToolBar->addAction(searchClear);
+	searchText = new QLineEdit(this);
+	searchText->setMaximumWidth(500);
+	searchToolBar->addWidget(searchText);
+	searchNext = new QAction(QIcon(":/main/forward.png"),"Next",this);
+	searchPrevious = new QAction(QIcon(":/main/back.png"),"Previous",this);
+	searchToolBar->addAction(searchPrevious);
+	searchToolBar->addAction(searchNext);
+	
+	searchAuthor = new QAction("Author",this);
+	searchDate = new QAction("Date",this);
+	searchCommit = new QAction("Commit",this);
+	searchLog = new QAction("Log",this);
+	searchLog->setCheckable(true);
+	searchLog->setChecked(true);
+	searchAuthor->setCheckable(true);
+	searchDate->setCheckable(true);
+	searchCommit->setCheckable(true);
+	searchOptionGroup = new QActionGroup(this);
+	searchOptionGroup->addAction(searchLog);
+	searchOptionGroup->addAction(searchAuthor);
+	searchOptionGroup->addAction(searchDate);
+	searchOptionGroup->addAction(searchCommit);
+	searchToolBar->addActions(searchOptionGroup->actions());
+	currentSearch=0;
+	
 	QTimer::singleShot(0,this,SLOT(initSlot()));
 	readSettings();
 	setupConnections();
@@ -139,6 +166,7 @@ void MainWindowImpl::populateProjects()
 
 void MainWindowImpl::hideLogReset()
 {
+	searchItemsFoundList.clear();
 	LogMessage->hide();
 	ResetLogButton->hide();	
 }
@@ -146,13 +174,18 @@ void MainWindowImpl::hideLogReset()
 
 void MainWindowImpl::showLogReset()
 {
+	searchItemsFoundList.clear();
 	LogMessage->show();
-	ResetLogButton->show();	
+	ResetLogButton->show();
 }
 
 void MainWindowImpl::setupConnections()
 {
-
+	connect(searchText,SIGNAL(textChanged(const QString &)),this,SLOT(textSearch(const QString &))); 
+	connect(searchNext,SIGNAL(triggered()),this,SLOT(nextSearch()));
+	connect(searchPrevious,SIGNAL(triggered()),this,SLOT(prevSearch())); 
+	connect(searchClear,SIGNAL(triggered()),searchText,SLOT(clear())); 
+	
 	connect(action_Options,SIGNAL(triggered()),this,SLOT(settingsDialog()));
 	connect(action_New,SIGNAL(triggered()),this,SLOT(newProjectDialog()));
 	connect(action_Pull,SIGNAL(triggered()),this,SLOT(pullDialog()));
@@ -328,7 +361,6 @@ void MainWindowImpl::initSettings()
 
 }
 
-
 void MainWindowImpl::initSlot()
 {
 	initSettings();
@@ -356,6 +388,53 @@ void MainWindowImpl::refresh()
 	GIT_INVOKE("getBranches");
 	GIT_INVOKE("getRemoteBranches");
 
+}
+
+void MainWindowImpl::textSearch(const QString &text)
+{
+	int column=0;
+	Qt::MatchFlags matchMode=Qt::MatchContains;
+	if(searchLog->isChecked()) {
+		column=0;
+	} else if(searchAuthor->isChecked()){
+		column=1;
+	} else if(searchDate->isChecked()){
+		column=2;
+	} else if(searchCommit->isChecked()){
+		column=3;
+		matchMode=Qt::MatchStartsWith;
+	}
+	
+	searchItemsFoundList.clear();
+	searchItemsFoundList << ((QStandardItemModel *)logView->model())->findItems(text,matchMode,column);
+	currentSearch=-1;
+	nextSearch();
+}
+
+void MainWindowImpl::nextSearch()
+{
+	if(currentSearch < searchItemsFoundList.size()) {
+		currentSearch++;
+	} else {
+		currentSearch=0;
+	}
+	if(searchItemsFoundList.size() > currentSearch) {
+		logView->scrollTo((((QStandardItemModel *)logView->model())->indexFromItem(searchItemsFoundList[currentSearch])));
+		logView->setCurrentIndex((((QStandardItemModel *)logView->model())->indexFromItem(searchItemsFoundList[currentSearch])));
+	}
+}
+
+void MainWindowImpl::prevSearch()
+{
+	if(currentSearch > 0) {
+		currentSearch--;
+	} else {
+		currentSearch=searchItemsFoundList.size()-1;
+	}
+	if(searchItemsFoundList.size() > currentSearch) {
+		logView->scrollTo((((QStandardItemModel *)logView->model())->indexFromItem(searchItemsFoundList[currentSearch])));
+		logView->setCurrentIndex((((QStandardItemModel *)logView->model())->indexFromItem(searchItemsFoundList[currentSearch])));
+	}
 }
 
 void MainWindowImpl::checkWorkingDiff()

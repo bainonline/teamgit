@@ -5,6 +5,8 @@
 #include <QStandardItemModel>
 #include <QProgressBar>
 #include <QAction>
+#include <QActionGroup>
+#include <QLineEdit>
 
 #include "ui_mainwindow.h"
 #include "gitthread.h"
@@ -29,6 +31,14 @@ class MainWindowImpl : public QMainWindow, public Ui::MainWindow
 {
 Q_OBJECT
 private:
+	
+	QLineEdit *searchText;
+	QActionGroup *searchOptionGroup;
+	QAction *searchClear;
+	QAction *searchNext, *searchPrevious;
+	QAction *searchLog, *searchAuthor, *searchDate, *searchCommit;
+	QList<QStandardItem *> searchItemsFoundList;
+	int currentSearch;
 	
 	QAction *recentRepos[5];
 	
@@ -78,6 +88,11 @@ public:
 	~MainWindowImpl();
 
 private slots:
+	
+	void textSearch(const QString &);
+	void nextSearch();
+	void prevSearch();
+	
 	void initSlot();
 	
 	void openRepo();

@@ -321,6 +321,7 @@ void GitProcess::getLog(int numLog)
 	
 	emit notify("Running git log");
 	emit progress(0);
+	emit progress(10);
 	s.sprintf("-%i",numLog);
 	args << "log";
 	args.append("--pretty=format:%sTEAMGITFIELDMARKER%an<%ae>TEAMGITFIELDMARKER%adTEAMGITFIELDMARKER%HTEAMGITFIELDEND");
