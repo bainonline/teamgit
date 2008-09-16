@@ -320,15 +320,6 @@
     <addaction name="action_Refresh" />
     <addaction name="actionShow_Untracked" />
    </widget>
-   <widget class="QMenu" name="menu_Connection" >
-    <property name="title" >
-     <string>&amp;Management</string>
-    </property>
-    <addaction name="actionAdd_Repositories" />
-    <addaction name="actionAdd_View" />
-    <addaction name="actionDelete_Repository" />
-    <addaction name="actionRemove_View" />
-   </widget>
    <widget class="QMenu" name="menu_Tools" >
     <property name="title" >
      <string>&amp;Tools</string>
@@ -348,7 +339,6 @@
    <addaction name="menuFile" />
    <addaction name="menu_Edit" />
    <addaction name="menu_View" />
-   <addaction name="menu_Connection" />
    <addaction name="menu_Tools" />
    <addaction name="menu_Help" />
   </widget>
