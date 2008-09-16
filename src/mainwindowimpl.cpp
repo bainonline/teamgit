@@ -434,7 +434,7 @@ void MainWindowImpl::prevSearch()
 	} else {
 		currentSearch=searchItemsFoundList.size()-1;
 	}
-	if(searchItemsFoundList.size() > currentSearch) {
+	if(searchItemsFoundList.size() > currentSearch && currentSearch >= 0) {
 		logView->scrollTo((((QStandardItemModel *)logView->model())->indexFromItem(searchItemsFoundList[currentSearch])));
 		logView->setCurrentIndex((((QStandardItemModel *)logView->model())->indexFromItem(searchItemsFoundList[currentSearch])));
 	}
