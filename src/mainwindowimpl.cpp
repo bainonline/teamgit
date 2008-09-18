@@ -188,6 +188,7 @@ void MainWindowImpl::setupConnections()
 	connect(searchPrevious,SIGNAL(triggered()),this,SLOT(prevSearch())); 
 	connect(searchClear,SIGNAL(triggered()),searchText,SLOT(clear())); 
 	
+	connect(actionAbout,SIGNAL(triggered()),this,SLOT(about()));
 	connect(action_Options,SIGNAL(triggered()),this,SLOT(settingsDialog()));
 	connect(action_New,SIGNAL(triggered()),this,SLOT(newProjectDialog()));
 	connect(action_Pull,SIGNAL(triggered()),this,SLOT(pullDialog()));
@@ -263,6 +264,16 @@ void MainWindowImpl::setupConnections()
 MainWindowImpl::~MainWindowImpl()
 {
 	writeSettings();
+}
+
+void MainWindowImpl::about()
+{
+	QMessageBox::about(this, tr("About Teamgit"),
+						"<br>(c) 2007-2008 Abhijit Bhopatkar - <i>BAIN</i> </b>"
+						"<br> bain@devslashzero.com "
+						"<br> <a href=http://www.devslashzero.com/teamgit>www.devslashzero.com/teamgit</a>"
+						"<br> This program is free software; you can redistribute it and/or modify it under the terms of the  <a href=http://www.devslashzero.com/teamgit/license>GNU General Public License Version 2.</a>"
+						"<br> You can get copy of the license by clicking above or at http://www.devslashzero.com/teamgit/license");
 }
 
 void MainWindowImpl::openRepo()

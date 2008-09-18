@@ -89,6 +89,8 @@ public:
 
 private slots:
 	
+	void about();
+	
 	void textSearch(const QString &);
 	void nextSearch();
 	void prevSearch();
