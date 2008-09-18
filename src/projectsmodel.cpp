@@ -1,5 +1,6 @@
 /****************************************************************************
  **
+ ** Copyright (C) 2008 Abhijit Bhopatkar
  ** Copyright (C) 2005-2008 Trolltech ASA. All rights reserved.
  **
  ** This file is part of the example classes of the Qt Toolkit.

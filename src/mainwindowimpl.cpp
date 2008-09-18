@@ -1,3 +1,21 @@
+/*
+	Copyright 2007 2008 Abhijit Bhopatkar
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with this program, in file COPYING
+	If not, see <http://www.devslashzero.com/teamgit/license>.
+*/
+
+
 #include <QMetaObject>
 #include <QTimer>
 #include <QSettings>
@@ -269,7 +287,7 @@ MainWindowImpl::~MainWindowImpl()
 void MainWindowImpl::about()
 {
 	QMessageBox::about(this, tr("About Teamgit"),
-						"<br>(c) 2007-2008 Abhijit Bhopatkar - <i>BAIN</i> </b>"
+						"<br> Copyright 2007-2008 Abhijit Bhopatkar - <i>BAIN</i> </b>"
 						"<br> bain@devslashzero.com "
 						"<br> <a href=http://www.devslashzero.com/teamgit>www.devslashzero.com/teamgit</a>"
 						"<br> This program is free software; you can redistribute it and/or modify it under the terms of the  <a href=http://www.devslashzero.com/teamgit/license>GNU General Public License Version 2.</a>"
