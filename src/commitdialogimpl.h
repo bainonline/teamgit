@@ -31,6 +31,13 @@ class CommitDialogImpl : public QDialog, public Ui::commitDialog
 		QString getAuthorEmail(){
 			return author_email->text();
 		}
+		bool signoff(){
+			if(signOff->checkState()==Qt::Checked) {
+				return true;
+			} else {
+				return false;
+			}
+		}
 };
 
 #endif // __COMMITDIALOGIMPL_H__

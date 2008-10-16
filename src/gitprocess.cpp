@@ -177,7 +177,7 @@ void  GitProcess::addFiles(QStringList files)
 	emit addDone();
 }
 
-void  GitProcess::commit(QString commit_msg,QString author_name,QString author_email)
+void  GitProcess::commit(QString commit_msg,QString author_name,QString author_email,bool signoff)
 {
 	QStringList args;
 	args << "commit";
@@ -185,6 +185,9 @@ void  GitProcess::commit(QString commit_msg,QString author_name,QString author_e
 		args << "--author";
 		QString auth = author_name + " <" + author_email + "> ";
 		args << auth;
+	}
+	if(signoff) {
+		args << "--signoff";
 	}
 	if(!commit_msg.isEmpty()) {
 		args << "-m";

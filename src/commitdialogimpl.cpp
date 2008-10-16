@@ -20,7 +20,6 @@ CommitDialogImpl::CommitDialogImpl(QWidget *parent)
 		:QDialog(parent)
 {
 	setupUi(this);
-	signOff->hide();
 	signofftext->hide();
 }
 

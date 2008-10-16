@@ -521,7 +521,8 @@ void MainWindowImpl::commitSlot()
 		QMetaObject::invokeMethod(gt->git,"commit",Qt::QueuedConnection,
 						Q_ARG(QString, cmd->getCommitMessage()),
 						Q_ARG(QString, cmd->getAuthorName()),
-						Q_ARG(QString, cmd->getAuthorEmail()));
+						Q_ARG(QString, cmd->getAuthorEmail()),
+						Q_ARG(bool,cmd->signoff()));
 	}
 }
 
