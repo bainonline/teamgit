@@ -23,12 +23,13 @@ CommitDialogImpl::CommitDialogImpl(QWidget *parent)
 	signofftext->hide();
 }
 
-void CommitDialogImpl::init(const QString &author,const QString &email)
+void CommitDialogImpl::init(const QString &author,const QString &email,bool autosignoff)
 {
 	commitMessage->selectAll();
 	commitMessage->setFocus();
 	author_name->setText(author);
 	author_email->setText(email);
+	signOff->setChecked(autosignoff);
 }
 
 QString CommitDialogImpl::getCommitMessage()

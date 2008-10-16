@@ -362,6 +362,7 @@ void MainWindowImpl::writeSettings()
 	settings.setValue("workspace",gSettings->teamGitWorkingDir);
 	settings.setValue("current_project",gSettings->currProjectPath);
 	settings.setValue("RecentlyOpened",gSettings->recentlyOpened);
+	settings.setValue("autosignoff",gSettings->autosignoff);
 	settings.endGroup();
 }
 
@@ -382,7 +383,8 @@ void MainWindowImpl::readSettings()
 	settings.beginGroup("TeamGit");
 	gSettings->teamGitWorkingDir = settings.value("workspace",QString("notset")).toString();
 	gSettings->currProjectPath = QString();
-	gSettings->recentlyOpened = settings.value("RecentlyOpened",QStringList()).toStringList();	
+	gSettings->recentlyOpened = settings.value("RecentlyOpened",QStringList()).toStringList();
+	gSettings->autosignoff = settings.value("autosignoff",bool()).toBool();
 	settings.endGroup();	
 	
 	GIT_INVOKE("getUserSettings");
@@ -515,7 +517,7 @@ void MainWindowImpl::commitSlot()
 {
 	if(!stagedFilesView->isVisible())
 		return;
-	cmd->init(gSettings->userName,gSettings->userEmail);
+	cmd->init(gSettings->userName,gSettings->userEmail,gSettings->autosignoff);
 	int ret = cmd->exec();
 	if( ret == QDialog::Accepted) {
 		QMetaObject::invokeMethod(gt->git,"commit",Qt::QueuedConnection,

@@ -22,6 +22,7 @@
 struct gsettings {
 	QString userName;
 	QString userEmail;
+	bool autosignoff;
 	QString teamGitWorkingDir;
 	QString currProjectPath;
 	QStringList recentlyOpened;
@@ -40,7 +41,7 @@ class SettingsImpl : public QDialog, public Ui::SettingsDialog
 		void setUserSettings(const QString &name, const QString &email);
 		QString getUserName();
 		QString getUserEmail();
-		
+		void setAutoSignoff(bool checked);
 	public slots:
 		void refreshUi();
 		void getFilePath();

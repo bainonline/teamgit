@@ -25,6 +25,7 @@ SettingsImpl::SettingsImpl(QWidget *parent)
 			: QDialog(parent)
 {
 	setupUi(this);
+	autosignoff->setChecked(true);
 	connect(pickPathButton,SIGNAL(clicked()),this,SLOT(getFilePath()));
 	gSettings = &GlobalSettings;//(gsettings *)malloc(sizeof(gsettings));
 }
@@ -75,14 +76,21 @@ void SettingsImpl::refreshUi()
 {
 	userName->setText(gSettings->userName);
 	userEmail->setText(gSettings->userEmail);
+	autosignoff->setChecked(gSettings->autosignoff);
 }
-
-
 
 void SettingsImpl::accept()
 {
 	gSettings->userName = userName->text();
 	gSettings->userEmail = userEmail->text();
-	
+	if(autosignoff->checkState() == Qt::Checked)
+		gSettings->autosignoff = true;
+	else
+		gSettings->autosignoff = false;	 
 	QDialog::accept();
+}
+
+void SettingsImpl::setAutoSignoff(bool checked)
+{
+	autosignoff->setChecked(checked);
 }
