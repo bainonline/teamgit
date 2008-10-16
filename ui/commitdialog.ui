@@ -60,7 +60,7 @@
      <item>
       <widget class="QCheckBox" name="signOff" >
        <property name="text" >
-        <string>Sign off Message</string>
+        <string>Add Sign Off Line </string>
        </property>
       </widget>
      </item>
@@ -72,7 +72,7 @@
    <item>
     <widget class="QDialogButtonBox" name="buttonBox" >
      <property name="standardButtons" >
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::NoButton|QDialogButtonBox::Ok</set>
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
      </property>
     </widget>
    </item>
