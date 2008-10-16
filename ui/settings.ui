@@ -19,14 +19,6 @@
       <number>0</number>
      </property>
      <widget class="QWidget" name="tab" >
-      <property name="geometry" >
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>380</width>
-        <height>218</height>
-       </rect>
-      </property>
       <attribute name="title" >
        <string>General</string>
       </attribute>
@@ -73,6 +65,13 @@
         </layout>
        </item>
        <item>
+        <widget class="QCheckBox" name="autosignoff" >
+         <property name="text" >
+          <string>Auto add signoff lines to commit messages</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <spacer>
          <property name="orientation" >
           <enum>Qt::Vertical</enum>
@@ -88,14 +87,6 @@
       </layout>
      </widget>
      <widget class="QWidget" name="gitTab" >
-      <property name="geometry" >
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>640</width>
-        <height>320</height>
-       </rect>
-      </property>
       <attribute name="title" >
        <string>&amp;Git Options</string>
       </attribute>
