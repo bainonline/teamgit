@@ -14,11 +14,13 @@
 	If not, see <http://www.devslashzero.com/teamgit/license>.
 */
 #include "newprojectimpl.h"
+#include <QFileDialog>
 
 NewProjectImpl::NewProjectImpl(QWidget *parent)
 		:QDialog(parent)
 {
 	setupUi(this);
+	connect(getDirButton,SIGNAL(clicked()),this,SLOT(getDirSlot()));
 }
 
 QString NewProjectImpl::getRepository()
@@ -34,4 +36,20 @@ QString NewProjectImpl::getTarget()
 QString NewProjectImpl::getRefRepo()
 {
 	return refRepo->text();
+}
+
+void NewProjectImpl::getDirSlot()
+{
+	QString startDir= "/home";
+	QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
+													startDir,
+													QFileDialog::ShowDirsOnly
+													| QFileDialog::DontResolveSymlinks);
+	if(!dir.isNull())
+		dirPath->setText(dir);
+}
+
+QString NewProjectImpl::getDir()
+{
+	return dirPath->text();
 }
