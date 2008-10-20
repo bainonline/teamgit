@@ -112,7 +112,7 @@ private slots:
 	
 	void initSlot();
 	
-	void openRepo();
+	void openRepo(const QString path=QString());
 	void openRecent();
 	void refresh();
 	

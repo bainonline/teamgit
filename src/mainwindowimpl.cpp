@@ -293,20 +293,23 @@ void MainWindowImpl::about()
 						"<br> You can get copy of the license by clicking above or at http://www.devslashzero.com/teamgit/license");
 }
 
-void MainWindowImpl::openRepo()
+void MainWindowImpl::openRepo(QString path)
 {
 	QString startDir=gSettings->teamGitWorkingDir;
+	QString dir;
 	if(startDir == "notset")
 		startDir = "/home";
-	
-	QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
-												startDir,
-												QFileDialog::ShowDirsOnly
-												| QFileDialog::DontResolveSymlinks);
+	if(path.isEmpty()) {
+		dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
+													startDir,
+													QFileDialog::ShowDirsOnly
+													| QFileDialog::DontResolveSymlinks);
+	} else {
+		dir = path;
+	}
 	if(!dir.isNull())
 		gSettings->teamGitWorkingDir= dir;
 	addRecentlyOpened(dir);
-	refresh();
 }
 
 void MainWindowImpl::openRecent()
@@ -481,12 +484,13 @@ void MainWindowImpl::newProjectDialog()
 	int ret = npd->exec();
 	if( ret == QDialog::Accepted) {
 		QMetaObject::invokeMethod(gt->git,"clone",Qt::QueuedConnection,
-                           Q_ARG(QString, npd->getRepository()),                       
-                           Q_ARG(QString, npd->getTarget()),
-                           Q_ARG(QString, npd->getRefRepo()),
-                           Q_ARG(QString, gSettings->teamGitWorkingDir));
+							Q_ARG(QString, npd->getRepository()),                       
+							Q_ARG(QString, npd->getTarget()),
+							Q_ARG(QString, npd->getRefRepo()),
+							Q_ARG(QString, npd->getDir()));
+	openRepo(npd->getDir() + "/" + npd->getTarget());
 	}
-}	
+}
 
 
 void MainWindowImpl::checkoutSlot()
