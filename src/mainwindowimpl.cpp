@@ -563,7 +563,6 @@ void MainWindowImpl::notifyOutputDialog(const QString &msg)
 
 void MainWindowImpl::cloneComplete(QString dir)
 {
-	gSettings->currProjectPath = dir;
 	QString msg("Cloning repository ");
 	msg.append(dir);
 	msg.append(" complete.");
