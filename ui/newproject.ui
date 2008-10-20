@@ -43,7 +43,7 @@
      <item>
       <widget class="QLineEdit" name="target" >
        <property name="text" >
-        <string>linux-2.6</string>
+        <string>~/linux-2.6</string>
        </property>
       </widget>
      </item>
