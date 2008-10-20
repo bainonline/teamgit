@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>462</width>
-    <height>232</height>
+    <height>253</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -32,6 +32,27 @@
     </layout>
    </item>
    <item>
+    <layout class="QHBoxLayout" name="horizontalLayout" >
+     <item>
+      <widget class="QLabel" name="label" >
+       <property name="text" >
+        <string>Directory</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="dirPath" />
+     </item>
+     <item>
+      <widget class="QPushButton" name="getDirButton" >
+       <property name="text" >
+        <string>Select</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
     <layout class="QHBoxLayout" >
      <item>
       <widget class="QLabel" name="label_3" >
@@ -43,7 +64,7 @@
      <item>
       <widget class="QLineEdit" name="target" >
        <property name="text" >
-        <string>~/linux-2.6</string>
+        <string/>
        </property>
       </widget>
      </item>
