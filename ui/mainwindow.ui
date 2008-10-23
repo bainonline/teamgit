@@ -456,7 +456,7 @@
   </action>
   <action name="actionAdd_View" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >
+    <iconset>
      <normaloff>:/main/view_fit_window.png</normaloff>:/main/view_fit_window.png</iconset>
    </property>
    <property name="text" >
@@ -465,7 +465,7 @@
   </action>
   <action name="actionDelete_Repository" >
    <property name="icon" >
-    <iconset resource="icons.qrc" >
+    <iconset>
      <normaloff>:/main/adept_remove.png</normaloff>:/main/adept_remove.png</iconset>
    </property>
    <property name="text" >
@@ -484,7 +484,7 @@
   <action name="actionAbout" >
    <property name="icon" >
     <iconset resource="icons.qrc" >
-     <normaloff>:/main/messagebox_info.png</normaloff>:/main/messagebox_info.png</iconset>
+     <normaloff>:/main/icon.png</normaloff>:/main/icon.png</iconset>
    </property>
    <property name="text" >
     <string>About</string>
@@ -502,7 +502,7 @@
   <action name="action_New_Branch" >
    <property name="icon" >
     <iconset resource="icons.qrc" >
-     <normaloff>:/main/view_tree.png</normaloff>:/main/view_tree.png</iconset>
+     <normaloff>:/main/window_new.png</normaloff>:/main/window_new.png</iconset>
    </property>
    <property name="text" >
     <string>New &amp;Branch</string>
@@ -586,7 +586,7 @@
    </property>
    <property name="icon" >
     <iconset resource="icons.qrc" >
-     <normaloff>:/main/compfile.png</normaloff>:/main/compfile.png</iconset>
+     <normaloff>:/main/player_playlist.png</normaloff>:/main/player_playlist.png</iconset>
    </property>
    <property name="text" >
     <string>Show Untracked Files</string>
