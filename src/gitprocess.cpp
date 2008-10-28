@@ -436,6 +436,7 @@ void GitProcess::getStatus()
 	emit notify("Ready");
 	emit progress(100);
 }
+
 void GitProcess::cherryPick(QString ref)
 {
 	QStringList args;
@@ -613,6 +614,22 @@ void GitProcess::deleteBranch(QString branch)
 	emit progress(100);
 	
 	emit refresh();
+	emit notify("Ready");
+	emit progress(100);
+}
+
+void GitProcess::blame(QString file)
+{
+	QStringList args;
+	
+	emit notify("Getting annotated file");
+	args << "blame";
+	args << "-p";
+	args << file;
+	
+	QByteArray array = runGit(args);
+	QString antdFile(array);
+	emit annotatedFile(antdFile);
 	emit notify("Ready");
 	emit progress(100);
 }

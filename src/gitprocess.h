@@ -99,6 +99,7 @@ Q_OBJECT
 	void cherryPick(QString);
 	//void checkout(QString ref);
 	void reset(QString ref,int type=0);
+	void blame(QString file);
 	
 	//Async slots
 	void getUserSettings();
@@ -145,6 +146,8 @@ Q_OBJECT
 	
 	void filesStatus(QString);
 	void fileDiff(QString,int);
+	
+	void annotatedFile(QString);
 	
 	void refresh();
 };
