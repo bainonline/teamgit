@@ -43,14 +43,9 @@ SOURCES = src/mainwindowimpl.cpp \
  src/diffviewer.cpp \
  src/resetdialogimpl.cpp
 RESOURCES += ui/icons.qrc
-
-target.path=/usr/bin/
-
+target.path = /usr/bin/
 desktop_file.path = /usr/share/applications/
 desktop_file.files = teamgit.desktop
-
 pixmaps.path = /usr/share/icons/hicolor/48x48/apps
 pixmaps.files = teamgit.png
-
-INSTALLS += desktop_file pixmaps target 
-
+INSTALLS += desktop_file pixmaps target
