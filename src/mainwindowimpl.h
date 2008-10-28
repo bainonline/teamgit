@@ -54,6 +54,7 @@ private:
 	QAction *searchLog, *searchAuthor, *searchDate, *searchCommit;
 	QList<QStandardItem *> searchItemsFoundList;
 	int currentSearch;
+	QTextEdit *annotatedFileBox;
 	
 	QAction *recentRepos[5];
 	
@@ -96,6 +97,8 @@ private:
 	
 	void addRecentlyOpened(QString dir);
 	void updateRecentlyOpened();
+	
+	int fileAnnotationTabIndex;
 	
 public:
 	GitThread *gt;
@@ -176,6 +179,8 @@ private slots:
 	
 	void patchApplied();
 	
+	void gotAnnotatedFile(QString);
+	void annotatedFileClicked();
 signals:
 	void test();
 	void teamGitWorkingDirChanged(const QString &newDir);

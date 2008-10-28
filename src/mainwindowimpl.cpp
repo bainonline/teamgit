@@ -27,6 +27,7 @@
 #include <QFileDialog>
 #include <QTextBlock>
 #include <QTextDocumentFragment>
+#include <QMap>
 
 #include "defs.h"
 #include "mainwindowimpl.h"
@@ -90,6 +91,9 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 	searchToolBar->addActions(searchOptionGroup->actions());
 	currentSearch=0;
 	
+	annotatedFileBox = new QTextEdit(0);
+	annotatedFileBox->setReadOnly(true);
+	connect(annotatedFileBox,SIGNAL(cursorPositionChanged()),this,SLOT(annotatedFileClicked()));
 	QTimer::singleShot(0,this,SLOT(initSlot()));
 	readSettings();
 	setupConnections();
@@ -122,6 +126,7 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 		QTimer::singleShot(0,this,SLOT(openRepo()));
 	}
 	updateRecentlyOpened();
+	fileAnnotationTabIndex=0;
 }
 
 void MainWindowImpl::checkAndSetWorkingDir(QString dir)
@@ -187,6 +192,10 @@ void MainWindowImpl::hideLogReset()
 	searchItemsFoundList.clear();
 	LogMessage->hide();
 	ResetLogButton->hide();	
+	if(fileAnnotationTabIndex) {
+		commitLogTabs->removeTab(fileAnnotationTabIndex);
+		fileAnnotationTabIndex=0;
+	}
 }
 
 
@@ -244,6 +253,8 @@ void MainWindowImpl::setupConnections()
 	connect(gt->git,SIGNAL(tagList(QString)),this,SLOT(tagsListReceived(QString)));
 	connect(gt->git,SIGNAL(branchList(QString)),this,SLOT(branchListReceived(QString)));
 	connect(gt->git,SIGNAL(remoteBranchesList(QString)),this,SLOT(remoteBranchListReceived(QString)));
+	
+	connect(gt->git,SIGNAL(annotatedFile(QString)),this,SLOT(gotAnnotatedFile(QString)));
 	
 	connect(logView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(logClicked(const QModelIndex &)));
 	connect(projectFilesView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(projectFilesViewClicked(const QModelIndex &)));
@@ -967,7 +978,10 @@ void MainWindowImpl::projectFilesViewClicked(const QModelIndex &index)
 	QStringList path;
 	QString text =  projectsModel->filepath(index);
 	QMetaObject::invokeMethod(gt->git,"getNamedLog",Qt::QueuedConnection,
-                           Q_ARG(QString,text));
+							Q_ARG(QString,text));
+	if(!projectsModel->rowCount(index)) 
+		QMetaObject::invokeMethod(gt->git,"blame",Qt::QueuedConnection,
+							Q_ARG(QString,text));
 }
 
 void MainWindowImpl::projectsComboBoxActivated(int index)
@@ -1003,7 +1017,7 @@ void MainWindowImpl::cherryPickSelectedCommit()
 	QStandardItemModel *model=(QStandardItemModel *)logView->model();
 	QStandardItem *item = model->itemFromIndex(index);
 	QMetaObject::invokeMethod(gt->git,"cherryPick",Qt::QueuedConnection,
-                           Q_ARG(QString,model->item(item->row(),3)->text()));
+							Q_ARG(QString,model->item(item->row(),3)->text()));
 }
 
 
@@ -1106,6 +1120,39 @@ void MainWindowImpl::fetchRemoteBranchSlot()
 	}
 }
 
+void MainWindowImpl::annotatedFileClicked()
+{
+	searchCommit->setChecked(true);
+	searchText->setText(annotatedFileBox->document()->findBlock(annotatedFileBox->textCursor().position()).text().left(6));
+}
+
+void MainWindowImpl::gotAnnotatedFile(QString file)
+{
+	QString commit, author,fileLine;
+	QMap<QString, QString> map;
+	int commit_lines=0;
+	
+	annotatedFileBox->clear();
+	QStringList fileLines = file.split("\n");
+	for(int i=0;i<fileLines.count()-1;i++) {
+		if(fileLines[i].startsWith("\t")) {
+			commit_lines--;
+			annotatedFileBox->append(commit.left(6) + " " + map[commit]+fileLines[i]);
+		} else {
+			if(!commit_lines) {
+				QStringList fields = fileLines[i].split(" ");
+				commit = fields[0];
+				commit_lines=fields[3].toInt();
+			}
+			if(fileLines[i].startsWith("author ")) {
+					author= fileLines[i].remove(0,7);
+					map[commit] = author;
+			}
+		} 
+	}
+	fileAnnotationTabIndex=commitLogTabs->addTab(annotatedFileBox,"Annotated File");
+}
+	
 void MainWindowImpl::patchApplied()
 {
 	QModelIndex index = unstagedFilesView->selectionModel()->currentIndex();
