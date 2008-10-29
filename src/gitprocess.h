@@ -22,7 +22,6 @@
 #include <QStandardItemModel>
 #include <QFile>
 #include <QWaitCondition>
-#include <QMutex>
 
 #include "kpty.h"
 //
@@ -30,9 +29,6 @@
 enum gitDiffType {commitDiff=0,stagedDiff,unstagedDiff};
 enum gitResetType {simple=0,soft,hard};
 
-//Used byg git and main thread to sync on event delivery;
-extern QWaitCondition eventDelivered; 
-extern QMutex mutex;
 /*
 This is the class which is responsible for both executing the 
 git process _and_ parsing its output.

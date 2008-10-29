@@ -40,7 +40,6 @@
 				QMetaObject::invokeMethod(gt->git,action_slot,Qt::QueuedConnection); \
 			} while(0)	
 
-extern QMutex gitMutex;
 
 class MainWindowImpl : public QMainWindow, public Ui::MainWindow
 {
