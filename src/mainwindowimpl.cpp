@@ -467,8 +467,9 @@ void MainWindowImpl::nextSearch()
 		currentSearch=0;
 	}
 	if(searchItemsFoundList.size() > currentSearch) {
-		logView->scrollTo((((QStandardItemModel *)logView->model())->indexFromItem(searchItemsFoundList[currentSearch])));
-		logView->setCurrentIndex((((QStandardItemModel *)logView->model())->indexFromItem(searchItemsFoundList[currentSearch])));
+		QStandardItem *item = ((QStandardItemModel *)logView->model())->item(searchItemsFoundList[currentSearch]->row(),0);
+		logView->scrollTo((((QStandardItemModel *)logView->model())->indexFromItem(item)));
+		logView->setCurrentIndex((((QStandardItemModel *)logView->model())->indexFromItem(item)));
 	}
 }
 
@@ -482,6 +483,7 @@ void MainWindowImpl::prevSearch()
 	if(searchItemsFoundList.size() > currentSearch && currentSearch >= 0) {
 		logView->scrollTo((((QStandardItemModel *)logView->model())->indexFromItem(searchItemsFoundList[currentSearch])));
 		logView->setCurrentIndex((((QStandardItemModel *)logView->model())->indexFromItem(searchItemsFoundList[currentSearch])));
+		
 	}
 }
 
