@@ -1152,6 +1152,10 @@ void MainWindowImpl::gotAnnotatedFile(QString file)
 			}
 		} 
 	}
+	QTextCursor cursor = annotatedFileBox->textCursor();
+	cursor.movePosition(QTextCursor::Start);
+	annotatedFileBox->setTextCursor(cursor);
+	annotatedFileBox->ensureCursorVisible ();
 	fileAnnotationTabIndex=commitLogTabs->addTab(annotatedFileBox,"Annotated File");
 }
 	
