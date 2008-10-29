@@ -321,6 +321,7 @@ void MainWindowImpl::openRepo(QString path)
 	if(!dir.isNull())
 		gSettings->teamGitWorkingDir= dir;
 	addRecentlyOpened(dir);
+	refresh();
 }
 
 void MainWindowImpl::openRecent()
