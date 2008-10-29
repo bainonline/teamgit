@@ -1157,6 +1157,7 @@ void MainWindowImpl::gotAnnotatedFile(QString file)
 	annotatedFileBox->setTextCursor(cursor);
 	annotatedFileBox->ensureCursorVisible ();
 	fileAnnotationTabIndex=commitLogTabs->addTab(annotatedFileBox,"Annotated File");
+	commitLogTabs->setCurrentIndex(fileAnnotationTabIndex);
 }
 	
 void MainWindowImpl::patchApplied()
