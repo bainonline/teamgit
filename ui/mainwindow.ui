@@ -331,6 +331,7 @@
     <addaction name="action_Push" />
     <addaction name="separator" />
     <addaction name="action_Apply_Mail" />
+    <addaction name="action_Send_Mail" />
    </widget>
    <widget class="QMenu" name="menu_Help" >
     <property name="title" >
@@ -597,6 +598,11 @@
   <action name="action_Apply_Mail" >
    <property name="text" >
     <string>Apply &amp;Mailed Patch</string>
+   </property>
+  </action>
+  <action name="action_Send_Mail" >
+   <property name="text" >
+    <string>&amp;Send commit by mail</string>
    </property>
   </action>
  </widget>
