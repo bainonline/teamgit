@@ -175,6 +175,7 @@ private slots:
 	void newBranchSlot();
 	void deleteBranchSlot();
 	void newRemoteBranchSlot();
+	void applyMail();
 	
 	void patchApplied();
 	

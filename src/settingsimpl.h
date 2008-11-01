@@ -7,7 +7,7 @@
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+	GNU General Public License for more detailautosignoffs.
 	
 	You should have received a copy of the GNU General Public License
 	along with this program, in file COPYING
@@ -26,6 +26,7 @@ struct gsettings {
 	QString teamGitWorkingDir;
 	QString currProjectPath;
 	QStringList recentlyOpened;
+	QString lastApplyMailPath;
 };
 
 class SettingsImpl : public QDialog, public Ui::SettingsDialog

@@ -231,6 +231,7 @@ void MainWindowImpl::setupConnections()
 	connect(action_Fetch_Remote_Branch,SIGNAL(triggered()),this,SLOT(fetchRemoteBranchSlot()));
 	connect(action_Reset,SIGNAL(triggered()),this,SLOT(resetSlot()));
 	connect(actionShow_Untracked,SIGNAL(triggered()),this,SLOT(hideShowUntracked()));
+	connect(action_Apply_Mail,SIGNAL(triggered()),this,SLOT(applyMail()));
 	
 	connect(gt->git,SIGNAL(notify(const QString &)),this->statusBar(),SLOT(showMessage(const QString &)));
 	connect(gt->git,SIGNAL(progress(int)),this,SLOT(progress(int)));
@@ -378,6 +379,7 @@ void MainWindowImpl::writeSettings()
 	settings.setValue("current_project",gSettings->currProjectPath);
 	settings.setValue("RecentlyOpened",gSettings->recentlyOpened);
 	settings.setValue("autosignoff",gSettings->autosignoff);
+	settings.setValue("applyMailStartPath",gSettings->lastApplyMailPath);
 	settings.endGroup();
 }
 
@@ -400,6 +402,7 @@ void MainWindowImpl::readSettings()
 	gSettings->currProjectPath = QString();
 	gSettings->recentlyOpened = settings.value("RecentlyOpened",QStringList()).toStringList();
 	gSettings->autosignoff = settings.value("autosignoff",bool()).toBool();
+	gSettings->lastApplyMailPath = settings.value("applyMailStartPath",QString("/home")).toString();
 	settings.endGroup();	
 	
 	GIT_INVOKE("getUserSettings");
@@ -853,6 +856,17 @@ void MainWindowImpl::userSettings(QString name, QString email)
 
 }
 
+void MainWindowImpl::applyMail()
+{
+	QString path = QFileDialog::getOpenFileName(this, tr("Select patch to apply"),
+													gSettings->lastApplyMailPath,
+													"");
+	if(!path.isNull()) {
+		QMetaObject::invokeMethod(gt->git,"applyMail",Qt::QueuedConnection,
+							Q_ARG(QString,path),
+							Q_ARG(bool,gSettings->autosignoff));
+	}
+}
 
 void MainWindowImpl::untrackedDoubleClicked(const QModelIndex &index)
 {
