@@ -865,6 +865,7 @@ void MainWindowImpl::applyMail()
 		QMetaObject::invokeMethod(gt->git,"applyMail",Qt::QueuedConnection,
 							Q_ARG(QString,path),
 							Q_ARG(bool,gSettings->autosignoff));
+		gSettings->lastApplyMailPath = path;
 	}
 }
 
