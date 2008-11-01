@@ -559,7 +559,21 @@ void GitProcess::push()
 	emit notify("Ready");
 }
 
+void GitProcess::applyMail(QString mailPath,bool signoff)
+{
+	QStringList args;
 
+	args << "am";
+	if(signoff)
+		args << "--signoff";
+	emit notify("Applying mailed patches");
+	emit initOutputDialog();
+	QByteArray array = runGit(args,false,true);
+	notifyOutputDialog(QString(array));	
+	sendGitOutput();
+	emit doneOutputDialog();
+	emit notify("Ready");
+}
 
 void GitProcess::newBranch(QString branch,QString ref)
 {
