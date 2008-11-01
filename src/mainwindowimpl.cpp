@@ -1034,7 +1034,6 @@ void MainWindowImpl::pushSlot()
 			repo.remove(0,2);
 		}
 	}
-	qDebug() << repo;
 	QMetaObject::invokeMethod(gt->git,"push",Qt::QueuedConnection,
 						Q_ARG(QString,repo));
 }
