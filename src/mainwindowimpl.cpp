@@ -715,7 +715,7 @@ void MainWindowImpl::remoteBranchListReceived(QString branches)
 {
 	if(remoteBranchesModel)
 		delete remoteBranchesModel;
-	remoteBranchesModel = new ProjectsModel(branches,0,"Remote brnaches");
+	remoteBranchesModel = new ProjectsModel(branches,0,"Remote branches");
 	remoteBranchesView->setModel(remoteBranchesModel);
 }
 
