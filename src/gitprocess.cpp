@@ -574,6 +574,7 @@ void GitProcess::applyMail(QString mailPath,bool signoff)
 	QByteArray array = runGit(args,false,true);
 	notifyOutputDialog(QString(array));	
 	sendGitOutput();
+	emit refresh();
 	emit doneOutputDialog();
 	emit notify("Ready");
 }
