@@ -568,6 +568,7 @@ void GitProcess::applyMail(QString mailPath,bool signoff)
 	args << "am";
 	if(signoff)
 		args << "--signoff";
+	args << mailPath;
 	emit notify("Applying mailed patches");
 	emit initOutputDialog();
 	QByteArray array = runGit(args,false,true);
