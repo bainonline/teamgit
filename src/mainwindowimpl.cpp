@@ -28,6 +28,7 @@
 #include <QTextBlock>
 #include <QTextDocumentFragment>
 #include <QMap>
+#include <iostream>
 
 #include "defs.h"
 #include "mainwindowimpl.h"
@@ -295,6 +296,15 @@ void MainWindowImpl::setupConnections()
 MainWindowImpl::~MainWindowImpl()
 {
 	writeSettings();
+	QModelIndex index = logView->selectionModel()->currentIndex();
+	if(index.isValid()) {
+		QStandardItemModel *model=(QStandardItemModel *)logView->model();
+		QStandardItem *item = model->itemFromIndex(index);
+		QString mystring="hallo";
+		QByteArray myarray=model->item(item->row(),3)->text().toAscii();
+		char *str=myarray.data();
+		std::cout << str;
+	}
 }
 
 void MainWindowImpl::about()
