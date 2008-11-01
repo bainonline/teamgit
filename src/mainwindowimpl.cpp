@@ -233,6 +233,7 @@ void MainWindowImpl::setupConnections()
 	connect(actionShow_Untracked,SIGNAL(triggered()),this,SLOT(hideShowUntracked()));
 	connect(action_Apply_Mail,SIGNAL(triggered()),this,SLOT(applyMail()));
 	connect(action_Send_Mail,SIGNAL(triggered()),this,SLOT(sendPatchByMail()));
+	connect(action_Quit,SIGNAL(triggered()),this,SLOT(close()));
 	
 	connect(gt->git,SIGNAL(notify(const QString &)),this->statusBar(),SLOT(showMessage(const QString &)));
 	connect(gt->git,SIGNAL(progress(int)),this,SLOT(progress(int)));

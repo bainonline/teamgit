@@ -303,6 +303,7 @@
     </property>
     <addaction name="action_Open" />
     <addaction name="action_New" />
+    <addaction name="action_Quit" />
    </widget>
    <widget class="QMenu" name="menu_Edit" >
     <property name="title" >
@@ -603,6 +604,15 @@
   <action name="action_Send_Mail" >
    <property name="text" >
     <string>&amp;Send commit by mail</string>
+   </property>
+  </action>
+  <action name="action_Quit" >
+   <property name="icon" >
+    <iconset resource="icons.qrc" >
+     <normaloff>:/main/button_cancel.png</normaloff>:/main/button_cancel.png</iconset>
+   </property>
+   <property name="text" >
+    <string>&amp;Quit</string>
    </property>
   </action>
  </widget>
