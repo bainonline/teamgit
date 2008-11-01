@@ -14,7 +14,7 @@
 	If not, see <http://www.devslashzero.com/teamgit/license>.
 */
 
-
+#include <QDesktopServices>
 #include <QMetaObject>
 #include <QTimer>
 #include <QSettings>
@@ -794,6 +794,32 @@ void MainWindowImpl::commitDetails(QStringList cd)
 	QString diff=cd.at(4);
 	commit_diff->setDiffText(diff);
 	commit_diff->setDiffType(commitDiff);
+}
+
+void MainWindowImpl::sendPatchByMail()
+{
+	QString log = commit_log->toPlainText();
+	QString diff = commit_diff->toPlainText();
+	QString sub,bd;
+	QByteArray subject;
+	QByteArray body;
+	
+	QStringList logLines=log.split("\n");
+	logLines[0].remove(0,4);
+	sub = "[PATCH] "+ logLines[0];
+	subject = QUrl::toPercentEncoding(sub);
+	for(int i=1;i<logLines.count();i++) {
+		logLines[i].remove(0,4);
+		bd += logLines[i];
+		bd += "\n";
+	}
+	bd += "---\n" + diff;
+	body = QUrl::toPercentEncoding(bd);
+	QUrl mailtoUrl;
+	mailtoUrl.setScheme("mailto");
+	mailtoUrl.addEncodedQueryItem(QByteArray("subject"),subject);
+	mailtoUrl.addEncodedQueryItem(QByteArray("body"),body);
+	QDesktopServices::openUrl ( mailtoUrl );
 }
 
 void MainWindowImpl::fileDiffReceived(QString diff,int type)
