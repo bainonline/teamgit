@@ -1026,9 +1026,18 @@ void MainWindowImpl::cherryPickSelectedCommit()
 
 void MainWindowImpl::pushSlot()
 {
-	GIT_INVOKE("push");
+	QString repo;
+	QModelIndex index = remoteBranchesView->selectionModel()->currentIndex();
+	if(index.isValid()) {
+		if(remoteBranchesModel->rowCount(index)) {
+			repo=remoteBranchesModel->filepath(index);
+			repo.remove(0,2);
+		}
+	}
+	qDebug() << repo;
+	QMetaObject::invokeMethod(gt->git,"push",Qt::QueuedConnection,
+						Q_ARG(QString,repo));
 }
-
 
 void MainWindowImpl::newBranchSlot()
 {

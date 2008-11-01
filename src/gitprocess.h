@@ -104,7 +104,7 @@ Q_OBJECT
 	void clone(QString,QString,QString,QString);
 	void pull();
 	void pull(QString,QString,QString);
-	void push();
+	void push(QString repo);
 	void fetch(QString);
 	
 	void checkout(QString);

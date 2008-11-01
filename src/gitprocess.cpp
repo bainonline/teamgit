@@ -544,11 +544,13 @@ void  GitProcess::merge(QString ref)
 	emit refresh();
 }
 
-void GitProcess::push()
+void GitProcess::push(QString repo)
 {
 	QStringList args;
 
 	args << "push";
+	if(!repo.isEmpty())
+		args << repo;
 
 	emit notify("Pushing out");
 	emit initOutputDialog();
