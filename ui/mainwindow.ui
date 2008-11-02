@@ -398,6 +398,9 @@
    <property name="text" >
     <string>&amp;New</string>
    </property>
+   <property name="shortcut" >
+    <string>Ctrl+N</string>
+   </property>
   </action>
   <action name="action_Pull" >
    <property name="icon" >
@@ -406,6 +409,9 @@
    </property>
    <property name="text" >
     <string>&amp;Quick Pull</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+P</string>
    </property>
   </action>
   <action name="action_Refresh" >
@@ -416,6 +422,9 @@
    <property name="text" >
     <string>&amp;Refresh</string>
    </property>
+   <property name="shortcut" >
+    <string>Ctrl+R</string>
+   </property>
   </action>
   <action name="action_Options" >
    <property name="icon" >
@@ -424,6 +433,9 @@
    </property>
    <property name="text" >
     <string>&amp;Options</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+S</string>
    </property>
   </action>
   <action name="action_CherryPick" >
@@ -434,6 +446,9 @@
    <property name="text" >
     <string>&amp;CherryPick</string>
    </property>
+   <property name="shortcut" >
+    <string>Ctrl+X</string>
+   </property>
   </action>
   <action name="action_Merge" >
    <property name="icon" >
@@ -442,6 +457,9 @@
    </property>
    <property name="text" >
     <string>&amp;Merge</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+M</string>
    </property>
   </action>
   <action name="action_Cut" >
@@ -456,6 +474,9 @@
    </property>
    <property name="text" >
     <string>Add &amp;Repository</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+Shift+R</string>
    </property>
   </action>
   <action name="actionAdd_View" >
@@ -484,6 +505,9 @@
    <property name="text" >
     <string>Remove View</string>
    </property>
+   <property name="shortcut" >
+    <string/>
+   </property>
   </action>
   <action name="actionAbout" >
    <property name="icon" >
@@ -492,6 +516,9 @@
    </property>
    <property name="text" >
     <string>About</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+A</string>
    </property>
   </action>
   <action name="actionNew_Tag" >
@@ -502,6 +529,9 @@
    <property name="text" >
     <string>New &amp;Tag</string>
    </property>
+   <property name="shortcut" >
+    <string>Ctrl+T</string>
+   </property>
   </action>
   <action name="action_New_Branch" >
    <property name="icon" >
@@ -511,6 +541,9 @@
    <property name="text" >
     <string>New &amp;Branch</string>
    </property>
+   <property name="shortcut" >
+    <string>Ctrl+B</string>
+   </property>
   </action>
   <action name="action_Delete_Branch" >
    <property name="icon" >
@@ -519,6 +552,9 @@
    </property>
    <property name="text" >
     <string>&amp;Delete Branch</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+Shift+B</string>
    </property>
   </action>
   <action name="action_New_Remote_branch" >
@@ -538,6 +574,9 @@
    <property name="text" >
     <string>&amp;Push</string>
    </property>
+   <property name="shortcut" >
+    <string>Ctrl+Shift+P</string>
+   </property>
   </action>
   <action name="action_Commit" >
    <property name="icon" >
@@ -546,6 +585,9 @@
    </property>
    <property name="text" >
     <string>&amp;Commit</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+C</string>
    </property>
   </action>
   <action name="actionCheck_Out" >
@@ -556,6 +598,9 @@
    <property name="text" >
     <string>Check&amp;Out</string>
    </property>
+   <property name="shortcut" >
+    <string>Ctrl+Shift+O</string>
+   </property>
   </action>
   <action name="action_Open" >
    <property name="icon" >
@@ -564,6 +609,9 @@
    </property>
    <property name="text" >
     <string>&amp;Open</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+O</string>
    </property>
   </action>
   <action name="action_Fetch_Remote_Branch" >
@@ -574,6 +622,9 @@
    <property name="text" >
     <string>&amp;Fetch Remote Branch</string>
    </property>
+   <property name="shortcut" >
+    <string>Ctrl+F</string>
+   </property>
   </action>
   <action name="action_Reset" >
    <property name="icon" >
@@ -582,6 +633,9 @@
    </property>
    <property name="text" >
     <string>&amp;Reset</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+Z</string>
    </property>
   </action>
   <action name="actionShow_Untracked" >
@@ -595,15 +649,24 @@
    <property name="text" >
     <string>Show Untracked Files</string>
    </property>
+   <property name="shortcut" >
+    <string>Ctrl+U</string>
+   </property>
   </action>
   <action name="action_Apply_Mail" >
    <property name="text" >
     <string>Apply &amp;Mailed Patch</string>
    </property>
+   <property name="shortcut" >
+    <string>Ctrl+Shift+A</string>
+   </property>
   </action>
   <action name="action_Send_Mail" >
    <property name="text" >
     <string>&amp;Send commit by mail</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+Shift+M</string>
    </property>
   </action>
   <action name="action_Quit" >
@@ -613,6 +676,9 @@
    </property>
    <property name="text" >
     <string>&amp;Quit</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+Q</string>
    </property>
   </action>
  </widget>
