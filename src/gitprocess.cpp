@@ -34,7 +34,9 @@ GitProcess::GitProcess()
 	setWorkingDirectory("/media/sda7/home/bain/linux-2.6");
 	gitBinary = "/home/bain/bin/git";
 	
+#if defined Q_OS_UNIX
 	pty.open();
+#endif
 }
 
 void GitProcess::setGitBinaryPath(const QString &path)
@@ -61,7 +63,7 @@ QByteArray GitProcess::runGit(QStringList arguments,bool block,bool usePseudoTer
 
 void GitProcess::setupChildProcess()
 {
- #if defined Q_OS_UNIX
+ #if defined  Q_OS_UNIX
 	if(usePty) {
 	 	int fd=::open(pty.ttyName(),O_RDWR);
 		::dup2(fd,0);
@@ -73,6 +75,7 @@ void GitProcess::setupChildProcess()
 
 QByteArray GitProcess::readAllStandardOutput() 
 {
+#if defined Q_OS_UNIX
 	if(usePty) {
 		QByteArray array;
 		char data[1024]={
@@ -84,8 +87,11 @@ QByteArray GitProcess::readAllStandardOutput()
 		}
 		return array;
 	} else {
+#endif
 		return QProcess::readAllStandardOutput();
+#if defined Q_OS_UNIX
 	}
+#endif
 }
 
 void GitProcess::sendGitOutput()

@@ -23,8 +23,9 @@
 #include <QFile>
 #include <QWaitCondition>
 
+#if defined Q_OS_UNIX
 #include "kpty.h"
-//
+#endif
 
 enum gitDiffType {commitDiff=0,stagedDiff,unstagedDiff};
 enum gitResetType {simple=0,soft,hard};
@@ -53,7 +54,9 @@ Q_OBJECT
 	private:
 	
 	bool usePty;
+#if defined Q_OS_UNIX
 	KPty pty;
+#endif
 	QString gitBinary;	
 
 	QString workingDir;
