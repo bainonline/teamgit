@@ -42,6 +42,13 @@ SOURCES = src/mainwindowimpl.cpp \
  src/commitdialogimpl.cpp \
  src/diffviewer.cpp \
  src/resetdialogimpl.cpp
+
+win32 {
+	SOURCES-=src/kpty.cpp
+	HEADERS-=src/kpty_p.h \
+		 src/kpty.h
+}
+
 RESOURCES += ui/icons.qrc
 target.path = /usr/bin/
 desktop_file.path = /usr/share/applications/
