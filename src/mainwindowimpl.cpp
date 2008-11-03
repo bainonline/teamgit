@@ -28,6 +28,7 @@
 #include <QTextBlock>
 #include <QTextDocumentFragment>
 #include <QMap>
+#include <QUrl>
 #include <iostream>
 
 #include "defs.h"

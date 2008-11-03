@@ -19,6 +19,7 @@
 #include <QMessageBox>
 #include <QFile>
 #include <QTemporaryFile>
+#include <QTextStream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
