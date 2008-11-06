@@ -1,24 +1,17 @@
 This package was debianized by Abhijit Bhopatkar <bain@devslashzero.com> on
 Thu, 06 Nov 2008 10:32:25 +0530.
 
-It was downloaded from <url://example.com>
+It was downloaded from <http://www.devslashzero.com>
 
 Upstream Author(s):
 
-    <put author's name and email here>
-    <likewise for another author>
+    Abhijit Bhopatkar <bain@devslashzero.com>
 
 Copyright:
 
-    <Copyright (C) YYYY Name OfAuthor>
-    <likewise for another author>
+    <Copyright (C) 2008 Abhijit Bhopatkar>
 
 License:
 
-    <Put the license of the package here indented by 4 spaces>
-
-The Debian packaging is (C) 2008, Abhijit Bhopatkar <bain@devslashzero.com> and
-is licensed under the GPL, see `/usr/share/common-licenses/GPL'.
-
-# Please also look if there are files or directories which have a
-# different copyright/license attached and list them here.
+    The Debian packaging is (C) 2008, Abhijit Bhopatkar <bain@devslashzero.com> and
+    is licensed under the GPL, see `/usr/share/common-licenses/GPL'.
