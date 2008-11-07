@@ -444,6 +444,24 @@ void GitProcess::getStatus()
 	emit progress(100);
 }
 
+void GitProcess::revert(QString ref)
+{
+        QStringList args;
+
+        args << "revert";
+        args << "--";
+        args << ref;
+
+        emit notify("Revert");
+        emit initOutputDialog();
+        QByteArray array = runGit(args,false,true);
+        notifyOutputDialog(QString(array));
+        sendGitOutput();
+        emit doneOutputDialog();
+        emit notify("Ready");
+        emit refresh();
+}
+
 void GitProcess::cherryPick(QString ref)
 {
 	QStringList args;
