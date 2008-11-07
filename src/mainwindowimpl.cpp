@@ -223,7 +223,8 @@ void MainWindowImpl::setupConnections()
 	connect(action_Refresh,SIGNAL(triggered()),this,SLOT(refresh()));
 	connect(actionNew_Tag,SIGNAL(triggered()),this,SLOT(newTag()));
 	connect(action_CherryPick,SIGNAL(triggered()),this,SLOT(cherryPickSelectedCommit()));
-	connect(action_Commit,SIGNAL(triggered()),this,SLOT(commitSlot()));
+        connect(action_Revert,SIGNAL(triggered()),this,SLOT(revertSelectedCommit()));
+        connect(action_Commit,SIGNAL(triggered()),this,SLOT(commitSlot()));
 	connect(actionCheck_Out,SIGNAL(triggered()),this,SLOT(checkoutSlot()));
 	connect(action_Open,SIGNAL(triggered()),this,SLOT(openRepo()));
 	connect(action_Push,SIGNAL(triggered()),this,SLOT(pushSlot()));
@@ -1077,6 +1078,16 @@ void MainWindowImpl::cherryPickSelectedCommit()
 							Q_ARG(QString,model->item(item->row(),3)->text()));
 }
 
+void MainWindowImpl::revertSelectedCommit()
+{
+        QModelIndex index = logView->selectionModel()->currentIndex();
+        if(!index.isValid())
+                return;
+        QStandardItemModel *model=(QStandardItemModel *)logView->model();
+        QStandardItem *item = model->itemFromIndex(index);
+        QMetaObject::invokeMethod(gt->git,"revert",Qt::QueuedConnection,
+                                                        Q_ARG(QString,model->item(item->row(),3)->text()));
+}
 
 void MainWindowImpl::pushSlot()
 {
