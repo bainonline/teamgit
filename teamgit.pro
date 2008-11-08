@@ -14,7 +14,8 @@ FORMS = ui/mainwindow.ui \
  ui/newproject.ui \
  ui/outputdialog.ui \
  ui/commitdialog.ui \
- ui/resetdialog.ui
+ ui/resetdialog.ui \
+ ui/guifycommand.ui
 HEADERS = src/mainwindowimpl.h \
  src/gitthread.h \
  src/gitprocess.h \
@@ -27,7 +28,8 @@ HEADERS = src/mainwindowimpl.h \
  src/projectsmodel.h \
  src/commitdialogimpl.h \
  src/diffviewer.h \
- src/resetdialogimpl.h
+ src/resetdialogimpl.h \
+ src/guifycommanddialogimpl.h
 SOURCES = src/mainwindowimpl.cpp \
  src/main.cpp \
  src/gitprocess.cpp \
@@ -38,14 +40,12 @@ SOURCES = src/mainwindowimpl.cpp \
  src/projectsmodel.cpp \
  src/commitdialogimpl.cpp \
  src/diffviewer.cpp \
- src/resetdialogimpl.cpp
-
+ src/resetdialogimpl.cpp \
+ src/guifycommanddialogimpl.cpp
 unix {
-	SOURCES+=src/kpty.cpp
-	HEADERS+=src/kpty_p.h \
-		 src/kpty.h
+ SOURCES +=  src/kpty.cpp
+ HEADERS +=  src/kpty_p.h  src/kpty.h
 }
-
 RESOURCES += ui/icons.qrc
 target.path = /usr/bin/
 desktop_file.path = /usr/share/applications/
