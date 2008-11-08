@@ -24,8 +24,6 @@ HEADERS = src/mainwindowimpl.h \
  src/gsettings.h \
  src/newprojectimpl.h \
  src/outputdialogimpl.h \
- src/kpty_p.h \
- src/kpty.h \
  src/projectsmodel.h \
  src/commitdialogimpl.h \
  src/diffviewer.h \
@@ -37,15 +35,14 @@ SOURCES = src/mainwindowimpl.cpp \
  src/settingsimpl.cpp \
  src/newprojectimpl.cpp \
  src/outputdialogimpl.cpp \
- src/kpty.cpp \
  src/projectsmodel.cpp \
  src/commitdialogimpl.cpp \
  src/diffviewer.cpp \
  src/resetdialogimpl.cpp
 
-win32 {
-	SOURCES-=src/kpty.cpp
-	HEADERS-=src/kpty_p.h \
+unix {
+	SOURCES+=src/kpty.cpp
+	HEADERS+=src/kpty_p.h \
 		 src/kpty.h
 }
 
