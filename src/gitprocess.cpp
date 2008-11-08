@@ -114,6 +114,19 @@ void GitProcess::sendGitOutput()
 		notifyOutputDialog(QString(array));
 }
 
+void GitProcess::getHelp(QString command)
+{
+	QStringList args;
+	
+	emit notify("Getting help for command");
+	args << "help";
+	args << command;
+	QByteArray array = runGit(args);
+	QString help(array);
+	
+	emit notify("ready");
+	emit helpMessage(command,help);
+}
 void GitProcess::unstageFiles(QStringList files)
 {
 	for(int i = 0;i<files.size();i++) {

@@ -118,6 +118,8 @@ Q_OBJECT
 	void newRemoteBranch(QString,QString);
 	void deleteBranch(QString);
 	
+	void getHelp(QString command);
+	
 	signals:
 	void logReceived(QString);
 	void namedLogReceived(QString,QString);
@@ -151,5 +153,7 @@ Q_OBJECT
 	void annotatedFile(QString);
 	
 	void refresh();
+	
+	void helpMessage(QString,QString);
 };
 #endif
