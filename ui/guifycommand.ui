@@ -125,6 +125,12 @@
    </item>
    <item>
     <widget class="QSplitter" name="splitter" >
+     <property name="sizePolicy" >
+      <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="orientation" >
       <enum>Qt::Horizontal</enum>
      </property>
@@ -135,6 +141,11 @@
       <property name="frameShadow" >
        <enum>QFrame::Raised</enum>
       </property>
+      <layout class="QVBoxLayout" name="verticalLayout_3" >
+       <item>
+        <layout class="QGridLayout" name="boolOptionsLayout" />
+       </item>
+      </layout>
      </widget>
      <widget class="QFrame" name="textInputOptionsFrame_2" >
       <property name="frameShape" >
@@ -143,21 +154,34 @@
       <property name="frameShadow" >
        <enum>QFrame::Raised</enum>
       </property>
+      <layout class="QVBoxLayout" name="verticalLayout_4" >
+       <item>
+        <layout class="QGridLayout" name="textArgOptionsLayout" />
+       </item>
+      </layout>
      </widget>
     </widget>
    </item>
    <item>
-    <spacer name="verticalSpacer" >
-     <property name="orientation" >
-      <enum>Qt::Vertical</enum>
+    <widget class="QFrame" name="commandArgs" >
+     <property name="sizePolicy" >
+      <sizepolicy vsizetype="Expanding" hsizetype="Preferred" >
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
-     <property name="sizeHint" stdset="0" >
-      <size>
-       <width>20</width>
-       <height>303</height>
-      </size>
+     <property name="frameShape" >
+      <enum>QFrame::StyledPanel</enum>
      </property>
-    </spacer>
+     <property name="frameShadow" >
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_6" >
+      <item>
+       <layout class="QGridLayout" name="commandArgsLayout" />
+      </item>
+     </layout>
+    </widget>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox" >
