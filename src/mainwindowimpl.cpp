@@ -36,14 +36,12 @@
 #include "gitthread.h"
 #include "settingsimpl.h"
 #include "gsettings.h"
-
-
+#include "guifycommanddialogimpl.h"
 
 MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 	: QMainWindow(parent, f)
 {
 	setupUi(this);
-	
 	delete commit_diff1;
 	commit_diff = new DiffViewer(this);
 	hboxLayout5->addWidget(commit_diff);
@@ -129,6 +127,18 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 	}
 	updateRecentlyOpened();
 	fileAnnotationTabIndex=0;
+}
+
+void MainWindowImpl::gotHelpMessage(QString command,QString help)
+{
+	guifyCommandDialogImpl gcd(this,command,help);
+	int ret = gcd.exec();
+	if( ret == QDialog::Accepted) {
+		qDebug() << gcd.getFinalCommandArgs();
+		QMetaObject::invokeMethod(gt->git,"runArgs",Qt::QueuedConnection,
+					Q_ARG(QStringList, gcd.getFinalCommandArgs()),
+					Q_ARG(bool,gcd.refresh()));
+	}
 }
 
 void MainWindowImpl::checkAndSetWorkingDir(QString dir)
@@ -223,8 +233,8 @@ void MainWindowImpl::setupConnections()
 	connect(action_Refresh,SIGNAL(triggered()),this,SLOT(refresh()));
 	connect(actionNew_Tag,SIGNAL(triggered()),this,SLOT(newTag()));
 	connect(action_CherryPick,SIGNAL(triggered()),this,SLOT(cherryPickSelectedCommit()));
-        connect(action_Revert,SIGNAL(triggered()),this,SLOT(revertSelectedCommit()));
-        connect(action_Commit,SIGNAL(triggered()),this,SLOT(commitSlot()));
+	connect(action_Revert,SIGNAL(triggered()),this,SLOT(revertSelectedCommit()));
+	connect(action_Commit,SIGNAL(triggered()),this,SLOT(commitSlot()));
 	connect(actionCheck_Out,SIGNAL(triggered()),this,SLOT(checkoutSlot()));
 	connect(action_Open,SIGNAL(triggered()),this,SLOT(openRepo()));
 	connect(action_Push,SIGNAL(triggered()),this,SLOT(pushSlot()));
@@ -261,6 +271,8 @@ void MainWindowImpl::setupConnections()
 	connect(gt->git,SIGNAL(remoteBranchesList(QString)),this,SLOT(remoteBranchListReceived(QString)));
 	
 	connect(gt->git,SIGNAL(annotatedFile(QString)),this,SLOT(gotAnnotatedFile(QString)));
+	
+	connect(gt->git,SIGNAL(helpMessage(QString,QString)),this,SLOT(gotHelpMessage(QString,QString)));
 	
 	connect(logView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(logClicked(const QModelIndex &)));
 	connect(projectFilesView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(projectFilesViewClicked(const QModelIndex &)));

@@ -184,6 +184,9 @@ private slots:
 	void annotatedFileClicked();
 	
 	void sendPatchByMail();
+	
+	void gotHelpMessage(QString,QString);
+	
 signals:
 	void test();
 	void teamGitWorkingDirChanged(const QString &newDir);
