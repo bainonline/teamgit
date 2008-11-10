@@ -127,6 +127,20 @@ void GitProcess::getHelp(QString command)
 	emit notify("ready");
 	emit helpMessage(command,help);
 }
+
+void GitProcess::runArgs(QStringList args,bool refrsh)
+{
+	emit notify("Running git " + args[0]);
+	emit initOutputDialog();
+	QByteArray array = runGit(args,false,true);
+	notifyOutputDialog(QString(array));
+	sendGitOutput();
+	emit doneOutputDialog();
+	emit notify("Ready");
+	if(refrsh)
+		emit refresh();
+}
+
 void GitProcess::unstageFiles(QStringList files)
 {
 	for(int i = 0;i<files.size();i++) {

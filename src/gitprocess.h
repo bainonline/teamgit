@@ -77,6 +77,8 @@ Q_OBJECT
 	}
 	
 	public slots:
+	void runArgs(QStringList,bool);
+	
 	void setGitBinaryPath(const QString &path); 
 	void getLog(int numLog=1000);
 	void getNamedLog(QString);
