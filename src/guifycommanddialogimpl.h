@@ -16,16 +16,44 @@
 #ifndef __GUIFYCOMMANDDIALOGIMPL_H__
 #define __GUIFYCOMMANDDIALOGIMPL_H__
 
+#include <QObject>
+#include <QString>
+#include <QCheckBox>
+#include <QLineEdit>
+
 #include "gitprocess.h"
 #include "ui_guifycommand.h"
 
+class optionItem : public QObject
+{
+	Q_OBJECT;
+	public slots:
+		void checkItem();
+	public:
+		bool commandArg;
+		QString name;
+		QCheckBox *checkBox;
+		QLineEdit *textArgument;
+		QString textArgumentCaption;
+		bool argumentOptional;
+		bool textArg;
+		QString help;
+		optionItem();
+		~optionItem();
+};
 
 
 class guifyCommandDialogImpl : public QDialog, public Ui::guifyCommandDialog
 {
+	private:
+		QString command;
+		QList<optionItem *> optionItems;
+		void parseHelpLines(QString);
 	public:
-		guifyCommandDialogImpl(QWidget *parent,QString command,QString help);
-		QString getFinalCommand();
+		guifyCommandDialogImpl(QWidget *parent,QString cmd,QString help);
+		~guifyCommandDialogImpl();
+		QStringList getFinalCommandArgs();
+		bool refresh();
 		
 };
 
