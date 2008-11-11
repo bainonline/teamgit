@@ -148,7 +148,7 @@ void MainWindowImpl::gotCommands(QString cmds)
 	QRegExp optionLine("^[\\s]+");
 	QRegExp cmdSplitter("[\\s]+");
 	
-	while(!cmdLines[i++].startsWith("----"));
+	while(!cmdLines[i++].startsWith("----")) ;
 	
 	while(optionLine.indexIn(cmdLines[i]) >= 0) {
 		QStringList lineCommands = cmdLines[i].split(cmdSplitter);
