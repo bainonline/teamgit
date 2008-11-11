@@ -160,6 +160,7 @@ void MainWindowImpl::gotCommands(QString cmds)
 		}
 		i++;
 	}
+	commands.sort();
 	for(int j=0;j < commands.count();j++) {
 		QAction *cmdAction = new QAction(this);
 		cmdAction->setText(commands[j]);
