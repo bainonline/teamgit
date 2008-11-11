@@ -121,6 +121,7 @@ Q_OBJECT
 	void deleteBranch(QString);
 	
 	void getHelp(QString command);
+	void getCommands();
 	
 	signals:
 	void logReceived(QString);
@@ -157,5 +158,6 @@ Q_OBJECT
 	void refresh();
 	
 	void helpMessage(QString,QString);
+	void commands(QString);
 };
 #endif

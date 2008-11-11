@@ -114,6 +114,20 @@ void GitProcess::sendGitOutput()
 		notifyOutputDialog(QString(array));
 }
 
+void GitProcess::getCommands()
+{
+	QStringList args;
+	
+	emit notify("Getting help for command");
+	args << "help";
+	args << "-a";
+	QByteArray array = runGit(args);
+	QString cmds(array);
+	
+	emit notify("ready");
+	emit commands(cmds);
+}
+
 void GitProcess::getHelp(QString command)
 {
 	QStringList args;
