@@ -134,7 +134,6 @@ void MainWindowImpl::gotHelpMessage(QString command,QString help)
 	guifyCommandDialogImpl gcd(this,command,help);
 	int ret = gcd.exec();
 	if( ret == QDialog::Accepted) {
-		qDebug() << gcd.getFinalCommandArgs();
 		QMetaObject::invokeMethod(gt->git,"runArgs",Qt::QueuedConnection,
 					Q_ARG(QStringList, gcd.getFinalCommandArgs()),
 					Q_ARG(bool,gcd.refresh()));
@@ -143,7 +142,6 @@ void MainWindowImpl::gotHelpMessage(QString command,QString help)
 
 void MainWindowImpl::gotCommands(QString cmds)
 {
-	qDebug() << cmds;
 	QStringList cmdLines = cmds.split("\n");
 	QStringList commands;
 	int i=0;
