@@ -92,7 +92,6 @@ void guifyCommandDialogImpl::parseHelpLines(QString help)
 			if(it && !it->name.isEmpty())
 				optionItems.append(it);
 			it = new optionItem();
-			qDebug() << helpLines[i];
 			it->commandArg=true;
 			it->name = commandArg.cap(1);
 		} else {
