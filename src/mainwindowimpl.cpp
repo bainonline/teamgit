@@ -141,6 +141,41 @@ void MainWindowImpl::gotHelpMessage(QString command,QString help)
 	}
 }
 
+void MainWindowImpl::gotCommands(QString cmds)
+{
+	qDebug() << cmds;
+	QStringList cmdLines = cmds.split("\n");
+	QStringList commands;
+	int i=0;
+	QRegExp optionLine("^[\\s]+");
+	QRegExp cmdSplitter("[\\s]+");
+	
+	while(!cmdLines[i++].startsWith("----"));
+	
+	while(optionLine.indexIn(cmdLines[i]) >= 0) {
+		QStringList lineCommands = cmdLines[i].split(cmdSplitter);
+		for(int j=0;j < lineCommands.count();j++) {
+			if(!lineCommands[j].isEmpty())
+				commands << lineCommands[j];
+		}
+		i++;
+	}
+	for(int j=0;j < commands.count();j++) {
+		QAction *cmdAction = new QAction(this);
+		cmdAction->setText(commands[j]);
+		cmdAction->setData(commands[j]);
+		menuAdvanced->addAction(cmdAction);
+		connect(cmdAction,SIGNAL(triggered()),this,SLOT(guifyCommand()));
+	}
+}
+
+void MainWindowImpl::guifyCommand()
+{
+	QAction *action = qobject_cast<QAction *>(sender());
+	QMetaObject::invokeMethod(gt->git,"getHelp",Qt::QueuedConnection,
+				Q_ARG(QString,action->data().toString()));
+}
+
 void MainWindowImpl::checkAndSetWorkingDir(QString dir)
 {
 	QString gitPath = dir + "/.git";
@@ -273,6 +308,7 @@ void MainWindowImpl::setupConnections()
 	connect(gt->git,SIGNAL(annotatedFile(QString)),this,SLOT(gotAnnotatedFile(QString)));
 	
 	connect(gt->git,SIGNAL(helpMessage(QString,QString)),this,SLOT(gotHelpMessage(QString,QString)));
+	connect(gt->git,SIGNAL(commands(QString)),this,SLOT(gotCommands(QString)));
 	
 	connect(logView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(logClicked(const QModelIndex &)));
 	connect(projectFilesView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(projectFilesViewClicked(const QModelIndex &)));
@@ -446,7 +482,7 @@ void MainWindowImpl::initSlot()
 		gSettings->currProjectPath=projectsComboBox->itemText(0);
 	else 
 		projectsComboBox->setCurrentIndex(projectsComboBox->findText(gSettings->currProjectPath));
-	
+	GIT_INVOKE("getCommands");
 	refresh();
 }
 

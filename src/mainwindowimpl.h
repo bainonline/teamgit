@@ -169,7 +169,7 @@ private slots:
 	
 	void newTag();
 	void cherryPickSelectedCommit();
-        void revertSelectedCommit();
+	void revertSelectedCommit();
 
 	void pushSlot();
 	void fetchRemoteBranchSlot();
@@ -186,6 +186,8 @@ private slots:
 	void sendPatchByMail();
 	
 	void gotHelpMessage(QString,QString);
+	void gotCommands(QString);
+	void guifyCommand();
 	
 signals:
 	void test();
