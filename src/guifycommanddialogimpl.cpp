@@ -51,8 +51,8 @@ guifyCommandDialogImpl::~guifyCommandDialogImpl()
 
 
 /*
- *	Why couldn't Bill try out his regular expressions?
- *	His mom wouldn't let him play with matches.
+ * Why couldn't Bill try out his regular expressions?
+ * His mom wouldn't let him play with matches.
  */
 void guifyCommandDialogImpl::parseHelpLines(QString help)
 {
