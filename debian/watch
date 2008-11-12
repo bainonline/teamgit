@@ -1,0 +1,3 @@
+version=3
+
+http://www.devslashzero.com/teamgit-releases/ ./teamgit-(.*)\.tar\.gz
