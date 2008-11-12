@@ -1,7 +1,7 @@
 This package was debianized by Abhijit Bhopatkar <bain@devslashzero.com> on
 Thu, 06 Nov 2008 10:32:25 +0530.
 
-It was downloaded from <http://www.devslashzero.com>
+It was downloaded fromi: http://www.devslashzero.com/teamgit
 
 Upstream Author(s):
 
@@ -9,9 +9,25 @@ Upstream Author(s):
 
 Copyright:
 
-    <Copyright (C) 2008 Abhijit Bhopatkar>
+    Copyright (C) 2008 Abhijit Bhopatkar <bain@devslashzero.com>
 
 License:
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License.
 
-    The Debian packaging is (C) 2008, Abhijit Bhopatkar <bain@devslashzero.com> and
-    is licensed under the GPL, see `/usr/share/common-licenses/GPL'.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License along
+    with this program; if not, write to the Free Software Foundation, Inc.,
+    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA. 
+    
+    See `/usr/share/common-licenses/GPL-2'
+	
+Packaging:
+    The Debian packaging is (C) 2008, Abhijit Bhopatkar <bain@devslashzero.com> 
+    released under the GPL version 2.0, see `/usr/share/common-licenses/GPL-2'.
+
