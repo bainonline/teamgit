@@ -51,9 +51,12 @@ QString GitProcess::getGitBinaryPath()
 
 QByteArray GitProcess::runGit(QStringList arguments,bool block,bool usePseudoTerm) 
 {
+	QStringList args;
+	args << "--no-pager";
+	args << arguments;
 	usePty=usePseudoTerm;
 	setWorkingDirectory(workingDir);
-	start(gitBinary,arguments);
+	start(gitBinary,args);
 
 	if(block)
 		waitForFinished(-1);
