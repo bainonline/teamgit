@@ -98,7 +98,6 @@ void OutputDialogImpl::processMessage(const QString msg)
 			}
 		} else {
 			progressBar->setValue(100);
-			line.remove("\n");
 			if(line.size() > 1)
 				output->insertPlainText(line);
 		}
