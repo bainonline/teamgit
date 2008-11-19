@@ -20,8 +20,8 @@ clean:
 	dh_testdir
 	dh_testroot
 	$(QMAKE) ./teamgit.pro
-	$(MAKE) clean
-	dh_clean build-stamp configure-stamp  
+	[ ! Makefile ] || $(MAKE) distclean
+	dh_clean build-stamp configure-stamp
 
 install: build
 	dh_testdir
