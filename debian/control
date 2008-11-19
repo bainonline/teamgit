@@ -4,11 +4,12 @@ Priority: optional
 Maintainer: Ubuntu MOTU Developers <ubuntu-motu@lists.ubuntu.com>
 XSBC-Original-Maintainer: Abhijit Bhopatkar <bain@devslashzero.com>
 Build-Depends: debhelper (>= 7), libqt4-dev
-Standards-Version: 3.8.0.1ubuntu2
+Standards-Version: 3.8.0
 Homepage: http://www.devslashzero.com/teamgit
 
 Package: teamgit
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, git-core (>= 1.5)
 Description: Visual frontend for git
- Will be tuned for close teams.
+ Teamgit is farely usable gui for git. Its ultimate aim is to become 
+ a one stop tool for developers wokring in close teams. 
