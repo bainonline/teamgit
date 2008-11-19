@@ -1,4 +1,4 @@
-teamgit (0.0.6-0ubuntu1) jaunty; urgency=low
+teamgit (0.0.7-ubuntu1) jaunty; urgency=low
 
   * Initial Ubuntu Package (LP:#296260)
 
