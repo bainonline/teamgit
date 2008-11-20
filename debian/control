@@ -11,5 +11,8 @@ Package: teamgit
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, git-core (>= 1.5)
 Description: Visual frontend for git
- Teamgit is farely usable gui for git. Its ultimate aim is to become 
- a one stop tool for developers wokring in close teams. 
+ Teamgit is farely usable gui for git. Currently it supports fair 
+ number of git operations including commit, branch/tag, remote branch 
+ management and pull-push Its ultimate aim is to become a one stop tool 
+ for developers working in close teams.
+ 
