@@ -1,5 +1,5 @@
-teamgit (0.0.5-1ubuntu1) jaunty; urgency=low
+teamgit (0.0.7-ubuntu1) jaunty; urgency=low
 
-  * Initial Ubuntu Package (LP #296260)
+  * Initial Ubuntu Package (LP:#296260)
 
- -- Abhijit Bhopatkar (My launchpad gpg key) <bain@devslashzero.com> Thu, 06 Nov 2008 19:34:15 +0530
+ -- Abhijit Bhopatkar <bain@devslashzero.com>  Thu, 06 Nov 2008 19:34:15 +0530

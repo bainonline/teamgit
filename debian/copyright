@@ -3,31 +3,96 @@ Thu, 06 Nov 2008 10:32:25 +0530.
 
 It was downloaded fromi: http://www.devslashzero.com/teamgit
 
-Upstream Author(s):
+Upstream Author:
 
-    Abhijit Bhopatkar <bain@devslashzero.com>
+  Abhijit Bhopatkar <bain@devslashzero.com>
 
 Copyright:
 
-    Copyright (C) 2008 Abhijit Bhopatkar <bain@devslashzero.com>
+  Copyright (C) 2008 Abhijit Bhopatkar <bain@devslashzero.com>
 
 License:
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program; if not, write to the Free Software Foundation, Inc.,
-    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA. 
+  You should have received a copy of the GNU General Public License along
+  with this program; if not, write to the Free Software Foundation, Inc.,
+  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA. 
     
-    See `/usr/share/common-licenses/GPL-2'
-	
+  See `/usr/share/common-licenses/GPL-2'
+
+
+src/projectsmodel.cpp
+  based on example code (C) Trolltech ASA
+
+License:
+  This file may be used under the terms of the GNU General Public
+  License versions 2.0 or 3.0 as published by the Free Software
+  Foundation and appearing in the files LICENSE.GPL2 and LICENSE.GPL3
+  included in the packaging of this file.  Alternatively you may (at
+  your option) use any later version of the GNU General Public
+  License if such license has been publicly approved by Trolltech ASA
+  (or its successors, if any) and the KDE Free Qt Foundation. In
+  addition, as a special exception, Trolltech gives you certain
+  additional rights. These rights are described in the Trolltech GPL
+  Exception version 1.1, which can be found at
+  http://www.trolltech.com/products/qt/gplexception/ and in the file
+  GPL_EXCEPTION.txt in this package.
+ 
+  Please review the following information to ensure GNU General
+  Public Licensing requirements will be met:
+  http://trolltech.com/products/qt/licenses/licensing/opensource/. If
+  you are unsure which license is appropriate for your use, please
+  review the following information:
+  http://trolltech.com/products/qt/licenses/licensing/licensingoverview
+  or contact the sales department at sales@trolltech.com.
+ 
+  In addition, as a special exception, Trolltech, as the sole
+  copyright holder for Qt Designer, grants users of the Qt/Eclipse
+  Integration plug-in the right for the Qt/Eclipse Integration to
+  link to functionality provided by Qt Designer and its related
+  libraries.
+ 
+  This file is provided "AS IS" with NO WARRANTY OF ANY KIND,
+  INCLUDING THE WARRANTIES OF DESIGN, MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE. Trolltech reserves all rights not expressly
+  granted herein.
+ 
+  This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
+   WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+		
+src/kpty.c
+src/kpty.h
+src/kpty_p.h
+   Copyright (C) 2002 Waldo Bastian <bastian@kde.org>
+   Copyright (C) 2002-2003,2007 Oswald Buddenhagen <ossi@kde.org>
+   Copyright (C) e_k <e_k at users.sourceforge.net>
+   Copyright (C) 2008 Abhijit Bhopatkar
+
+License:
+   This library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public
+   License as published by the Free Software Foundation; either
+   version 2 of the License, or (at your option) any later version.
+
+   This library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Library General Public License
+   along with this library; see the file COPYING.LIB.  If not, write to
+   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+   Boston, MA 02110-1301, USA.
+
+   See `/usr/share/common-licenses/LGPL`
+
 Packaging:
     The Debian packaging is (C) 2008, Abhijit Bhopatkar <bain@devslashzero.com> 
-    released under the GPL version 2.0, see `/usr/share/common-licenses/GPL-2'.
-
+    released under the GPL version 2.0, see `/usr/share/common-licenses/GPL-2`

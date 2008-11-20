@@ -48,8 +48,10 @@ unix {
 }
 RESOURCES += ui/icons.qrc
 target.path = /usr/bin/
+manpage.path = /usr/share/man/man1
+manpage.files = doc/teamgit.1.gz
 desktop_file.path = /usr/share/applications/
 desktop_file.files = teamgit.desktop
 pixmaps.path = /usr/share/icons/hicolor/48x48/apps
 pixmaps.files = teamgit.png
-INSTALLS += desktop_file pixmaps target
+INSTALLS += desktop_file pixmaps manpage target 

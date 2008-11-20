@@ -7,7 +7,7 @@ configure: configure-stamp
 configure-stamp:
 	dh_testdir
 	$(QMAKE) ./teamgit.pro
-	touch configure-stamp
+	touch $@
 
 
 build: build-stamp
@@ -19,10 +19,9 @@ build-stamp: configure-stamp
 clean: 
 	dh_testdir
 	dh_testroot
-	rm -f build-stamp configure-stamp
-	rm -rf debug release bin build 
-	$(MAKE) clean
-	dh_clean 
+	$(QMAKE) ./teamgit.pro
+	[ ! Makefile ] || $(MAKE) distclean
+	dh_clean build-stamp configure-stamp
 
 install: build
 	dh_testdir
