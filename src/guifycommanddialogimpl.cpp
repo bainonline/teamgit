@@ -59,12 +59,12 @@ void guifyCommandDialogImpl::parseHelpLines(QString help)
 	QStringList helpLines = help.split("\n");
 	int i = 0;
 	optionItem *it = NULL;
-	QRegExp optionLine("^[\\s]+-");
+	QRegExp optionLine("^[\\s]{7,7}-");
 	QRegExp boolOption("^[\\s]+(-[-\\w]+)$");
 	QRegExp boolLongOption("^[\\s]+(--[-\\w]+)$");
-	QRegExp textOption("^[\\s]+(--[-\\w]+)(=.*)$");	
+	QRegExp textOption("^[\\s]+(--[-\\w]+)(=.*)$");
 	QRegExp optionalTextOption("^[\\s]+(--[-\\w]+)(\\[=.*)$");
-	QRegExp commandArg("^[\\s]+(<.*)$");
+	QRegExp commandArg("^[\\s]{7,7}(<.*)$");
 	QRegExp optionsEnd("^\\w");
 	QRegExp helpLinePattern("^[\\s]+([^\\s].*)$");
 	while(!helpLines[i].startsWith("OPTIONS"))
