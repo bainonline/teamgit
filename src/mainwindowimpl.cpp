@@ -153,7 +153,7 @@ void MainWindowImpl::gotCommands(QString cmds)
 	while(optionLine.indexIn(cmdLines[i]) >= 0) {
 		QStringList lineCommands = cmdLines[i].split(cmdSplitter);
 		for(int j=0;j < lineCommands.count();j++) {
-			if(!lineCommands[j].isEmpty())
+			if(!lineCommands[j].isEmpty() && !lineCommands[j].contains("--"))
 				commands << lineCommands[j];
 		}
 		i++;
