@@ -44,6 +44,11 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 	setupUi(this);
 	delete commit_diff1;
 	commit_diff = new DiffViewer(this);
+	QFont font;
+	font.setFamily(QString::fromUtf8("Any"));
+	font.setFixedPitch(true);
+	commit_diff->setFont(font);
+	commit_diff->setReadOnly(true);
 	hboxLayout5->addWidget(commit_diff);
 	setWindowIcon(QIcon(":/main/icon.png"));
 	gt = new GitThread();
