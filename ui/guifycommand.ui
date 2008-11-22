@@ -158,7 +158,7 @@
         </sizepolicy>
        </property>
        <property name="title" >
-        <string>Option with text parameters</string>
+        <string>Option without any parameters</string>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_3" >
         <item>
