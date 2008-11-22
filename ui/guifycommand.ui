@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>645</width>
-    <height>446</height>
+    <height>443</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -124,59 +124,57 @@
     </layout>
    </item>
    <item>
-    <widget class="QSplitter" name="splitter" >
-     <property name="sizePolicy" >
-      <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="orientation" >
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <widget class="QFrame" name="boolOptionsFrame" >
-      <property name="frameShape" >
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow" >
-       <enum>QFrame::Raised</enum>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout_3" >
-       <item>
-        <layout class="QGridLayout" name="boolOptionsLayout" />
-       </item>
-      </layout>
-     </widget>
-     <widget class="QFrame" name="textInputOptionsFrame_2" >
-      <property name="frameShape" >
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow" >
-       <enum>QFrame::Raised</enum>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout_4" >
-       <item>
-        <layout class="QGridLayout" name="textArgOptionsLayout" />
-       </item>
-      </layout>
-     </widget>
-    </widget>
+    <layout class="QHBoxLayout" name="horizontalLayout_3" >
+     <item>
+      <widget class="QGroupBox" name="groupBox_4" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Expanding" hsizetype="Preferred" >
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="title" >
+        <string>Option with text parameters</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_3" >
+        <item>
+         <layout class="QGridLayout" name="boolOptionsLayout" />
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="groupBox_2" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Expanding" hsizetype="Preferred" >
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="title" >
+        <string>Option with text parameters</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_2" >
+        <item>
+         <layout class="QGridLayout" name="textArgOptionsLayout" />
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
    </item>
    <item>
-    <widget class="QFrame" name="commandArgs" >
+    <widget class="QGroupBox" name="groupBox_3" >
      <property name="sizePolicy" >
       <sizepolicy vsizetype="Expanding" hsizetype="Preferred" >
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <property name="frameShape" >
-      <enum>QFrame::StyledPanel</enum>
+     <property name="title" >
+      <string>Command parameters</string>
      </property>
-     <property name="frameShadow" >
-      <enum>QFrame::Raised</enum>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_6" >
+     <layout class="QVBoxLayout" name="verticalLayout_5" >
       <item>
        <layout class="QGridLayout" name="commandArgsLayout" />
       </item>
