@@ -40,6 +40,7 @@ guifyCommandDialogImpl::guifyCommandDialogImpl(QWidget *parent,QString cmd, QStr
 	setupUi(this);
 	command=cmd;
 	gitCommandName->setText(cmd);
+	setWindowTitle("git " + cmd);
 	parseHelpLines(help);
 }
 
