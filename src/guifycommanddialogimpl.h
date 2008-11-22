@@ -20,9 +20,11 @@
 #include <QString>
 #include <QCheckBox>
 #include <QLineEdit>
+#include <QStandardItemModel>
 
 #include "gitprocess.h"
 #include "ui_guifycommand.h"
+#include "projectsmodel.h"
 
 class optionItem : public QObject
 {
@@ -54,6 +56,7 @@ class guifyCommandDialogImpl : public QDialog, public Ui::guifyCommandDialog
 		~guifyCommandDialogImpl();
 		QStringList getFinalCommandArgs();
 		bool refresh();
+		void setModels(QStandardItemModel *,QStandardItemModel *,QStandardItemModel *,ProjectsModel *);
 		
 };
 

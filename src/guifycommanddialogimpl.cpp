@@ -170,3 +170,15 @@ bool guifyCommandDialogImpl::refresh()
 {
 	return refreshCheckBox->isChecked();
 }
+
+void guifyCommandDialogImpl::setModels(QStandardItemModel *logModel,QStandardItemModel *tagsModel,QStandardItemModel *branchModel,ProjectsModel *remoteBranchesModel)
+{
+	if(logModel)
+	   	commitsComboBox->setModel(logModel);
+	if(tagsModel)
+		tagsComboBox->setModel(tagsModel);
+	if(branchModel)
+		branchesComboBox->setModel(branchModel);
+	if(remoteBranchesModel)
+		remotesComboBox->setModel(remoteBranchesModel);
+}

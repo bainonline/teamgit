@@ -132,6 +132,7 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 void MainWindowImpl::gotHelpMessage(QString command,QString help)
 {
 	guifyCommandDialogImpl gcd(this,command,help);
+	gcd.setModels(logModel,tagsModel,branchModel,remoteBranchesModel);
 	int ret = gcd.exec();
 	if( ret == QDialog::Accepted) {
 		QMetaObject::invokeMethod(gt->git,"runArgs",Qt::QueuedConnection,
