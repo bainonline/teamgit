@@ -76,6 +76,24 @@ void GitProcess::setupChildProcess()
 #endif
 }
 
+void GitProcess::rebaseInteractive()
+{
+ emit notify("Getting help for command");
+ QStringList env = QProcess::systemEnvironment();
+ QStringList args;
+ args << "rebase";
+ args << "-i";
+ args << "HEAD~10";
+ env << "GIT_EDITOR=/usr/bin/gedit"; 
+ setEnvironment(env);
+ emit notify("rebase");
+ emit initOutputDialog();
+ QByteArray array = runGit(args,false,true);
+ notifyOutputDialog(QString(array)); 
+ sendGitOutput();
+ emit doneOutputDialog();
+}
+
 QByteArray GitProcess::readAllStandardOutput() 
 {
 #if defined Q_OS_UNIX
