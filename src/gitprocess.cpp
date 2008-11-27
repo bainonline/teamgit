@@ -33,7 +33,7 @@ GitProcess::GitProcess()
 {
 	setWorkingDirectory("/media/sda7/home/bain/linux-2.6");
 	gitBinary = "/home/bain/bin/git";
-	
+	gitRebaseBinary = "/usr/bin/gedit";
 #if defined Q_OS_UNIX
 	pty.open();
 #endif
@@ -78,20 +78,29 @@ void GitProcess::setupChildProcess()
 
 void GitProcess::rebaseInteractive()
 {
- emit notify("Getting help for command");
- QStringList env = QProcess::systemEnvironment();
- QStringList args;
- args << "rebase";
- args << "-i";
- args << "HEAD~10";
- env << "GIT_EDITOR=/usr/bin/gedit"; 
- setEnvironment(env);
- emit notify("rebase");
- emit initOutputDialog();
- QByteArray array = runGit(args,false,true);
- notifyOutputDialog(QString(array)); 
- sendGitOutput();
- emit doneOutputDialog();
+	emit notify("Getting help for command");
+	QStringList env;
+	QStringList args;
+	args << "rebase";
+	args << "-i";
+	args << "HEAD~10";
+	env = QProcess::systemEnvironment();
+	env << "GIT_EDITOR=" + gitRebaseBinary; 
+	setEnvironment(env);
+	emit notify("rebase");
+	emit initOutputDialog();
+	QByteArray array = runGit(args,false,true);
+	notifyOutputDialog(QString(array)); 
+	sendGitOutput();
+	env = QProcess::systemEnvironment();
+	QStringList newEnv;
+	for(int i = 0; i < env.size();i++) {
+		if(!env[i].startsWith("GIT_EDITOR")) {
+			newEnv << env[i];
+		}
+	}
+	setEnvironment(newEnv);
+	emit doneOutputDialog();
 }
 
 QByteArray GitProcess::readAllStandardOutput() 

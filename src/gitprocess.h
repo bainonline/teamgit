@@ -58,7 +58,7 @@ Q_OBJECT
 	KPty pty;
 #endif
 	QString gitBinary;	
-
+	QString gitRebaseBinary;
 	QString workingDir;
 	
 	void sendGitOutput();
