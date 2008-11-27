@@ -97,7 +97,7 @@ Q_OBJECT
 	void getBranches();
 	void getRemoteBranches();
 	void getStatus();
-	void rebaseInteractive();
+	void rebaseInteractive(QString commit);
 	void cherryPick(QString);
 	//void checkout(QString ref);
 	void reset(QString ref,int type=0);

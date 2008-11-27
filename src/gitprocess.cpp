@@ -76,14 +76,14 @@ void GitProcess::setupChildProcess()
 #endif
 }
 
-void GitProcess::rebaseInteractive()
+void GitProcess::rebaseInteractive(QString commit)
 {
 	emit notify("Getting help for command");
 	QStringList env;
 	QStringList args;
 	args << "rebase";
 	args << "-i";
-	args << "HEAD~10";
+	args << commit;
 	env = QProcess::systemEnvironment();
 	env << "GIT_EDITOR=" + gitRebaseBinary; 
 	setEnvironment(env);
