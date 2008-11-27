@@ -294,7 +294,7 @@
      <x>0</x>
      <y>0</y>
      <width>1280</width>
-     <height>27</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile" >
@@ -329,8 +329,11 @@
     <addaction name="actionNew_Tag" />
     <addaction name="action_New_Branch" />
     <addaction name="action_Delete_Branch" />
+    <addaction name="separator" />
     <addaction name="action_Pull" />
     <addaction name="action_Push" />
+    <addaction name="separator" />
+    <addaction name="action_interactiveRebase" />
     <addaction name="separator" />
     <addaction name="action_Apply_Mail" />
     <addaction name="action_Send_Mail" />
@@ -694,6 +697,11 @@
    </property>
    <property name="shortcut" >
     <string>Ctrl+Shift+R</string>
+   </property>
+  </action>
+  <action name="action_interactiveRebase" >
+   <property name="text" >
+    <string>&amp;Interactive rebase</string>
    </property>
   </action>
  </widget>
