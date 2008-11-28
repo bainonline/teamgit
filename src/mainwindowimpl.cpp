@@ -148,6 +148,8 @@ void MainWindowImpl::gotHelpMessage(QString command,QString help)
 
 void MainWindowImpl::gotCommands(QString cmds)
 {
+	if(cmds.isEmpty())
+		return;
 	QStringList cmdLines = cmds.split("\n");
 	QStringList commands;
 	int i=0;
