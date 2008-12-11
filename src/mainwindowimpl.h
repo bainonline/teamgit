@@ -189,6 +189,7 @@ private slots:
 	void gotCommands(QString);
 	void guifyCommand();
 	
+	void rebaseInteractive();
 signals:
 	void test();
 	void teamGitWorkingDirChanged(const QString &newDir);
