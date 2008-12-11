@@ -1,6 +1,6 @@
 TEMPLATE = app
 QT = gui core qt3support
-CONFIG += qt release warn_on console
+CONFIG += qt warn_on console debug
 DESTDIR = bin
 OBJECTS_DIR = build
 MOC_DIR = build
@@ -8,3 +8,5 @@ UI_DIR = build
 FORMS = ui/rebaseDialog.ui
 HEADERS = src/rebaseDialogimpl.h
 SOURCES = src/rebaseDialogimpl.cpp src/main.cpp
+target.path = /usr/bin/
+INSTALLS += target
