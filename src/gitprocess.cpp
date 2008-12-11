@@ -33,7 +33,7 @@ GitProcess::GitProcess()
 {
 	setWorkingDirectory("/media/sda7/home/bain/linux-2.6");
 	gitBinary = "/home/bain/bin/git";
-l	gitRebaseBinary = "/usr/bin/teamgit-rebase";
+	gitRebaseBinary = "/usr/bin/teamgit-rebase";
 #if defined Q_OS_UNIX
 	pty.open();
 #endif
