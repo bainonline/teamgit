@@ -3,12 +3,12 @@
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation, version 2 of the License.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
-	
+
 	You should have received a copy of the GNU General Public License
 	along with this program, in file COPYING
 	If not, see <http://www.devslashzero.com/teamgit/license>.
@@ -41,15 +41,15 @@ GitProcess::GitProcess()
 
 void GitProcess::setGitBinaryPath(const QString &path)
 {
-	gitBinary = path; 
+	gitBinary = path;
 }
 
 QString GitProcess::getGitBinaryPath()
 {
-	return gitBinary; 
+	return gitBinary;
 }
 
-QByteArray GitProcess::runGit(QStringList arguments,bool block,bool usePseudoTerm) 
+QByteArray GitProcess::runGit(QStringList arguments,bool block,bool usePseudoTerm)
 {
 	QStringList args;
 	args << "--no-pager";
@@ -85,12 +85,12 @@ void GitProcess::rebaseInteractive(QString commit)
 	args << "-i";
 	args << commit;
 	env = QProcess::systemEnvironment();
-	env << "GIT_EDITOR=" + gitRebaseBinary; 
+	env << "GIT_EDITOR=" + gitRebaseBinary;
 	setEnvironment(env);
 	emit notify("rebase");
 	emit initOutputDialog();
 	QByteArray array = runGit(args,false,true);
-	notifyOutputDialog(QString(array)); 
+	notifyOutputDialog(QString(array));
 	sendGitOutput();
 	env = QProcess::systemEnvironment();
 	QStringList newEnv;
@@ -103,7 +103,7 @@ void GitProcess::rebaseInteractive(QString commit)
 	emit doneOutputDialog();
 }
 
-QByteArray GitProcess::readAllStandardOutput() 
+QByteArray GitProcess::readAllStandardOutput()
 {
 #if defined Q_OS_UNIX
 	if(usePty) {
@@ -147,13 +147,13 @@ void GitProcess::sendGitOutput()
 void GitProcess::getCommands()
 {
 	QStringList args;
-	
+
 	emit notify("Getting help for command");
 	args << "help";
 	args << "-a";
 	QByteArray array = runGit(args);
 	QString cmds(array);
-	
+
 	emit notify("ready");
 	emit commands(cmds);
 }
@@ -161,13 +161,13 @@ void GitProcess::getCommands()
 void GitProcess::getHelp(QString command)
 {
 	QStringList args;
-	
+
 	emit notify("Getting help for command");
 	args << "help";
 	args << command;
 	QByteArray array = runGit(args);
 	QString help(array);
-	
+
 	emit notify("ready");
 	emit helpMessage(command,help);
 }
@@ -200,7 +200,7 @@ void GitProcess::unstageFiles(QStringList files)
 void GitProcess::stageFiles(QStringList files)
 {
 	QStringList args;
-	
+
 	args << "add";
 	args << files;
 	runGit(args);
@@ -216,12 +216,12 @@ void GitProcess::unStageHunk(QString hunk)
 	}
 	file.close();
 	QStringList args;
-	
+
 	args << "apply";
 	args << "--cached";
 	args << "--reverse";
 	args << file.fileName();
-	
+
 	runGit(args);
 	file.remove();
 	emit patchApplied();
@@ -236,11 +236,11 @@ void GitProcess::stageHunk(QString hunk)
 	}
 	file.close();
 	QStringList args;
-	
+
 	args << "apply";
 	args << "--cached";
 	args << file.fileName();
-	
+
 	runGit(args);
 	file.remove();
 	emit patchApplied();
@@ -287,23 +287,23 @@ void  GitProcess::tag(QString tag)
 	emit tagDone();
 }
 
-void GitProcess::pull(QString repo, QString branch, QString mergeStrategy) 
+void GitProcess::pull(QString repo, QString branch, QString mergeStrategy)
 {
 
 	QStringList args;
 	args << "pull";
-	if(!repo.isEmpty()) 
+	if(!repo.isEmpty())
 		args << branch;
-	if(!branch.isEmpty()) 
+	if(!branch.isEmpty())
 		args << branch;
 	//fixme
-	if(!mergeStrategy.isEmpty()) 
+	if(!mergeStrategy.isEmpty())
 		args << "--strategy" << mergeStrategy;
-		
+
 	emit notify("Doing Pull");
 	emit initOutputDialog();
 	QByteArray array = runGit(args,false,true);
-	notifyOutputDialog(QString(array));	
+	notifyOutputDialog(QString(array));
 	sendGitOutput();
 	emit doneOutputDialog();
 	emit notify("Ready");
@@ -314,23 +314,23 @@ void GitProcess::pull()
 	pull(QString(),QString(),QString());
 }
 
-void GitProcess::clone(QString repo, QString target, QString refRepo,QString dir) 
+void GitProcess::clone(QString repo, QString target, QString refRepo,QString dir)
 {
 
 	QStringList args;
 	args << "clone" << repo;
-	if(!target.isEmpty()) 
+	if(!target.isEmpty())
 		args << target;
-	if(!refRepo.isEmpty()) 
+	if(!refRepo.isEmpty())
 		args << "--reference" << refRepo;
-	
+
 	workingDir = dir;
 	emit notify("Cloning");
 	emit initOutputDialog();
 	QByteArray array = runGit(args,false,true);
-	notifyOutputDialog(QString(array));	
+	notifyOutputDialog(QString(array));
 	sendGitOutput();
-	
+
 	emit cloneComplete(target);
 	emit notify("Ready");
 	emit doneOutputDialog();
@@ -414,7 +414,7 @@ void GitProcess::getLog(int numLog)
 {
 	QStringList args;
 	QString s;
-	
+
 	emit notify("Running git log");
 	emit progress(0);
 	emit progress(10);
@@ -467,12 +467,12 @@ void GitProcess::getCommit(QString commitHash)
 		}
 		commit.remove(0,commit.indexOf(QChar('\n'))+1);
 	}
-	
+
 	commitDet << log;
 	emit progress(90);
 	//if(commit.size() < 1024*100)
 		commitDet << commit;
-	//else 
+	//else
 		//commitDet << "too huge commit to parse";
 	emit commitDetails(commitDet);
 	emit notify("Ready");
@@ -591,14 +591,14 @@ void GitProcess::getRemoteBranches()
 void GitProcess::getTags()
 {
 	QStringList args;
-	
+
 	emit notify("Gathering tags");
 	emit progress(0);
 	args << "tag";
-	
+
 	QByteArray array = runGit(args);
 	emit progress(50);
-	
+
 	QString tags(array);
 	emit tagList(tags);
 
@@ -678,17 +678,17 @@ void GitProcess::applyMail(QString mailPath,bool signoff)
 void GitProcess::newBranch(QString branch,QString ref)
 {
 	QStringList args;
-	
+
 	emit notify("Creating new branch");
 	emit progress(0);
 	args << "branch";
 	args << branch;
 	if(!ref.isEmpty())
 		args << ref;
-	
+
 	QByteArray array = runGit(args);
 	emit progress(100);
-	
+
 	emit refresh();
 	emit notify("Ready");
 	emit progress(100);
@@ -696,19 +696,19 @@ void GitProcess::newBranch(QString branch,QString ref)
 
 void GitProcess::newRemoteBranch(QString name,QString repo)
 {
-	
+
 	QStringList args;
-	
+
 	emit notify("Creating new remote branch");
 	emit progress(0);
 	args << "remote";
 	args << "add";
 	args << name;
 	args << repo;
-	
+
 	QByteArray array = runGit(args);
 	emit progress(100);
-	
+
 	emit refresh();
 	emit notify("Ready");
 	emit progress(100);
@@ -717,16 +717,16 @@ void GitProcess::newRemoteBranch(QString name,QString repo)
 void GitProcess::deleteBranch(QString branch)
 {
 	QStringList args;
-	
+
 	emit notify("Deleting branch");
 	emit progress(0);
 	args << "branch";
 	args << "-d";
 	args << branch;
-	
+
 	QByteArray array = runGit(args);
 	emit progress(100);
-	
+
 	emit refresh();
 	emit notify("Ready");
 	emit progress(100);
@@ -767,7 +767,7 @@ void GitProcess::fetch(QString ref)
 void GitProcess::reset(QString ref,int type)
 {
 	QStringList args;
-	
+
 	emit notify("reset");
 	args << "reset";
 	if(type==soft)
