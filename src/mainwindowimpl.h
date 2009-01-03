@@ -170,6 +170,7 @@ private slots:
 	void newTag();
 	void cherryPickSelectedCommit();
 	void revertSelectedCommit();
+	void merge();
 
 	void pushSlot();
 	void fetchRemoteBranchSlot();

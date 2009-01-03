@@ -275,6 +275,7 @@ void MainWindowImpl::setupConnections()
 	connect(action_Refresh,SIGNAL(triggered()),this,SLOT(refresh()));
 	connect(actionNew_Tag,SIGNAL(triggered()),this,SLOT(newTag()));
 	connect(action_CherryPick,SIGNAL(triggered()),this,SLOT(cherryPickSelectedCommit()));
+	connect(action_Merge,SIGNAL(triggered()),this,SLOT(merge()));
 	connect(action_Revert,SIGNAL(triggered()),this,SLOT(revertSelectedCommit()));
 	connect(action_Commit,SIGNAL(triggered()),this,SLOT(commitSlot()));
 	connect(actionCheck_Out,SIGNAL(triggered()),this,SLOT(checkoutSlot()));
@@ -1131,6 +1132,31 @@ void MainWindowImpl::rebaseInteractive()
 	QStandardItem *item = model->itemFromIndex(index);
 	QMetaObject::invokeMethod(gt->git,"rebaseInteractive",Qt::QueuedConnection,
 							Q_ARG(QString,model->item(item->row(),3)->text()));
+}
+
+void MainWindowImpl::merge()
+{
+	QString branch;
+	QModelIndex index = branchesView->selectionModel()->currentIndex();
+	if(index.isValid()){
+		branch=branchModel->itemFromIndex(index)->text().trimmed();
+		if(branch.startsWith("*")) {
+			return;
+		}
+		branch.trimmed();
+	} else {
+		index = remoteBranchesView->selectionModel()->currentIndex();
+		if(index.isValid()) {
+			branch = remoteBranchesModel->filepath(index);
+			branch = branch.trimmed();
+			if(branch.indexOf("/") >= 0)
+				branch.remove(branch.indexOf("/"),branch.size()-branch.indexOf("/"));
+		}
+	}
+	if(!branch.isEmpty()) {
+		 QMetaObject::invokeMethod(gt->git,"merge",Qt::QueuedConnection,
+							Q_ARG(QString,branch));
+	}
 }
 
 void MainWindowImpl::cherryPickSelectedCommit()
