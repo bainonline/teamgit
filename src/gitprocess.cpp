@@ -90,7 +90,7 @@ void GitProcess::rebaseInteractive(QString commit)
 	emit notify("rebase");
 	emit initOutputDialog();
 	QByteArray array = runGit(args,false,true);
-	notifyOutputDialog(QString(array));
+	notifyOutputDialog(QString::fromUtf8(array));
 	sendGitOutput();
 	env = QProcess::systemEnvironment();
 	QStringList newEnv;
@@ -113,7 +113,7 @@ QByteArray GitProcess::readAllStandardOutput()
 		int	exit=0;
 		while(!exit) {
 			exit =::read(pty.masterFd(),data,1023);
-			array.append(QString::fromUtf8(data));
+			array.append(data);
 		}
 		return array;
 	} else {
@@ -130,18 +130,18 @@ void GitProcess::sendGitOutput()
 	while(state()) {
 		array = readAllStandardOutput();
 		if(array.size())
-			notifyOutputDialog(QString(array));
+			notifyOutputDialog(QString::fromUtf8(array));
 		array = readAllStandardError();
 		if(array.size())
-			notifyOutputDialog(QString(array));
+			notifyOutputDialog(QString::fromUtf8(array));
 		waitForFinished(100);
 	}
 	array = readAllStandardOutput();
 	if(array.size())
-		notifyOutputDialog(QString(array));
+		notifyOutputDialog(QString::fromUtf8(array));
 	array = readAllStandardError();
 	if(array.size())
-		notifyOutputDialog(QString(array));
+		notifyOutputDialog(QString::fromUtf8(array));
 }
 
 void GitProcess::getCommands()
@@ -152,10 +152,9 @@ void GitProcess::getCommands()
 	args << "help";
 	args << "-a";
 	QByteArray array = runGit(args);
-	QString cmds(array);
 
 	emit notify("ready");
-	emit commands(cmds);
+	emit commands(QString::fromUtf8(array));
 }
 
 void GitProcess::getHelp(QString command)
@@ -166,10 +165,9 @@ void GitProcess::getHelp(QString command)
 	args << "help";
 	args << command;
 	QByteArray array = runGit(args);
-	QString help(array);
 
 	emit notify("ready");
-	emit helpMessage(command,help);
+	emit helpMessage(command, QString::fromUtf8(array));
 }
 
 void GitProcess::runArgs(QStringList args,bool refrsh)
@@ -177,7 +175,7 @@ void GitProcess::runArgs(QStringList args,bool refrsh)
 	emit notify("Running git " + args[0]);
 	emit initOutputDialog();
 	QByteArray array = runGit(args,false,true);
-	notifyOutputDialog(QString(array));
+	notifyOutputDialog(QString::fromUtf8(array));
 	sendGitOutput();
 	emit doneOutputDialog();
 	emit notify("Ready");
@@ -303,7 +301,7 @@ void GitProcess::pull(QString repo, QString branch, QString mergeStrategy)
 	emit notify("Doing Pull");
 	emit initOutputDialog();
 	QByteArray array = runGit(args,false,true);
-	notifyOutputDialog(QString(array));
+	notifyOutputDialog(QString::fromUtf8(array));
 	sendGitOutput();
 	emit doneOutputDialog();
 	emit notify("Ready");
@@ -328,7 +326,7 @@ void GitProcess::clone(QString repo, QString target, QString refRepo,QString dir
 	emit notify("Cloning");
 	emit initOutputDialog();
 	QByteArray array = runGit(args,false,true);
-	notifyOutputDialog(QString(array));
+	notifyOutputDialog(QString::fromUtf8(array));
 	sendGitOutput();
 
 	emit cloneComplete(target);
@@ -342,14 +340,12 @@ void GitProcess::getUserSettings()
 
 	args << "config" << "--global" << "--get" << "user.name";
 	emit notify("Getting user settings");
-	QByteArray array = runGit(args);
-	QString name(QString::fromUtf8(array));
+	QByteArray name = runGit(args);
 
 	args2 << "config" << "--global" << "--get" << "user.email";
-	QByteArray array2 = runGit(args2);
-	QString email(QString::fromUtf8(array2));
+	QByteArray email = runGit(args2);
 
-	emit userSettings(name, email);
+	emit userSettings(QString::fromUtf8(name), QString::fromUtf8(email));
 	emit notify("Ready");
 }
 
@@ -372,22 +368,17 @@ void GitProcess::getDiffCached(QString file)
 	args << "diff";
 	args << "--cached";
 	args << file;
-	QByteArray array = runGit(args);
-	QString diff(QString::fromUtf8(array));
+	QByteArray diff = runGit(args);
 	emit fileDiff(diff,stagedDiff);
-
 }
-
 
 void GitProcess::getDiff(QString file)
 {
 	QStringList args;
 	args << "diff";
 	args << file;
-	QByteArray array = runGit(args);
-	QString diff(QString::fromUtf8(array));
+	QByteArray diff = runGit(args);
 	emit fileDiff(diff,unstagedDiff);
-
 }
 
 void GitProcess::getNamedLog(QString ref)
@@ -487,11 +478,10 @@ void GitProcess::getFiles()
 	emit progress(0);
 	args << "ls-files";
 
-	QByteArray array = runGit(args);
+	QByteArray files = runGit(args);
 	emit progress(50);
 
-	QString files(QString::fromUtf8(array));
-	emit projectFiles(files);
+	emit projectFiles(QString::fromUtf8(files));
 
 	emit notify("Ready");
 	emit progress(100);
@@ -505,11 +495,10 @@ void GitProcess::getStatus()
 	emit progress(0);
 	args << "status";
 
-	QByteArray array = runGit(args);
+	QByteArray status= runGit(args);
 	emit progress(50);
 
-	QString status(QString::fromUtf8(array));
-	emit filesStatus(status);
+	emit filesStatus(QString::fromUtf8(status));
 
 	emit notify("Ready");
 	emit progress(100);
@@ -558,11 +547,10 @@ void GitProcess::getBranches()
 	emit progress(0);
 	args << "branch";
 
-	QByteArray array = runGit(args);
+	QByteArray branches = runGit(args);
 	emit progress(50);
 
-	QString branches(QString::fromUtf8(array));
-	emit branchList(branches);
+	emit branchList(QString::fromUtf8(branches));
 
 	emit notify("Ready");
 	emit progress(100);
@@ -577,11 +565,10 @@ void GitProcess::getRemoteBranches()
 	args << "branch";
 	args << "-r";
 
-	QByteArray array = runGit(args);
+	QByteArray branches = runGit(args);
 	emit progress(50);
 
-	QString branches(QString::fromUtf8(array));
-	emit remoteBranchesList(branches);
+	emit remoteBranchesList(QString::fromUtf8(branches));
 
 	emit notify("Ready");
 	emit progress(100);
@@ -596,11 +583,10 @@ void GitProcess::getTags()
 	emit progress(0);
 	args << "tag";
 
-	QByteArray array = runGit(args);
+	QByteArray tags = runGit(args);
 	emit progress(50);
 
-	QString tags(array);
-	emit tagList(tags);
+	emit tagList(QString::fromUtf8(tags));
 
 	emit notify("Ready");
 	emit progress(100);
@@ -696,7 +682,6 @@ void GitProcess::newBranch(QString branch,QString ref)
 
 void GitProcess::newRemoteBranch(QString name,QString repo)
 {
-
 	QStringList args;
 
 	emit notify("Creating new remote branch");
@@ -742,8 +727,7 @@ void GitProcess::blame(QString file)
 	args << file;
 
 	QByteArray array = runGit(args);
-	QString antdFile(QString::fromUtf8(array));
-	emit annotatedFile(antdFile);
+	emit annotatedFile(QString::fromUtf8(array));
 	emit notify("Ready");
 	emit progress(100);
 }
