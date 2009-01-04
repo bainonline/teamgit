@@ -17,6 +17,7 @@ build-stamp: configure-stamp
 	touch $@
 
 clean: 
+	scripts/pretty
 	dh_testdir
 	dh_testroot
 	$(QMAKE) ./teamgit.pro

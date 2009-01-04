@@ -1,0 +1,18 @@
+#!/bin/sh
+
+RM="rm -f"
+FIND=$(which find)
+SDIR=$(dirname $0)
+
+if [ -z "${FIND}" ]; then
+	echo "Error: Install GNU find"
+	exit 1
+fi
+
+${FIND} -name '*.cpp' -exec ${SDIR}/eraser {} \;
+${FIND} -name '*.h' -exec ${SDIR}/eraser {} \;
+${FIND} -name '*.ui' -exec ${SDIR}/eraser {} \;
+${FIND} -name '*.pro' -exec ${SDIR}/eraser {} \;
+${FIND} -name '*~' -exec ${RM} {} \;
+
+exit 0

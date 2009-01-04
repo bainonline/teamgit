@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# remove trailing whitespaces, tabs and carriage returns.
+
+SED=$(which sed)
+MV=$(which mv)
+
+[[ -z "${SED}" ]] && exit 1
+[[ -z "${MV}" ]] && exit 1
+
+for i in "$@";
+do
+	"${SED}" "s/[\r\t ]*$//" "$i" > tmp.bak;
+	"${MV}" -f tmp.bak "$i";
+done;
