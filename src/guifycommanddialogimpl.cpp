@@ -68,8 +68,10 @@ void guifyCommandDialogImpl::parseHelpLines(QString help)
 	QRegExp commandArg("^[\\s]{7,7}(<.*)$");
 	QRegExp optionsEnd("^\\w");
 	QRegExp helpLinePattern("^[\\s]+([^\\s].*)$");
-	while(!helpLines[i].startsWith("OPTIONS"))
+	while(helpLines[i] != NULL && !helpLines[i].startsWith("OPTIONS"))
 		i++;
+	if (helpLines[i] == NULL)
+		return;
 	while(optionsEnd.indexIn(helpLines[++i])<0) {
 		if(helpLines[i].contains(optionLine)) {
 			if(it && !it->name.isEmpty())
