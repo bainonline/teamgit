@@ -369,7 +369,7 @@ void GitProcess::getDiffCached(QString file)
 	args << "--cached";
 	args << file;
 	QByteArray diff = runGit(args);
-	emit fileDiff(diff,stagedDiff);
+	emit fileDiff(QString::fromUtf8(diff),stagedDiff);
 }
 
 void GitProcess::getDiff(QString file)
@@ -378,7 +378,7 @@ void GitProcess::getDiff(QString file)
 	args << "diff";
 	args << file;
 	QByteArray diff = runGit(args);
-	emit fileDiff(diff,unstagedDiff);
+	emit fileDiff(QString::fromUtf8(diff),unstagedDiff);
 }
 
 void GitProcess::getNamedLog(QString ref)
