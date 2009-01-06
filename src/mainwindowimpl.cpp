@@ -436,8 +436,7 @@ void MainWindowImpl::writeSettings()
 {
 	QSettings settings(COMPANY, "Teamgit");
 	settings.beginGroup("MainWindow");
-	settings.setValue("size", size());
-	settings.setValue("pos", pos());
+	settings.setValue("geometry",saveGeometry());
 	settings.setValue("horizontalSplitter1", horizontalSplitter1->saveState());
 	settings.setValue("verticalSplitter1", verticalSplitter1->saveState());
 	settings.endGroup();
@@ -459,8 +458,7 @@ void MainWindowImpl::readSettings()
 	 QSettings settings(COMPANY, "Teamgit");
 
      settings.beginGroup("MainWindow");
-     resize(settings.value("size", QSize(800, 600)).toSize());
-     move(settings.value("pos", QPoint(200,200)).toPoint());
+     restoreGeometry(settings.value("geometry").toByteArray());
      horizontalSplitter1->restoreState(settings.value("horizontalSplitter1").toByteArray());
      verticalSplitter1->restoreState(settings.value("verticalSplitter1").toByteArray());
      settings.endGroup();
