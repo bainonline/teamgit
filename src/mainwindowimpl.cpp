@@ -1130,6 +1130,7 @@ void MainWindowImpl::rebaseInteractive()
 	QStandardItem *item = model->itemFromIndex(index);
 	QMetaObject::invokeMethod(gt->git,"rebaseInteractive",Qt::QueuedConnection,
 							Q_ARG(QString,model->item(item->row(),3)->text()));
+	emit refresh();
 }
 
 void MainWindowImpl::merge()
