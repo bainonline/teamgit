@@ -50,7 +50,7 @@
  #include <QAbstractItemModel>
  #include <QModelIndex>
  #include <QVariant>
- 
+
  class ProjectsItem
  {
  public:
@@ -69,7 +69,7 @@
      ProjectsItem *parent();
 
      QList<ProjectsItem*> childItems;
-     
+
      private:
      QList<QVariant> itemData;
      ProjectsItem *parentItem;
@@ -94,11 +94,11 @@
      QModelIndex parent(const QModelIndex &index) const;
      int rowCount(const QModelIndex &parent = QModelIndex()) const;
      int columnCount(const QModelIndex &parent = QModelIndex()) const;
-     
+
      void setFilesModified(QString files);
 
 private:
-	
+
 	QString modifiedFiles;
      void setupModelData(const QStringList &lines, ProjectsItem *parent);
 	QModelIndex search(const QString &string);

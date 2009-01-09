@@ -3,12 +3,12 @@
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation, version 2 of the License.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
-	
+
 	You should have received a copy of the GNU General Public License
 	along with this program, in file COPYING
 	If not, see <http://www.devslashzero.com/teamgit/license>.
@@ -26,13 +26,13 @@ class DiffViewer : public QTextEdit
 	Q_OBJECT
 	private:
 		int diffType;
-		
+
 		void select(int blockFrom,int blockTo);
 		void mouseReleaseEvent(QMouseEvent *event);
 		void mouseDoubleClickEvent(QMouseEvent *event);
 	public slots:
 		void cursorPosChanged(QTextCursor);
-	
+
 	public:
 		DiffViewer(QWidget * parent);
 		~DiffViewer();
@@ -43,11 +43,11 @@ class DiffViewer : public QTextEdit
 		int getDiffType() {
 			return diffType;
 		}
-	
+
 	signals:
 		void clicked();
 		void doubleClicked();
-	
+
 };
 
 #endif // __DIFFVIEWER_H__

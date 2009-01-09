@@ -3,12 +3,12 @@
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation, version 2 of the License.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
-	
+
 	You should have received a copy of the GNU General Public License
 	along with this program, in file COPYING
 	If not, see <http://www.devslashzero.com/teamgit/license>.
@@ -26,22 +26,22 @@ DiffViewer::DiffViewer(QWidget * parent) : QTextEdit(parent)
 
 DiffViewer::~DiffViewer()
 {
-	
+
 }
 
 void DiffViewer::setDiffText(QString diff)
 {
 	clear();
-	
+
 	if(diff.size() > DIFF_LIMIT) {
 		diff.remove(DIFF_LIMIT,diff.size()-(DIFF_LIMIT));
 		diff.append("\n- Commit too huge: trimmed!");
 	}
 	QStringList diffLines=diff.split(QChar('\n'));
-	 
+
 	setTextColor(QColor("black"));
 	setFontWeight(QFont::Normal);
-	
+
 	for (int i = 0; i < diffLines.size(); ++i) {
 		QString line = diffLines.at(i);
 		/* preprocess */
@@ -62,7 +62,7 @@ void DiffViewer::setDiffText(QString diff)
 			setFontWeight(QFont::Bold);
 		} else if (line.startsWith("index")){
 			setFontWeight(QFont::Bold);
-		} 
+		}
 
 		append(line);
 		setTextColor(QColor("black"));
@@ -83,15 +83,15 @@ void DiffViewer::cursorPosChanged(QTextCursor cursor)
 	QTextDocument *doc= this->document();
 	QString paraText;
 	int paraFrom=-1,paraTo=-1;
-	int para; 
+	int para;
 	int tmp;
 	int totalPara=doc->blockCount();
 	para = doc->findBlock(pos).blockNumber();
-	
+
 	/* if a diff line is clicked select entire file */
 	if(doc->findBlockByNumber(para).text().startsWith("diff")) {
 		paraFrom = para;
-		paraTo=totalPara-1;	
+		paraTo=totalPara-1;
 		tmp=para+1;
 		while(tmp<totalPara) {
 			paraText = doc->findBlockByNumber(tmp).text();
@@ -101,7 +101,7 @@ void DiffViewer::cursorPosChanged(QTextCursor cursor)
 			}
 			tmp++;
 		}
-	} else {	 
+	} else {
 		/* Find starting line */
 		tmp=para;
 		while(tmp) {
@@ -114,7 +114,7 @@ void DiffViewer::cursorPosChanged(QTextCursor cursor)
 			}
 			tmp--;
 		}
-	
+
 		paraTo=totalPara-1;
 		tmp=para;
 		while(tmp<totalPara) {

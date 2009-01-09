@@ -3,12 +3,12 @@
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation, version 2 of the License.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
-	
+
 	You should have received a copy of the GNU General Public License
 	along with this program, in file COPYING
 	If not, see <http://www.devslashzero.com/teamgit/license>.
@@ -43,7 +43,7 @@ void OutputDialogImpl::initOutputDialog(OUTPUT_TYPE type,bool showProgressBar,bo
 		cancelButton->show();
 	else
 		cancelButton->hide();
-	
+
 	closeButton->setEnabled(false);
 	output_type = type;
 	output->clear();
@@ -82,10 +82,10 @@ void OutputDialogImpl::processMessage(const QString msg)
 		if(index == -1 || (outputLines.mid(index+1,1) == "\n") ) {
 			if_cr=false;
 			index = outputLines.indexOf("\n");
-			if(index == -1) 
+			if(index == -1)
 				break;
 		}
-		
+
 		QString line = outputLines.left(index+1);
 		outputLines.remove(0,index+1);
 		if(if_cr) {
@@ -102,7 +102,7 @@ void OutputDialogImpl::processMessage(const QString msg)
 				output->insertPlainText(line);
 		}
 	}
-#if 0 
+#if 0
 	qDebug() << "BEGIN";
 	const QChar *data=msg.data();
 	while (!data->isNull()) {

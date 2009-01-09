@@ -3,12 +3,12 @@
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation, version 2 of the License.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
-	
+
 	You should have received a copy of the GNU General Public License
 	along with this program, in file COPYING
 	If not, see <http://www.devslashzero.com/teamgit/license>.
@@ -90,7 +90,7 @@ void guifyCommandDialogImpl::parseHelpLines(QString help)
 				it->argumentOptional = true;
 				it->name = optionalTextOption.cap(1) ;
 				it->textArgumentCaption = optionalTextOption.cap(2);
-			} 
+			}
 		} else if(commandArg.indexIn(helpLines[i]) >= 0) {
 			if(it && !it->name.isEmpty())
 				optionItems.append(it);
@@ -130,7 +130,7 @@ void guifyCommandDialogImpl::parseHelpLines(QString help)
 				trow++;
 			}
 		} else if(it->commandArg) {
-			QLabel *l= new QLabel(it->name); 
+			QLabel *l= new QLabel(it->name);
 			l->setToolTip(it->help);
 			it->textArgument = new QLineEdit();
 			commandArgsLayout->addWidget(l,crow,0);
@@ -146,7 +146,7 @@ void guifyCommandDialogImpl::parseHelpLines(QString help)
 	}
 }
 
-QStringList guifyCommandDialogImpl::getFinalCommandArgs() 
+QStringList guifyCommandDialogImpl::getFinalCommandArgs()
 {
 	QStringList args;
 	QString arg;

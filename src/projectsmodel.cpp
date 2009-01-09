@@ -122,7 +122,7 @@
 void ProjectsModel::setFilesModified(QString file)
 {
 	QModelIndex index = search(file);
-	ProjectsItem *item = static_cast<ProjectsItem*>(index.internalPointer());	
+	ProjectsItem *item = static_cast<ProjectsItem*>(index.internalPointer());
 	item->status = 1;
 	while(item->parent()!=rootItem) {
 		item=item->parent();
@@ -146,7 +146,7 @@ QModelIndex ProjectsModel::search(const QString &string)
 	return createIndex(item->row(),0,item);
 }
 
-QString ProjectsModel::filepath(const QModelIndex &index) 
+QString ProjectsModel::filepath(const QModelIndex &index)
 {
 	QStringList pathitems;
 	if (!index.isValid())
@@ -163,25 +163,25 @@ QString ProjectsModel::filepath(const QModelIndex &index)
 			path.append("/");
 	}
 	return path;
-	
+
 }
 
  QVariant ProjectsModel::data(const QModelIndex &index, int role) const
  {
      if (!index.isValid())
          return QVariant();
-	ProjectsItem *item = static_cast<ProjectsItem*>(index.internalPointer());	
+	ProjectsItem *item = static_cast<ProjectsItem*>(index.internalPointer());
 	if (role == Qt::DecorationRole)  {
 		if(item->status)
 				return QIcon(":/main/contents.png");
 		if(item->childCount())
 			return QIcon(":/main/fileopen.png");
-		else 
+		else
 			return QIcon(":/main/contents2.png");
-			
+
 	} else if (role == Qt::DisplayRole) {
 		return item->data(index.column());
-	} else 
+	} else
 		return QVariant();
  }
 
@@ -258,10 +258,10 @@ QString ProjectsModel::filepath(const QModelIndex &index)
      dirs << "rootihopenobodynamestheirdirectorythisinsanename";
 
 	int number = 0;
-	while (number < lines.count()-1) { 
+	while (number < lines.count()-1) {
 		QStringList pathItems;
 		pathItems << "rootihopenobodynamestheirdirectorythisinsanename";
-		pathItems << lines[number].split("/"); 
+		pathItems << lines[number].split("/");
 		//Find out if pathItems parents and dir parents are same
 		for(int j=1;j<dirs.size()||j<(pathItems.size()-1);j++) {
 			if(j>=(pathItems.size()-1)) {
@@ -296,7 +296,7 @@ QString ProjectsModel::filepath(const QModelIndex &index)
 				}
 				break;
 			}
-				
+
 		}
 		//add the new child
 		QList<QVariant> data2;

@@ -2,15 +2,15 @@
 #include "rebaseDialogimpl.h"
 
 //
-DialogImpl::DialogImpl( QWidget * parent, Qt::WFlags f) 
+DialogImpl::DialogImpl( QWidget * parent, Qt::WFlags f)
 	: QDialog(parent, f)
 {
 	setupUi(this);
-	
+
 	commitsListView->addColumn("action");
 	commitsListView->addColumn("commit");
 	commitsListView->addColumn("headline", -1);
-	
+
 	connect(upButton,SIGNAL(clicked()),this,SLOT(upSlot()));
 	connect(downButton,SIGNAL(clicked()),this,SLOT(downSlot()));
 	connect(pickButton,SIGNAL(clicked()),this,SLOT(pickSlot()));
@@ -36,7 +36,7 @@ DialogImpl::DialogImpl( QWidget * parent, Qt::WFlags f)
 	}
 }
 
-void DialogImpl::openFile(QString file) 
+void DialogImpl::openFile(QString file)
 {
 	rebaseFile = new QFile(file);
 	if (!rebaseFile->open(QIODevice::ReadWrite | QIODevice::Text))

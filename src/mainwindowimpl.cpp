@@ -3,12 +3,12 @@
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation, version 2 of the License.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
-	
+
 	You should have received a copy of the GNU General Public License
 	along with this program, in file COPYING
 	If not, see <http://www.devslashzero.com/teamgit/license>.
@@ -22,7 +22,7 @@
 #include <QStringListIterator>
 #include <QVariant>
 #include <QMetaType>
-#include <QMessageBox> 
+#include <QMessageBox>
 #include <QInputDialog>
 #include <QFileDialog>
 #include <QTextBlock>
@@ -68,7 +68,7 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 		menuFile->addAction(recentRepos[i]);
 		connect(recentRepos[i],SIGNAL(triggered()),this,SLOT(openRecent()));
 	}
-	
+
 	searchClear = new QAction(QIcon(":/main/locationbar_erase.png"),"Reset Search",this);
 	searchToolBar->addAction(searchClear);
 	searchText = new QLineEdit(this);
@@ -78,7 +78,7 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 	searchPrevious = new QAction(QIcon(":/main/back.png"),"Previous",this);
 	searchToolBar->addAction(searchPrevious);
 	searchToolBar->addAction(searchNext);
-	
+
 	searchAuthor = new QAction("Author",this);
 	searchDate = new QAction("Date",this);
 	searchCommit = new QAction("Commit",this);
@@ -95,16 +95,16 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 	searchOptionGroup->addAction(searchCommit);
 	searchToolBar->addActions(searchOptionGroup->actions());
 	currentSearch=0;
-	
+
 	annotatedFileBox = new QTextEdit(0);
 	annotatedFileBox->setReadOnly(true);
 	connect(annotatedFileBox,SIGNAL(cursorPositionChanged()),this,SLOT(annotatedFileClicked()));
 	QTimer::singleShot(0,this,SLOT(initSlot()));
 	readSettings();
 	setupConnections();
-	
+
 	populateProjects();
-	
+
 	projectsModel = NULL;
 	stagedModel = NULL;
 	unstagedModel = NULL;
@@ -113,12 +113,12 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 	tagsModel=NULL;
 	branchModel=NULL;
 	remoteBranchesModel=NULL;
-	
+
 	hideLogReset();
 	hideStaged();
 	hideUnstaged();
 	hideUntracked();
-	
+
 	QStringList args = QCoreApplication::arguments ();
 	if(args.size() > 1) {
 		//Check the first argument and see if its a git directory
@@ -155,9 +155,9 @@ void MainWindowImpl::gotCommands(QString cmds)
 	int i=0;
 	QRegExp optionLine("^[\\s]+");
 	QRegExp cmdSplitter("[\\s]+");
-	
+
 	while(!cmdLines[i++].startsWith("----")) ;
-	
+
 	while(optionLine.indexIn(cmdLines[i]) >= 0) {
 		QStringList lineCommands = cmdLines[i].split(cmdSplitter);
 		for(int j=0;j < lineCommands.count();j++) {
@@ -245,7 +245,7 @@ void MainWindowImpl::hideLogReset()
 {
 	searchItemsFoundList.clear();
 	LogMessage->hide();
-	ResetLogButton->hide();	
+	ResetLogButton->hide();
 	if(fileAnnotationTabIndex) {
 		commitLogTabs->removeTab(fileAnnotationTabIndex);
 		fileAnnotationTabIndex=0;
@@ -263,11 +263,11 @@ void MainWindowImpl::showLogReset()
 void MainWindowImpl::setupConnections()
 {
 	connect(searchText,SIGNAL(returnPressed()),searchNext,SIGNAL(triggered()));
-	connect(searchText,SIGNAL(textChanged(const QString &)),this,SLOT(textSearch(const QString &))); 
+	connect(searchText,SIGNAL(textChanged(const QString &)),this,SLOT(textSearch(const QString &)));
 	connect(searchNext,SIGNAL(triggered()),this,SLOT(nextSearch()));
-	connect(searchPrevious,SIGNAL(triggered()),this,SLOT(prevSearch())); 
-	connect(searchClear,SIGNAL(triggered()),searchText,SLOT(clear())); 
-	
+	connect(searchPrevious,SIGNAL(triggered()),this,SLOT(prevSearch()));
+	connect(searchClear,SIGNAL(triggered()),searchText,SLOT(clear()));
+
 	connect(actionAbout,SIGNAL(triggered()),this,SLOT(about()));
 	connect(action_Options,SIGNAL(triggered()),this,SLOT(settingsDialog()));
 	connect(action_New,SIGNAL(triggered()),this,SLOT(newProjectDialog()));
@@ -291,7 +291,7 @@ void MainWindowImpl::setupConnections()
 	connect(action_Send_Mail,SIGNAL(triggered()),this,SLOT(sendPatchByMail()));
 	connect(action_Quit,SIGNAL(triggered()),this,SLOT(close()));
 	connect(action_interactiveRebase,SIGNAL(triggered()),this,SLOT(rebaseInteractive()));
-	
+
 	connect(gt->git,SIGNAL(notify(const QString &)),this->statusBar(),SLOT(showMessage(const QString &)));
 	connect(gt->git,SIGNAL(progress(int)),this,SLOT(progress(int)));
 	connect(gt->git,SIGNAL(logReceived(QString)),this,SLOT(logReceived(QString)));
@@ -309,16 +309,16 @@ void MainWindowImpl::setupConnections()
 	connect(gt->git,SIGNAL(initOutputDialog()),this,SLOT(initOutputDialog()));
 	connect(gt->git,SIGNAL(notifyOutputDialog(const QString &)),this,SLOT(notifyOutputDialog(const QString &)));
 	connect(gt->git,SIGNAL(doneOutputDialog()),this,SLOT(doneOutputDialog()));
-	
+
 	connect(gt->git,SIGNAL(tagList(QString)),this,SLOT(tagsListReceived(QString)));
 	connect(gt->git,SIGNAL(branchList(QString)),this,SLOT(branchListReceived(QString)));
 	connect(gt->git,SIGNAL(remoteBranchesList(QString)),this,SLOT(remoteBranchListReceived(QString)));
-	
+
 	connect(gt->git,SIGNAL(annotatedFile(QString)),this,SLOT(gotAnnotatedFile(QString)));
-	
+
 	connect(gt->git,SIGNAL(helpMessage(QString,QString)),this,SLOT(gotHelpMessage(QString,QString)));
 	connect(gt->git,SIGNAL(commands(QString)),this,SLOT(gotCommands(QString)));
-	
+
 	connect(logView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(logClicked(const QModelIndex &)));
 	connect(projectFilesView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(projectFilesViewClicked(const QModelIndex &)));
 	connect(projectsComboBox,SIGNAL(activated(int)),this,SLOT(projectsComboBoxActivated(int)));
@@ -332,12 +332,12 @@ void MainWindowImpl::setupConnections()
 	connect(remoteBranchesView,SIGNAL(doubleClicked(const QModelIndex &)),this,SLOT(remoteBranchesViewClicked(const QModelIndex &)));
 	connect(commit_diff,SIGNAL(doubleClicked()),this,SLOT(diffDoubleClicked()));
 	connect(untrackedFilesView,SIGNAL(doubleClicked(const QModelIndex &)),this,SLOT(untrackedDoubleClicked(const QModelIndex &)));
-	
+
 	//UI tweaks
 	connect(logView,SIGNAL(clicked(const QModelIndex &)),branchesView,SLOT(clearSelection()));
 	connect(logView,SIGNAL(clicked(const QModelIndex &)),remoteBranchesView,SLOT(clearSelection()));
 	connect(logView,SIGNAL(clicked(const QModelIndex &)),tagsView,SLOT(clearSelection()));
-	
+
 	connect(tagsView,SIGNAL(clicked(const QModelIndex &)),branchesView,SLOT(clearSelection()));
 	connect(tagsView,SIGNAL(clicked(const QModelIndex &)),remoteBranchesView,SLOT(clearSelection()));
 	connect(tagsView,SIGNAL(clicked(const QModelIndex &)),logView,SLOT(clearSelection()));
@@ -345,7 +345,7 @@ void MainWindowImpl::setupConnections()
 	connect(branchesView,SIGNAL(clicked(const QModelIndex &)),logView,SLOT(clearSelection()));
 	connect(branchesView,SIGNAL(clicked(const QModelIndex &)),remoteBranchesView,SLOT(clearSelection()));
 	connect(branchesView,SIGNAL(clicked(const QModelIndex &)),tagsView,SLOT(clearSelection()));
-	
+
 	connect(remoteBranchesView,SIGNAL(clicked(const QModelIndex &)),branchesView,SLOT(clearSelection()));
 	connect(remoteBranchesView,SIGNAL(clicked(const QModelIndex &)),logView,SLOT(clearSelection()));
 	connect(remoteBranchesView,SIGNAL(clicked(const QModelIndex &)),tagsView,SLOT(clearSelection()));
@@ -443,7 +443,7 @@ void MainWindowImpl::writeSettings()
 	settings.beginGroup("Git");
 	settings.setValue("gitbinary",gt->git->getGitBinaryPath());
 	settings.endGroup();
-	
+
 	settings.beginGroup("TeamGit");
 	settings.setValue("workspace",gSettings->teamGitWorkingDir);
 	settings.setValue("current_project",gSettings->currProjectPath);
@@ -465,15 +465,15 @@ void MainWindowImpl::readSettings()
      settings.beginGroup("Git");
      gt->git->setGitBinaryPath(settings.value("gitbinary",QString("/usr/bin/git")).toString());
      settings.endGroup();
-     
+
 	settings.beginGroup("TeamGit");
 	gSettings->teamGitWorkingDir = settings.value("workspace",QString("notset")).toString();
 	gSettings->currProjectPath = QString();
 	gSettings->recentlyOpened = settings.value("RecentlyOpened",QStringList()).toStringList();
 	gSettings->autosignoff = settings.value("autosignoff",bool()).toBool();
 	gSettings->lastApplyMailPath = settings.value("applyMailStartPath",QString("/home")).toString();
-	settings.endGroup();	
-	
+	settings.endGroup();
+
 	GIT_INVOKE("getUserSettings");
 }
 
@@ -487,7 +487,7 @@ void MainWindowImpl::initSlot()
 	initSettings();
 	if(gSettings->currProjectPath == "notset")
 		gSettings->currProjectPath=projectsComboBox->itemText(0);
-	else 
+	else
 		projectsComboBox->setCurrentIndex(projectsComboBox->findText(gSettings->currProjectPath));
 	GIT_INVOKE("getCommands");
 	refresh();
@@ -525,7 +525,7 @@ void MainWindowImpl::textSearch(const QString &text)
 		column=3;
 		matchMode=Qt::MatchStartsWith;
 	}
-	
+
 	searchItemsFoundList.clear();
 	searchItemsFoundList << ((QStandardItemModel *)logView->model())->findItems(text,matchMode,column);
 	currentSearch=-1;
@@ -556,13 +556,13 @@ void MainWindowImpl::prevSearch()
 	if(searchItemsFoundList.size() > currentSearch && currentSearch >= 0) {
 		logView->scrollTo((((QStandardItemModel *)logView->model())->indexFromItem(searchItemsFoundList[currentSearch])));
 		logView->setCurrentIndex((((QStandardItemModel *)logView->model())->indexFromItem(searchItemsFoundList[currentSearch])));
-		
+
 	}
 }
 
 void MainWindowImpl::checkWorkingDiff()
 {
-	
+
 }
 
 void MainWindowImpl::newProjectDialog()
@@ -570,7 +570,7 @@ void MainWindowImpl::newProjectDialog()
 	int ret = npd->exec();
 	if( ret == QDialog::Accepted) {
 		QMetaObject::invokeMethod(gt->git,"clone",Qt::QueuedConnection,
-							Q_ARG(QString, npd->getRepository()),                       
+							Q_ARG(QString, npd->getRepository()),
 							Q_ARG(QString, npd->getTarget()),
 							Q_ARG(QString, npd->getRefRepo()),
 							Q_ARG(QString, npd->getDir()));
@@ -625,7 +625,7 @@ void MainWindowImpl::pullDialog()
 	//int ret = pullDialog->exec();
 	//if( ret == QDialog::Accepted) {
 		//}
-}	
+}
 
 void MainWindowImpl::settingsDialog()
 {
@@ -682,10 +682,10 @@ void MainWindowImpl::logReceived(QString log)
 }
 
 void MainWindowImpl::namedLogReceived(QString ref,QString log)
-{	
+{
 	QStandardItemModel *prevModel;
 	prevModel = (QStandardItemModel *)logView->model();
-	
+
 	QStandardItemModel *model = parseLog2Model(log);
 	logView->setModel(model);
 	if(prevModel != logModel)
@@ -717,7 +717,7 @@ void MainWindowImpl::filesStatusReceived(QString status)
 			curList->append(lines[i]+"\n");
 		} else {
 			if(curList == &untrackedChanged) {
-				if(lines[i].startsWith("# ") && 
+				if(lines[i].startsWith("# ") &&
 				   !lines[i].startsWith("# (use ")) {
 					lines[i].remove(0,sizeof("#"));
 					curList->append(lines[i]+"\n");
@@ -725,7 +725,7 @@ void MainWindowImpl::filesStatusReceived(QString status)
 			}
 		}
 	}
-	
+
 	if(stagedChanged.size()) {
 		if(stagedModel)
 			delete stagedModel;
@@ -744,7 +744,7 @@ void MainWindowImpl::filesStatusReceived(QString status)
 	} else {
 		hideUnstaged();
 	}
-	
+
 	if(untrackedChanged.size()) {
 		if(untrackedModel)
 			delete untrackedModel;
@@ -764,7 +764,7 @@ void MainWindowImpl::filesReceived(QString files)
 		delete projectsModel;
 	projectsModel = new ProjectsModel(files);
 	projectFilesView->setModel(projectsModel);
-	
+
 }
 
 void MainWindowImpl::branchListReceived(QString branch)
@@ -809,7 +809,7 @@ void MainWindowImpl::tagsListReceived(QString tags)
 
 QStandardItemModel *MainWindowImpl::parseLog2Model(QString log)
 {
-	QStandardItemModel *model = new QStandardItemModel(0,4);	
+	QStandardItemModel *model = new QStandardItemModel(0,4);
 	QStandardItem *it = new QStandardItem(QString("Log"));
 	QStandardItem *it1 = new QStandardItem(QString("Author"));
 	QStandardItem *it2 = new QStandardItem(QString("Date"));
@@ -818,7 +818,7 @@ QStandardItemModel *MainWindowImpl::parseLog2Model(QString log)
 	model->setHorizontalHeaderItem(1,it1);
 	model->setHorizontalHeaderItem(2,it2);
 	model->setHorizontalHeaderItem(3,it3);
-	
+
 	QString delimit("TEAMGITFIELDEND");
 	QString delimit2("TEAMGITFIELDMARKER");
 	QStringList logList=log.split(delimit);
@@ -843,10 +843,10 @@ QStandardItemModel *MainWindowImpl::parseLog2Model(QString log)
 		QStandardItem *item1 = new QStandardItem(oneLiner);
 		item1->setEditable(false);
 		itemlist.append(item1);
-		
+
 		while(it2.hasNext()) {
 			QStandardItem *item1 = new QStandardItem(it2.next());
-			item1->setEditable(false);	
+			item1->setEditable(false);
 			itemlist.append(item1);
 		}
 		model->appendRow(itemlist);
@@ -872,7 +872,7 @@ void MainWindowImpl::sendPatchByMail()
 	QString sub,bd;
 	QByteArray subject;
 	QByteArray body;
-	
+
 	QStringList logLines=log.split("\n");
 	logLines[0].remove(0,4);
 	sub = "[PATCH] "+ logLines[0];
@@ -929,9 +929,9 @@ void MainWindowImpl::progress(int i)
 {
 	if(i == 0) {
 		progressBar = new QProgressBar(this);
-		statusBar()->addPermanentWidget(progressBar); 
+		statusBar()->addPermanentWidget(progressBar);
 		QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-		
+
 	} else if(i == 100) {
 		if(progressBar) {
 			statusBar()->removeWidget(progressBar);
@@ -969,28 +969,28 @@ void MainWindowImpl::untrackedDoubleClicked(const QModelIndex &index)
 	QStringList files;
 	QModelIndexList indexes = untrackedFilesView->selectionModel()->selectedIndexes();
 
-	for(int i=0;i < indexes.size();i++) {	
+	for(int i=0;i < indexes.size();i++) {
 		if(!untrackedModel->rowCount(indexes[i]))
 			files << untrackedModel->filepath(indexes[i]);
 	}
 	files << untrackedModel->filepath(index);
-	
+
 	QMetaObject::invokeMethod(gt->git,"stageFiles",Qt::QueuedConnection,
 							Q_ARG(QStringList,files));
 }
 
 void MainWindowImpl::stagedDoubleClicked(const QModelIndex &index)
 {
-	
+
 	QStringList files;
 	QModelIndexList indexes = stagedFilesView->selectionModel()->selectedIndexes();
 
-	for(int i=0;i < indexes.size();i++) {	
+	for(int i=0;i < indexes.size();i++) {
 		if(!stagedModel->rowCount(indexes[i]))
 			files << stagedModel->filepath(indexes[i]);
 	}
 	files << stagedModel->filepath(index);
-	
+
 	QMetaObject::invokeMethod(gt->git,"unstageFiles",Qt::QueuedConnection,
 							Q_ARG(QStringList,files));
 }
@@ -1000,12 +1000,12 @@ void MainWindowImpl::unstagedDoubleClicked(const QModelIndex &index)
 	QStringList files;
 	QModelIndexList indexes = unstagedFilesView->selectionModel()->selectedIndexes();
 
-	for(int i=0;i < indexes.size();i++) {	
+	for(int i=0;i < indexes.size();i++) {
 		if(!unstagedModel->rowCount(indexes[i]))
 			files << unstagedModel->filepath(indexes[i]);
 	}
 	files << unstagedModel->filepath(index);
-	
+
 	QMetaObject::invokeMethod(gt->git,"stageFiles",Qt::QueuedConnection,
 							Q_ARG(QStringList,files));
 }
@@ -1031,7 +1031,7 @@ void MainWindowImpl::tagsViewClicked(const QModelIndex &index)
 {
 	branchesView->selectionModel()->clear();
 	remoteBranchesView->selectionModel()->clear();
-	
+
 	QString text = tagsModel->itemFromIndex(index)->text();
 	QMetaObject::invokeMethod(gt->git,"getNamedLog",Qt::QueuedConnection,
                            Q_ARG(QString,text));
@@ -1041,7 +1041,7 @@ void MainWindowImpl::branchesViewClicked(const QModelIndex &index)
 {
 	remoteBranchesView->selectionModel()->clear();
 	tagsView->selectionModel()->clear();
-	
+
 	QString text = branchModel->itemFromIndex(index)->text();
 	if(text.startsWith("*")) {
 		resetLog();
@@ -1092,7 +1092,7 @@ void MainWindowImpl::projectFilesViewClicked(const QModelIndex &index)
 	QString text =  projectsModel->filepath(index);
 	QMetaObject::invokeMethod(gt->git,"getNamedLog",Qt::QueuedConnection,
 							Q_ARG(QString,text));
-	if(!projectsModel->rowCount(index)) 
+	if(!projectsModel->rowCount(index))
 		QMetaObject::invokeMethod(gt->git,"blame",Qt::QueuedConnection,
 							Q_ARG(QString,text));
 }
@@ -1108,7 +1108,7 @@ void MainWindowImpl::projectsComboBoxActivated(int index)
 void MainWindowImpl::resetLog()
 {
 	QStandardItemModel *prevModel;
-	prevModel = (QStandardItemModel *)logView->model();	
+	prevModel = (QStandardItemModel *)logView->model();
 	logView->setModel(logModel);
 	if(prevModel != logModel)
 		delete prevModel;
@@ -1253,20 +1253,20 @@ void MainWindowImpl::newRemoteBranchSlot()
 	QString branch = QInputDialog::getText(this, tr("Add New Remote branch"),
 										tr("Please enter the branch name (for local referece):"), QLineEdit::Normal,
 										"", &ok);
-	if(!ok) 
+	if(!ok)
 		return;
 
 	QString url = QInputDialog::getText(this, tr("Add New Remote branch"),
 									tr("Please enter the branch url:"), QLineEdit::Normal,
 									"", &ok);
 	url=url.trimmed();
-	if(!ok) 
+	if(!ok)
 		return;
-		
+
 	QMetaObject::invokeMethod(gt->git,"newRemoteBranch",Qt::QueuedConnection,
 							Q_ARG(QString,branch),
 							Q_ARG(QString,url));
-	
+
 	QMetaObject::invokeMethod(gt->git,"fetch",Qt::QueuedConnection,
 							Q_ARG(QString,branch));
 	GIT_INVOKE("getRemoteBranches");
@@ -1298,7 +1298,7 @@ void MainWindowImpl::gotAnnotatedFile(QString file)
 	QString commit, author,fileLine;
 	QMap<QString, QString> map;
 	int commit_lines=0;
-	
+
 	annotatedFileBox->clear();
 	QStringList fileLines = file.split("\n");
 	for(int i=0;i<fileLines.count()-1;i++) {
@@ -1315,7 +1315,7 @@ void MainWindowImpl::gotAnnotatedFile(QString file)
 					author= fileLines[i].remove(0,7);
 					map[commit] = author;
 			}
-		} 
+		}
 	}
 	QTextCursor cursor = annotatedFileBox->textCursor();
 	cursor.movePosition(QTextCursor::Start);
@@ -1324,7 +1324,7 @@ void MainWindowImpl::gotAnnotatedFile(QString file)
 	fileAnnotationTabIndex=commitLogTabs->addTab(annotatedFileBox,"Annotated File");
 	commitLogTabs->setCurrentIndex(fileAnnotationTabIndex);
 }
-	
+
 void MainWindowImpl::patchApplied()
 {
 	QModelIndex index = unstagedFilesView->selectionModel()->currentIndex();
@@ -1367,7 +1367,7 @@ void MainWindowImpl::resetSlot()
 	if( ret == QDialog::Accepted) {
 		int opt = rsd->getOption();
 		QMetaObject::invokeMethod(gt->git,"reset",Qt::QueuedConnection,
- 					Q_ARG(QString, ref),                       
+ 					Q_ARG(QString, ref),
  					Q_ARG(int, opt));
  	}
 }
@@ -1376,6 +1376,6 @@ void MainWindowImpl::resetSlot()
 //Usefull if you want to pop a dialog for debug from git thread etc.
 void MainWindowImpl::testSlot()
 {
-	
+
 }
 //

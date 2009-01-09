@@ -55,4 +55,4 @@ desktop_file.path = /usr/share/applications/
 desktop_file.files = teamgit.desktop
 pixmaps.path = /usr/share/pixmaps
 pixmaps.files = teamgit_icon.png
-INSTALLS += desktop_file pixmaps manpage target 
+INSTALLS += desktop_file pixmaps manpage target
