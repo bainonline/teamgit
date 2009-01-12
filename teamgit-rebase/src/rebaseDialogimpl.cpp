@@ -138,7 +138,7 @@ void DialogImpl::squashSlot()
 
 void DialogImpl::okSlot()
 {
-	QByteArray result;
+	QString result;
 
 	rebaseFile->close();
 	if (!rebaseFile->open(QIODevice::ReadWrite | QIODevice::Text | QIODevice::Truncate)) {
@@ -147,7 +147,7 @@ void DialogImpl::okSlot()
 
 	if (!rebaseMode) {
 		result = textEdit->text().trimmed();
-		rebaseFile->writeBlock(result);
+		rebaseFile->writeBlock(QByteArray(result.toUtf8()));
 		rebaseFile->close();
 
 		close();
@@ -175,7 +175,7 @@ void DialogImpl::okSlot()
 	result.append("\n");
 
 	/* try to overwrite the current file with the re-ordered commits */
-	rebaseFile->writeBlock(result);
+	rebaseFile->writeBlock(QByteArray(result.toUtf8()));
 	rebaseFile->close();
 
 	close();
