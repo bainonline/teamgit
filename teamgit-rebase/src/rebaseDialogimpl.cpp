@@ -62,7 +62,7 @@ void DialogImpl::openFile(QString file)
 		qFatal ("The file " + file + " does not exist");
 	}
 
-	if (!rebaseFile->open(QIODevice::ReadWrite | QIODevice::Text))
+	if (!rebaseFile->open(QIODevice::ReadOnly | QIODevice::Text))
 		qFatal ("Check the file permissions on " + file);
 
 	while (!rebaseFile->atEnd()) {
