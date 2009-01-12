@@ -13,11 +13,14 @@ private:
 	QFile *rebaseFile;
 	bool rebaseMode;
 	Q3ListViewItem *lastItem;
+	QTextEdit *textEdit;
 
 	void openFile(QString file);
 	void processLine(QString line);
+	void setEditMode();
 public:
 	DialogImpl( QWidget * parent = 0, Qt::WFlags f = 0 );
+   ~DialogImpl();
 
 private slots:
 	void upSlot();

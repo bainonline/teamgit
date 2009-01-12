@@ -1,7 +1,6 @@
 #include <QString>
 #include "rebaseDialogimpl.h"
 
-//
 DialogImpl::DialogImpl( QWidget * parent, Qt::WFlags f)
 	: QDialog(parent, f)
 {
@@ -21,43 +20,67 @@ DialogImpl::DialogImpl( QWidget * parent, Qt::WFlags f)
 	commitsListView->setSorting(-1);
 
 	QStringList args = QCoreApplication::arguments ();
-	if(args.size() > 1) {
-		if (args[1].endsWith("COMMIT_EDITMSG")) {
-			setWindowTitle("COMMIT");
-			rebaseMode = false;
-		} else {
-			setWindowTitle("REBASE");
-			rebaseMode = true;
-		}
-		lastItem = NULL;
-		openFile(args[1]);
-	} else {
-		/* nothing to do */
-		close();
+	if(args.size() < 2) {
+		qFatal ("Usage: teamgit-rebase FILE");
 	}
+
+	if (args[1].endsWith("git-rebase-todo")) {
+		setWindowTitle("REBASE");
+		rebaseMode = true;
+		textEdit = NULL;
+		/* safely remove the first line */
+		Q3ListViewItem *item = commitsListView->firstChild();
+		if (item && item->text(2) == "")
+			commitsListView->removeItem(item);
+	} else if (args[1].endsWith("COMMIT_EDITMSG")) {
+		setWindowTitle("COMMIT");
+		setEditMode();
+		rebaseMode = false;
+	} else
+		qFatal ("Usage: teamgit-rebase FILE");
+
+	lastItem = NULL;
+	openFile(args[1]);
+}
+
+DialogImpl::~DialogImpl()
+{
+	if (rebaseFile)
+		delete rebaseFile;
+	if (commitsListView)
+		commitsListView->clear();
+	if (textEdit)
+		delete textEdit;
 }
 
 void DialogImpl::openFile(QString file)
 {
 	rebaseFile = new QFile(file);
+	if (!rebaseFile->exists()) {
+		qFatal ("The file " + file + " does not exist");
+	}
+
 	if (!rebaseFile->open(QIODevice::ReadWrite | QIODevice::Text))
-		return;
+		qFatal ("Check the file permissions on " + file);
 
 	while (!rebaseFile->atEnd()) {
 		QByteArray line = rebaseFile->readLine();
 		processLine(QString::fromUtf8(line));
 	}
+
+	if (textEdit)
+		textEdit->moveCursor(QTextCursor::Start);
 }
 
 void DialogImpl::processLine(QString line)
 {
-	if(line.startsWith("#"))
-		return;
-
 	if (!rebaseMode) {
-		lastItem = new Q3ListViewItem(commitsListView, lastItem, "pick", "line", line.remove(QRegExp("[\r\n\t ]*$")));
+		textEdit->insertPlainText(line);
 		return;
 	}
+
+	if(line.startsWith("#"))
+		return;
 
 	QStringList lineItems = line.split(" ");
 	if(lineItems.size() > 2) {
@@ -115,36 +138,41 @@ void DialogImpl::squashSlot()
 
 void DialogImpl::okSlot()
 {
+	QByteArray result;
+
+	rebaseFile->close();
+	if (!rebaseFile->open(QIODevice::ReadWrite | QIODevice::Text | QIODevice::Truncate)) {
+		qFatal ("Cannot reopen the file");
+	}
+
+	if (!rebaseMode) {
+		result = textEdit->text().trimmed();
+		rebaseFile->writeBlock(result);
+		rebaseFile->close();
+
+		close();
+		return;
+	}
+
 	Q3ListViewItemIterator it(commitsListView);
 	QStringList list;
-	QByteArray result;
 
 	while (it.current()) {
 		Q3ListViewItem *item = it.current();
 		QString str = "";
 
-		if (rebaseMode) {
-			for (int i=0;i<3;i++)
-				str.append(item->text(i) + "\t");
-			list.append(str);
-		} else {
-			if (item->text(0) == "pick") {
-				str = item->text(2);
-				if (str != "")
-					list.append(str);
-			}
-		}
+		for (int i=0;i<3;i++)
+			str.append(item->text(i) + "\t");
+		list.append(str);
 		it++;
 	}
 
 	for (QStringList::Iterator it = list.begin(); it != list.end(); it++)
 		result.append(*it + "\n");
 
-	rebaseFile->close();
-	if (!rebaseFile->open(QIODevice::ReadWrite | QIODevice::Text | QIODevice::Truncate)) {
-		qWarning ("Cannot reopen the file");
-		close();
-	}
+	result = result.trimmed();
+	/* add a newline to the end of the file */
+	result.append("\n");
 
 	/* try to overwrite the current file with the re-ordered commits */
 	rebaseFile->writeBlock(result);
@@ -156,5 +184,19 @@ void DialogImpl::okSlot()
 void DialogImpl::cancelSlot()
 {
 	rebaseFile->close();
-	close();
+	reject();
+}
+
+void DialogImpl::setEditMode()
+{
+	delete commitsListView;
+	commitsListView = NULL;
+
+	delete upButton;
+	delete downButton;
+	delete pickButton;
+	delete squashButton;
+
+	textEdit = new QTextEdit();
+	verticalLayout->addWidget(textEdit);
 }
