@@ -12,6 +12,7 @@ private:
 
 	QFile *rebaseFile;
 	bool rebaseMode;
+	Q3ListViewItem *lastItem;
 
 	void openFile(QString file);
 	void processLine(QString line);

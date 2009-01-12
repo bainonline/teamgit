@@ -29,6 +29,7 @@ DialogImpl::DialogImpl( QWidget * parent, Qt::WFlags f)
 			setWindowTitle("REBASE");
 			rebaseMode = true;
 		}
+		lastItem = NULL;
 		openFile(args[1]);
 	} else {
 		/* nothing to do */
@@ -54,7 +55,7 @@ void DialogImpl::processLine(QString line)
 		return;
 
 	if (!rebaseMode) {
-		new Q3ListViewItem(commitsListView, "pick", "line", line.remove(QRegExp("[\r\n\t ]*$")));
+		lastItem = new Q3ListViewItem(commitsListView, lastItem, "pick", "line", line.remove(QRegExp("[\r\n\t ]*$")));
 		return;
 	}
 
@@ -66,7 +67,7 @@ void DialogImpl::processLine(QString line)
 			headline.append(" ");
 		}
 		headline.remove(QRegExp("[\r\n\t ]*$"));
-		new Q3ListViewItem(commitsListView,lineItems[0],lineItems[1], headline);
+		lastItem = new Q3ListViewItem(commitsListView, lastItem, lineItems[0], lineItems[1], headline);
 	}
 }
 
@@ -136,8 +137,7 @@ void DialogImpl::okSlot()
 		it++;
 	}
 
-	/* Reverse the list :) */
-	for (QStringList::Iterator it = list.end()-1; it != list.begin()-1; it--)
+	for (QStringList::Iterator it = list.begin(); it != list.end(); it++)
 		result.append(*it + "\n");
 
 	rebaseFile->close();
