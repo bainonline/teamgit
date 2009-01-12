@@ -14,7 +14,7 @@
 	If not, see <http://www.devslashzero.com/teamgit/license>.
 */
 #include <QtDebug>
-#include <stdio.h>
+#include <cstdio>
 #include <iostream>
 
 

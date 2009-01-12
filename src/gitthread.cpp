@@ -14,7 +14,7 @@
 	If not, see <http://www.devslashzero.com/teamgit/license>.
 */
 #include "gitthread.h"
-#include <stdio.h>
+#include <cstdio>
 
 GitThread::GitThread()
 {
