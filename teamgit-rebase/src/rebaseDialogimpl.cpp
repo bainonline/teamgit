@@ -14,6 +14,8 @@ DialogImpl::DialogImpl( QWidget * parent, Qt::WFlags f)
 	connect(downButton,SIGNAL(clicked()),this,SLOT(downSlot()));
 	connect(pickButton,SIGNAL(clicked()),this,SLOT(pickSlot()));
 	connect(squashButton,SIGNAL(clicked()),this,SLOT(squashSlot()));
+	connect(editButton,SIGNAL(clicked()),this,SLOT(editSlot()));
+	connect(dropButton,SIGNAL(clicked()),this,SLOT(dropSlot()));
 	connect(okButton,SIGNAL(clicked()),this,SLOT(okSlot()));
 	connect(cancelButton,SIGNAL(clicked()),this,SLOT(cancelSlot()));
 
@@ -136,6 +138,20 @@ void DialogImpl::squashSlot()
 		item->setText(0, "squash");
 }
 
+void DialogImpl::editSlot()
+{
+	Q3ListViewItem *item = commitsListView->selectedItem();
+	if (item)
+		item->setText(0, "edit");
+}
+
+void DialogImpl::dropSlot()
+{
+	Q3ListViewItem *item = commitsListView->selectedItem();
+	if (item)
+		item->setText(0, "drop");
+}
+
 void DialogImpl::okSlot()
 {
 	QString result;
@@ -163,7 +179,8 @@ void DialogImpl::okSlot()
 
 		for (int i=0;i<3;i++)
 			str.append(item->text(i) + "\t");
-		list.append(str);
+		if (item->text(0) != "drop")
+			list.append(str);
 		it++;
 	}
 
@@ -196,6 +213,8 @@ void DialogImpl::setEditMode()
 	delete downButton;
 	delete pickButton;
 	delete squashButton;
+	delete editButton;
+	delete dropButton;
 
 	textEdit = new QTextEdit();
 	verticalLayout->addWidget(textEdit);

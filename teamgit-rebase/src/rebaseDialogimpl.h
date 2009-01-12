@@ -27,6 +27,8 @@ private slots:
 	void downSlot();
 	void squashSlot();
 	void pickSlot();
+	void editSlot();
+	void dropSlot();
 	void okSlot();
 	void cancelSlot();
 };
