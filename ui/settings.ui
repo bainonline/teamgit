@@ -6,13 +6,13 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>300</height>
+    <height>313</height>
    </rect>
   </property>
   <property name="windowTitle" >
    <string>Dialog</string>
   </property>
-  <layout class="QVBoxLayout" >
+  <layout class="QVBoxLayout" name="verticalLayout_2" >
    <item>
     <widget class="QTabWidget" name="tabWidget" >
      <property name="currentIndex" >
@@ -153,11 +153,53 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout" >
        <item>
+        <spacer name="verticalSpacer" >
+         <property name="orientation" >
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0" >
+          <size>
+           <width>20</width>
+           <height>59</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
         <widget class="QCheckBox" name="showAdvancedCheckBox" >
          <property name="text" >
           <string>Show Advanced Menu</string>
          </property>
         </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_2" >
+         <property name="midLineWidth" >
+          <number>0</number>
+         </property>
+         <property name="text" >
+          <string>WARNING: Advanced menu is still _VERY_ _unstable_ and should not be enabled except for testing and debugging  purposed</string>
+         </property>
+         <property name="textFormat" >
+          <enum>Qt::RichText</enum>
+         </property>
+         <property name="wordWrap" >
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_2" >
+         <property name="orientation" >
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0" >
+          <size>
+           <width>20</width>
+           <height>59</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>
