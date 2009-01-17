@@ -29,6 +29,8 @@
 #include <QTextDocumentFragment>
 #include <QMap>
 #include <QUrl>
+#include <QDragEnterEvent>
+
 #include <iostream>
 
 #include "defs.h"
@@ -132,6 +134,39 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 	}
 	updateRecentlyOpened();
 	fileAnnotationTabIndex=0;
+	
+	//Enable drag and drop
+	setAcceptDrops(true);
+	
+}
+
+void MainWindowImpl::dragEnterEvent(QDragEnterEvent *event)
+{
+	if (event->mimeData()->hasFormat("text/uri-list"))
+		event->acceptProposedAction();
+}
+
+void MainWindowImpl::dropEvent(QDropEvent *event)
+{ 
+	QList<QUrl> urlList;
+	QString fName;
+	QFileInfo info;
+
+	if (event->mimeData()->hasUrls())
+	{
+		urlList = event->mimeData()->urls(); // returns list of QUrls
+
+		// if just text was dropped, urlList is empty (size == 0)
+		if ( urlList.size() > 0) // if at least one QUrl is present in list
+		{
+			fName = urlList[0].toLocalFile(); // convert first QUrl to local path
+			info.setFile( fName ); // information about file
+			if ( info.isFile() ) 
+				applyMail( info.absoluteFilePath() ); // if is file, setText
+			}
+	}
+	
+	event->acceptProposedAction();
 }
 
 void MainWindowImpl::gotHelpMessage(QString command,QString help)
@@ -951,11 +986,16 @@ void MainWindowImpl::userSettings(QString name, QString email)
 
 }
 
-void MainWindowImpl::applyMail()
+void MainWindowImpl::applyMail(QString patchPath)
 {
-	QString path = QFileDialog::getOpenFileName(this, tr("Select patch to apply"),
-													gSettings->lastApplyMailPath,
-													"");
+	QString path;
+	if(patchPath.isEmpty()) {
+		 path = QFileDialog::getOpenFileName(this, tr("Select patch to apply"),
+														gSettings->lastApplyMailPath,
+														"");
+	} else {
+		path = patchPath;
+	}
 	if(!path.isNull()) {
 		QMetaObject::invokeMethod(gt->git,"applyMail",Qt::QueuedConnection,
 							Q_ARG(QString,path),

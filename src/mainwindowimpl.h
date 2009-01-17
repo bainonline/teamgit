@@ -98,6 +98,9 @@ private:
 	void updateRecentlyOpened();
 
 	int fileAnnotationTabIndex;
+	
+	void dropEvent(QDropEvent *event);
+	void dragEnterEvent(QDragEnterEvent *event);
 
 public:
 	GitThread *gt;
@@ -177,7 +180,7 @@ private slots:
 	void newBranchSlot();
 	void deleteBranchSlot();
 	void newRemoteBranchSlot();
-	void applyMail();
+	void applyMail(QString patchPath=QString());
 
 	void patchApplied();
 
