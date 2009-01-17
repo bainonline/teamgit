@@ -74,7 +74,9 @@ private:
 	OutputDialogImpl *opd;
 	CommitDialogImpl *cmd;
 	ResetDialogImpl *rsd;
-
+	
+	bool showAdvanced;
+	
 	void readSettings();
 	void checkAndSetWorkingDir(QString dir);
 	void writeSettings();
