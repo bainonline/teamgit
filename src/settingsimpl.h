@@ -27,6 +27,8 @@ struct gsettings {
 	QString currProjectPath;
 	QStringList recentlyOpened;
 	QString lastApplyMailPath;
+	bool showAdvanced;
+
 };
 
 class SettingsImpl : public QDialog, public Ui::SettingsDialog

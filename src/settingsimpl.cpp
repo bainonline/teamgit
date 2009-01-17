@@ -77,6 +77,10 @@ void SettingsImpl::refreshUi()
 	userName->setText(gSettings->userName);
 	userEmail->setText(gSettings->userEmail);
 	autosignoff->setChecked(gSettings->autosignoff);
+	if(gSettings->showAdvanced)
+		showAdvancedCheckBox->setCheckState(Qt::Checked);
+	else
+		showAdvancedCheckBox->setCheckState(Qt::Unchecked);
 }
 
 void SettingsImpl::accept()
@@ -87,6 +91,7 @@ void SettingsImpl::accept()
 		gSettings->autosignoff = true;
 	else
 		gSettings->autosignoff = false;
+	gSettings->showAdvanced = showAdvancedCheckBox->checkState() ? true : false ;
 	QDialog::accept();
 }
 

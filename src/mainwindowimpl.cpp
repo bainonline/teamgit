@@ -473,7 +473,7 @@ void MainWindowImpl::writeSettings()
 	settings.setValue("geometry",saveGeometry());
 	settings.setValue("horizontalSplitter1", horizontalSplitter1->saveState());
 	settings.setValue("verticalSplitter1", verticalSplitter1->saveState());
-	settings.setValue("showadvanced",showAdvanced);
+	settings.setValue("showadvanced",gSettings->showAdvanced);
 	settings.endGroup();
 	settings.beginGroup("Git");
 	settings.setValue("gitbinary",gt->git->getGitBinaryPath());
@@ -496,7 +496,7 @@ void MainWindowImpl::readSettings()
      restoreGeometry(settings.value("geometry").toByteArray());
      horizontalSplitter1->restoreState(settings.value("horizontalSplitter1").toByteArray());
      verticalSplitter1->restoreState(settings.value("verticalSplitter1").toByteArray());
-     showAdvanced = settings.value("showadvanced",false).toBool();
+     gSettings->showAdvanced = settings.value("showadvanced",false).toBool();
      settings.endGroup();
      settings.beginGroup("Git");
      gt->git->setGitBinaryPath(settings.value("gitbinary",QString("/usr/bin/git")).toString());
@@ -525,8 +525,8 @@ void MainWindowImpl::initSlot()
 		gSettings->currProjectPath=projectsComboBox->itemText(0);
 	else
 		projectsComboBox->setCurrentIndex(projectsComboBox->findText(gSettings->currProjectPath));
-	if(showAdvanced)
-		GIT_INVOKE("getCommands");
+	GIT_INVOKE("getCommands");
+	menuAdvanced->setEnabled(gSettings->showAdvanced);
 	refresh();
 }
 
@@ -672,6 +672,7 @@ void MainWindowImpl::settingsDialog()
 	if( ret == QDialog::Accepted) {
 		gt->git->setGitBinaryPath(sd->getGitBinaryPath());
 		GIT_INVOKE("setUserSettings");
+		menuAdvanced->setEnabled(gSettings->showAdvanced);
 	}
 }
 
