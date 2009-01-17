@@ -154,15 +154,14 @@ void MainWindowImpl::dropEvent(QDropEvent *event)
 
 	if (event->mimeData()->hasUrls())
 	{
-		urlList = event->mimeData()->urls(); // returns list of QUrls
-
+		urlList = event->mimeData()->urls();
 		// if just text was dropped, urlList is empty (size == 0)
-		if ( urlList.size() > 0) // if at least one QUrl is present in list
+		if ( urlList.size() > 0)
 		{
-			fName = urlList[0].toLocalFile(); // convert first QUrl to local path
-			info.setFile( fName ); // information about file
-			if ( info.isFile() ) 
-				applyMail( info.absoluteFilePath() ); // if is file, setText
+			fName = urlList[0].toLocalFile();
+			info.setFile( fName );
+			if ( info.isFile() )
+				applyMail( info.absoluteFilePath() );
 			}
 	}
 	
