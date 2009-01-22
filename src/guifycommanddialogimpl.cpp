@@ -57,6 +57,8 @@ guifyCommandDialogImpl::~guifyCommandDialogImpl()
  */
 void guifyCommandDialogImpl::parseHelpLines(QString help)
 {
+	if(help.isEmpty())
+		return;
 	QStringList helpLines = help.split("\n");
 	int i = 0;
 	optionItem *it = NULL;
@@ -68,8 +70,13 @@ void guifyCommandDialogImpl::parseHelpLines(QString help)
 	QRegExp commandArg("^[\\s]{7,7}(<.*)$");
 	QRegExp optionsEnd("^\\w");
 	QRegExp helpLinePattern("^[\\s]+([^\\s].*)$");
-	while(!helpLines[i].startsWith("OPTIONS"))
+	
+	int helpLinesSize=helpLines.size();
+	while(i<helpLinesSize && !helpLines[i].startsWith("OPTIONS"))
 		i++;
+	if(i >= helpLinesSize)
+		return;
+	
 	while(optionsEnd.indexIn(helpLines[++i])<0) {
 		if(helpLines[i].contains(optionLine)) {
 			if(it && !it->name.isEmpty())
@@ -96,7 +103,7 @@ void guifyCommandDialogImpl::parseHelpLines(QString help)
 			it->commandArg=true;
 			it->name = commandArg.cap(1);
 		} else {
-			if(!it->name.isEmpty()) {
+			if(it && !it->name.isEmpty()) {
 				helpLinePattern.indexIn(helpLines[i]);
 				if(!it->help.isEmpty() && !helpLinePattern.cap(1).isEmpty())
 					it->help.append("\n");
