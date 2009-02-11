@@ -16,7 +16,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget" >
      <property name="currentIndex" >
-      <number>2</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab" >
       <attribute name="title" >
@@ -127,6 +127,27 @@
           <widget class="QPushButton" name="pickPathButton" >
            <property name="text" >
             <string>&amp;Select</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout" >
+         <item>
+          <widget class="QLabel" name="label_5" >
+           <property name="text" >
+            <string>Merge tool</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="mergeToolPath" />
+         </item>
+         <item>
+          <widget class="QPushButton" name="selectMergeTool" >
+           <property name="text" >
+            <string>S&amp;elect</string>
            </property>
           </widget>
          </item>
