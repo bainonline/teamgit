@@ -116,6 +116,7 @@ Q_OBJECT
 
 	void checkout(QString);
 	void merge(QString);
+	void checkUnMerged();
 
 	void newBranch(QString,QString);
 	void newRemoteBranch(QString,QString);
@@ -160,5 +161,6 @@ Q_OBJECT
 
 	void helpMessage(QString,QString);
 	void commands(QString);
+	void unMerged(QString);
 };
 #endif

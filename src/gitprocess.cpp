@@ -768,3 +768,21 @@ void GitProcess::reset(QString ref,int type)
 	emit notify("Ready");
 	emit refresh();
 }
+
+void GitProcess::checkUnMerged()
+{
+	QStringList args;
+
+	emit notify("Gathering merge conflicts");
+	emit progress(0);
+	args << "ls-files";
+	args << "-u";
+
+	QByteArray files = runGit(args);
+	emit progress(50);
+
+	emit unMerged(QString::fromUtf8(files));
+
+	emit notify("Ready");
+	emit progress(100);
+}
