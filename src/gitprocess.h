@@ -102,8 +102,8 @@ Q_OBJECT
 	//void checkout(QString ref);
 	void reset(QString ref,int type=0);
 	void blame(QString file);
-        void applyMail(QString,bool);
-        void revert(QString);
+	void applyMail(QString,bool);
+	void revert(QString);
 
 	//Async slots
 	void getUserSettings();
