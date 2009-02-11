@@ -27,7 +27,9 @@ SettingsImpl::SettingsImpl(QWidget *parent)
 {
 	setupUi(this);
 	autosignoff->setChecked(true);
-	connect(pickPathButton,SIGNAL(clicked()),this,SLOT(getFilePath()));
+	connect(pickPathButton,SIGNAL(clicked()),this,SLOT(getGitFilePath()));
+	connect(selectMergeTool,SIGNAL(clicked()),this,SLOT(getMergeToolFilePath()));
+
 	gSettings = &GlobalSettings;//(gsettings *)malloc(sizeof(gsettings));
 	readSettings();
 }
@@ -59,15 +61,26 @@ QString SettingsImpl::getGitBinaryPath()
 	return gitBinaryPath->text();
 }
 
-void SettingsImpl::getFilePath()
+QString SettingsImpl::getFilePath()
 {
-	QString path = QFileDialog::getOpenFileName(this, tr("Open Binary"),
-                                                 "/home",
-                                                 "");
-    if(!path.isNull())
-    	gitBinaryPath->setText(path);
+	return QFileDialog::getOpenFileName(this, tr("Open Binary"),
+											"/home",
+											"");
 }
 
+void SettingsImpl::getGitFilePath() 
+{
+	QString path=getFilePath();
+	if(!path.isNull())
+		gitBinaryPath->setText(path);
+}
+
+void SettingsImpl::getMergeToolFilePath() 
+{
+	QString path=getFilePath();
+	if(!path.isNull())
+		mergeToolPath->setText(path);
+}
 
 void SettingsImpl::getWorkingDirPath()
 {
@@ -96,7 +109,7 @@ void SettingsImpl::accept()
 	else
 		gSettings->autosignoff = false;
 	gSettings->showAdvanced = showAdvancedCheckBox->checkState() ? true : false ;
-
+	writeSettings();
 	QDialog::accept();
 }
 

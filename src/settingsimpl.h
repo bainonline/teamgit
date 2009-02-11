@@ -37,7 +37,7 @@ class SettingsImpl : public QDialog, public Ui::SettingsDialog
 	Q_OBJECT
 	private:
 		int i;
-
+		QString getFilePath();
 	public:
 		SettingsImpl(QWidget *parent = 0);
 		void setGitBinaryPath(const QString &path);
@@ -51,7 +51,8 @@ class SettingsImpl : public QDialog, public Ui::SettingsDialog
 		
 	public slots:
 		void refreshUi();
-		void getFilePath();
+		void getGitFilePath();
+		void getMergeToolFilePath();
 		void getWorkingDirPath();
 		void accept();
 };
