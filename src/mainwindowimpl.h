@@ -75,6 +75,8 @@ private:
 	CommitDialogImpl *cmd;
 	ResetDialogImpl *rsd;
 	
+	QString mergeConflicts;
+	
 	void readSettings();
 	void checkAndSetWorkingDir(QString dir);
 	void writeSettings();
@@ -194,11 +196,11 @@ private slots:
 	void guifyCommand();
 
 	void rebaseInteractive();
+	void gotUnMerged(QString);
+	void resolvMerged();
+
 signals:
 	void test();
 	void teamGitWorkingDirChanged(const QString &newDir);
 };
 #endif
-
-
-

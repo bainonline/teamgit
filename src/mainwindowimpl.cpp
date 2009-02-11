@@ -120,6 +120,7 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 	hideStaged();
 	hideUnstaged();
 	hideUntracked();
+	mergeConflictLabel->hide();
 
 	QStringList args = QCoreApplication::arguments ();
 	if(args.size() > 1) {
@@ -353,6 +354,8 @@ void MainWindowImpl::setupConnections()
 	connect(gt->git,SIGNAL(helpMessage(QString,QString)),this,SLOT(gotHelpMessage(QString,QString)));
 	connect(gt->git,SIGNAL(commands(QString)),this,SLOT(gotCommands(QString)));
 
+	connect(gt->git,SIGNAL(unMerged(QString)),this,SLOT(gotUnMerged(QString)));
+
 	connect(logView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(logClicked(const QModelIndex &)));
 	connect(projectFilesView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(projectFilesViewClicked(const QModelIndex &)));
 	connect(projectsComboBox,SIGNAL(activated(int)),this,SLOT(projectsComboBoxActivated(int)));
@@ -366,6 +369,7 @@ void MainWindowImpl::setupConnections()
 	connect(remoteBranchesView,SIGNAL(doubleClicked(const QModelIndex &)),this,SLOT(remoteBranchesViewClicked(const QModelIndex &)));
 	connect(commit_diff,SIGNAL(doubleClicked()),this,SLOT(diffDoubleClicked()));
 	connect(untrackedFilesView,SIGNAL(doubleClicked(const QModelIndex &)),this,SLOT(untrackedDoubleClicked(const QModelIndex &)));
+	connect(mergeConflictLabel,SIGNAL(clicked()),this,SLOT(resolvMerged()));
 
 	//UI tweaks
 	connect(logView,SIGNAL(clicked(const QModelIndex &)),branchesView,SLOT(clearSelection()));
@@ -545,7 +549,7 @@ void MainWindowImpl::refresh()
 	GIT_INVOKE("getTags");
 	GIT_INVOKE("getBranches");
 	GIT_INVOKE("getRemoteBranches");
-
+	GIT_INVOKE("checkUnMerged");
 }
 
 void MainWindowImpl::textSearch(const QString &text)
@@ -1415,6 +1419,24 @@ void MainWindowImpl::resetSlot()
  	}
 }
 
+void MainWindowImpl::gotUnMerged(QString files)
+{
+	mergeConflicts = files;
+	if(!files.isEmpty()){
+		mergeConflictLabel->hide();
+	} else {
+		mergeConflictLabel->setAutoFillBackground(true); 
+		mergeConflictLabel->setBackgroundRole(QPalette::Light);
+		mergeConflictLabel->show();
+	}
+}
+
+
+void MainWindowImpl::resolvMerged()
+{
+
+}
+
 //Used for connecting random things while devloping,
 //Usefull if you want to pop a dialog for debug from git thread etc.
 void MainWindowImpl::testSlot()
@@ -1422,3 +1444,4 @@ void MainWindowImpl::testSlot()
 
 }
 //
+	
