@@ -494,24 +494,16 @@ void MainWindowImpl::writeSettings()
 
 void MainWindowImpl::readSettings()
 {
-	 QSettings settings(COMPANY, "Teamgit");
-
-     settings.beginGroup("MainWindow");
-     restoreGeometry(settings.value("geometry").toByteArray());
-     horizontalSplitter1->restoreState(settings.value("horizontalSplitter1").toByteArray());
-     verticalSplitter1->restoreState(settings.value("verticalSplitter1").toByteArray());
-     gSettings->showAdvanced = settings.value("showadvanced",false).toBool();
-     settings.endGroup();
-     settings.beginGroup("Git");
-     gt->git->setGitBinaryPath(settings.value("gitbinary",QString("/usr/bin/git")).toString());
-     settings.endGroup();
-
-	settings.beginGroup("TeamGit");
-	gSettings->teamGitWorkingDir = settings.value("workspace",QString("notset")).toString();
-	gSettings->currProjectPath = QString();
-	gSettings->recentlyOpened = settings.value("RecentlyOpened",QStringList()).toStringList();
-	gSettings->autosignoff = settings.value("autosignoff",bool()).toBool();
-	gSettings->lastApplyMailPath = settings.value("applyMailStartPath",QString("/home")).toString();
+	QSettings settings(COMPANY, "Teamgit");
+	
+	settings.beginGroup("MainWindow");
+	restoreGeometry(settings.value("geometry").toByteArray());
+	horizontalSplitter1->restoreState(settings.value("horizontalSplitter1").toByteArray());
+	verticalSplitter1->restoreState(settings.value("verticalSplitter1").toByteArray());
+	gSettings->showAdvanced = settings.value("showadvanced",false).toBool();
+	settings.endGroup();
+	settings.beginGroup("Git");
+	gt->git->setGitBinaryPath(settings.value("gitbinary",QString("/usr/bin/git")).toString());
 	settings.endGroup();
 
 	GIT_INVOKE("getUserSettings");

@@ -14,8 +14,9 @@
 	If not, see <http://www.devslashzero.com/teamgit/license>.
 */
 #include <QFileDialog>
-
+#include <QSettings>
 #include "settingsimpl.h"
+#include "defs.h"
 //#include "gsettings.h"
 
 gsettings GlobalSettings;
@@ -28,6 +29,7 @@ SettingsImpl::SettingsImpl(QWidget *parent)
 	autosignoff->setChecked(true);
 	connect(pickPathButton,SIGNAL(clicked()),this,SLOT(getFilePath()));
 	gSettings = &GlobalSettings;//(gsettings *)malloc(sizeof(gsettings));
+	readSettings();
 }
 
 void SettingsImpl::setUserSettings(const QString &name, const QString &email)
@@ -87,12 +89,42 @@ void SettingsImpl::accept()
 {
 	gSettings->userName = userName->text();
 	gSettings->userEmail = userEmail->text();
+	gSettings->mergeToolPath = mergeToolPath->text();
 	if(autosignoff->checkState() == Qt::Checked)
 		gSettings->autosignoff = true;
 	else
 		gSettings->autosignoff = false;
 	gSettings->showAdvanced = showAdvancedCheckBox->checkState() ? true : false ;
+
 	QDialog::accept();
+}
+
+void SettingsImpl::readSettings()
+{
+	QSettings settings(COMPANY, "Teamgit");
+	settings.beginGroup("TeamGit");
+	gSettings->teamGitWorkingDir = settings.value("workspace",QString("notset")).toString();
+	gSettings->currProjectPath = QString();
+	gSettings->recentlyOpened = settings.value("RecentlyOpened",QStringList()).toStringList();
+	gSettings->autosignoff = settings.value("autosignoff",bool()).toBool();
+	gSettings->lastApplyMailPath = settings.value("applyMailStartPath",QString("/home")).toString();
+	settings.endGroup();
+}
+
+
+void SettingsImpl::writeSettings()
+{
+	
+	QSettings settings(COMPANY, "Teamgit");
+	settings.beginGroup("TeamGit");
+	settings.setValue("workspace",gSettings->teamGitWorkingDir);
+	settings.setValue("current_project",gSettings->currProjectPath);
+	settings.setValue("RecentlyOpened",gSettings->recentlyOpened);
+	settings.setValue("autosignoff",gSettings->autosignoff);
+	settings.setValue("applyMailStartPath",gSettings->lastApplyMailPath);
+	settings.setValue("mergeToolPath",gSettings->mergeToolPath);
+	settings.endGroup();
+
 }
 
 void SettingsImpl::setAutoSignoff(bool checked)
