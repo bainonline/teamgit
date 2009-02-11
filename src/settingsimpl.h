@@ -28,6 +28,7 @@ struct gsettings {
 	QStringList recentlyOpened;
 	QString lastApplyMailPath;
 	bool showAdvanced;
+	QString mergeToolPath;
 
 };
 

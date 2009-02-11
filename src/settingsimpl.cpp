@@ -79,6 +79,7 @@ void SettingsImpl::refreshUi()
 	userName->setText(gSettings->userName);
 	userEmail->setText(gSettings->userEmail);
 	autosignoff->setChecked(gSettings->autosignoff);
+	mergeToolPath->setText(gSettings->mergeToolPath);
 	if(gSettings->showAdvanced)
 		showAdvancedCheckBox->setCheckState(Qt::Checked);
 	else
@@ -108,13 +109,13 @@ void SettingsImpl::readSettings()
 	gSettings->recentlyOpened = settings.value("RecentlyOpened",QStringList()).toStringList();
 	gSettings->autosignoff = settings.value("autosignoff",bool()).toBool();
 	gSettings->lastApplyMailPath = settings.value("applyMailStartPath",QString("/home")).toString();
+	gSettings->mergeToolPath = settings.value("mergeToolPath",QString()).toString();
 	settings.endGroup();
 }
 
 
 void SettingsImpl::writeSettings()
 {
-	
 	QSettings settings(COMPANY, "Teamgit");
 	settings.beginGroup("TeamGit");
 	settings.setValue("workspace",gSettings->teamGitWorkingDir);
