@@ -1414,7 +1414,7 @@ void MainWindowImpl::resetSlot()
 void MainWindowImpl::gotUnMerged(QString files)
 {
 	mergeConflicts = files;
-	if(!files.isEmpty()){
+        if(files.isEmpty()){
 		mergeConflictLabel->hide();
 	} else {
 		mergeConflictLabel->setAutoFillBackground(true); 
