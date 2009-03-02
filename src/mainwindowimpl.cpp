@@ -1054,7 +1054,7 @@ void MainWindowImpl::stagedClicked(const QModelIndex &index)
 	QString file;
 	file = stagedModel->filepath(index);
 	QMetaObject::invokeMethod(gt->git,"getDiffCached",Qt::QueuedConnection,
-                           Q_ARG(QString,file));
+							Q_ARG(QString,file));
 }
 
 
@@ -1063,7 +1063,7 @@ void MainWindowImpl::unstagedClicked(const QModelIndex &index)
 	QString file;
 	file = unstagedModel->filepath(index);
 	QMetaObject::invokeMethod(gt->git,"getDiff",Qt::QueuedConnection,
-                           Q_ARG(QString,file));
+							Q_ARG(QString,file));
 }
 
 void MainWindowImpl::tagsViewClicked(const QModelIndex &index)
@@ -1073,7 +1073,7 @@ void MainWindowImpl::tagsViewClicked(const QModelIndex &index)
 
 	QString text = tagsModel->itemFromIndex(index)->text();
 	QMetaObject::invokeMethod(gt->git,"getNamedLog",Qt::QueuedConnection,
-                           Q_ARG(QString,text));
+							Q_ARG(QString,text));
 }
 
 void MainWindowImpl::branchesViewClicked(const QModelIndex &index)
@@ -1089,7 +1089,7 @@ void MainWindowImpl::branchesViewClicked(const QModelIndex &index)
 	text = text.trimmed();
 	commit_diff->append(text);
 	QMetaObject::invokeMethod(gt->git,"getNamedLog",Qt::QueuedConnection,
-                           Q_ARG(QString,text));
+								Q_ARG(QString,text));
 }
 
 void MainWindowImpl::remoteBranchesViewClicked(const QModelIndex &index)
@@ -1100,7 +1100,7 @@ void MainWindowImpl::remoteBranchesViewClicked(const QModelIndex &index)
 	branch = remoteBranchesModel->filepath(index);
 	branch = branch.trimmed();
 	QMetaObject::invokeMethod(gt->git,"getNamedLog",Qt::QueuedConnection,
-                           Q_ARG(QString,branch));
+							Q_ARG(QString,branch));
 }
 
 void MainWindowImpl::logClicked(const QModelIndex &index)
@@ -1108,7 +1108,7 @@ void MainWindowImpl::logClicked(const QModelIndex &index)
 	QStandardItemModel *model = (QStandardItemModel *)logView->model();
 	QStandardItem *item = model->itemFromIndex(index);
 	QMetaObject::invokeMethod(gt->git,"getCommit",Qt::QueuedConnection,
-                           Q_ARG(QString,model->item(item->row(),3)->text()));
+							Q_ARG(QString,model->item(item->row(),3)->text()));
 }
 
 
@@ -1426,7 +1426,9 @@ void MainWindowImpl::gotUnMerged(QString files)
 
 void MainWindowImpl::resolvMerged()
 {
-
+	if(mergeConflicts.isEmpty())
+		return;
+	
 }
 
 //Used for connecting random things while devloping,
