@@ -16,7 +16,8 @@ FORMS = ui/mainwindow.ui \
  ui/outputdialog.ui \
  ui/commitdialog.ui \
  ui/resetdialog.ui \
- ui/guifycommand.ui
+ ui/guifycommand.ui \
+ ui/mergedialog.ui
 HEADERS = src/mainwindowimpl.h \
  src/gitthread.h \
  src/gitprocess.h \
@@ -30,7 +31,8 @@ HEADERS = src/mainwindowimpl.h \
  src/commitdialogimpl.h \
  src/diffviewer.h \
  src/resetdialogimpl.h \
- src/guifycommanddialogimpl.h
+ src/guifycommanddialogimpl.h \
+ src/mergedialogimpl.h
 SOURCES = src/mainwindowimpl.cpp \
  src/main.cpp \
  src/gitprocess.cpp \
@@ -42,7 +44,8 @@ SOURCES = src/mainwindowimpl.cpp \
  src/commitdialogimpl.cpp \
  src/diffviewer.cpp \
  src/resetdialogimpl.cpp \
- src/guifycommanddialogimpl.cpp
+ src/guifycommanddialogimpl.cpp \
+ src/mergedialogimpl.cpp
 unix {
  SOURCES +=  src/kpty.cpp
  HEADERS +=  src/kpty_p.h  src/kpty.h
