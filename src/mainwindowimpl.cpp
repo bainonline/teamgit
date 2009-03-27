@@ -60,6 +60,7 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 	opd = new OutputDialogImpl(this);
 	cmd = new CommitDialogImpl(this);
 	rsd = new ResetDialogImpl(this);
+	md = new MergeDialogImpl(gt,this);
 	QAction *separator= new QAction((QObject *)this);
 	separator->setSeparator(true);
 	separator->setText("Recent Repositories");
@@ -1428,7 +1429,9 @@ void MainWindowImpl::resolvMerged()
 {
 	if(mergeConflicts.isEmpty())
 		return;
-	
+	md->init(mergeConflicts);
+	md->exec();
+	refresh();
 }
 
 //Used for connecting random things while devloping,

@@ -30,6 +30,7 @@
 #include "outputdialogimpl.h"
 #include "projectsmodel.h"
 #include "commitdialogimpl.h"
+#include "mergedialogimpl.h"
 #include "diffviewer.h"
 #include "resetdialogimpl.h"
 //
@@ -70,6 +71,7 @@ private:
 	OutputDialogImpl *opd;
 	CommitDialogImpl *cmd;
 	ResetDialogImpl *rsd;
+	MergeDialogImpl *md;
 	
 	QString mergeConflicts;
 	
