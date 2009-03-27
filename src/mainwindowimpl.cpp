@@ -1431,6 +1431,7 @@ void MainWindowImpl::resolvMerged()
 		return;
 	md->init(mergeConflicts);
 	md->exec();
+	md->cleanUp();
 	refresh();
 }
 

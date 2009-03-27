@@ -1,11 +1,6 @@
 #include "mergedialogimpl.h"
 
 
-void MergeDialogImpl::init(QString files)
-{
-	
-}
-
 
 MergeDialogImpl::MergeDialogImpl(GitThread *gitthread,QWidget *parent)
 	: QDialog(parent)
@@ -18,3 +13,18 @@ MergeDialogImpl::MergeDialogImpl(GitThread *gitthread,QWidget *parent)
 	gt=gitthread;
 }
 
+void MergeDialogImpl::fileDiffReceived(QString diff,int i)
+{
+	qDebug() << diff;
+}
+
+void MergeDialogImpl::init(QString files)
+{
+	connect(gt->git,SIGNAL(fileDiff(QString,int)),this,SLOT(fileDiffReceived(QString,int)));
+}
+
+
+void MergeDialogImpl::cleanUp()
+{
+	disconnect(gt->git,SIGNAL(fileDiff(QString,int)),this,SLOT(fileDiffReceived(QString,int)));
+}

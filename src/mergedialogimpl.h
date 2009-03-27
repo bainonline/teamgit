@@ -22,11 +22,15 @@
 
 class MergeDialogImpl : public QDialog, public Ui::mergeDialog
 {
+	Q_OBJECT
 	private:
 		DiffViewer *conflict_diff;
 		GitThread *gt;
+	public slots:
+		void fileDiffReceived(QString,int);
 	public:
 		void init(QString);
+		void cleanUp();
 		MergeDialogImpl(GitThread *gt,QWidget *parent = 0);
 };
 
