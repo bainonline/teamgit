@@ -172,7 +172,7 @@ QString ProjectsModel::filepath(const QModelIndex &index)
          return QVariant();
 	ProjectsItem *item = static_cast<ProjectsItem*>(index.internalPointer());
 	if (role == Qt::DecorationRole)  {
-		if(item->status)
+                if(item->status == MERGE_CONFLICT)
 				return QIcon(":/main/contents.png");
 		if(item->childCount())
 			return QIcon(":/main/fileopen.png");
@@ -259,6 +259,17 @@ QString ProjectsModel::filepath(const QModelIndex &index)
 
 	int number = 0;
 	while (number < lines.count()-1) {
+                // In conflicts we get three exactly same listing for files
+                if(number) {
+                    if(lines[number] == lines[number-1]) {
+                        if(number > 1 && lines[number] == lines[number-2]) {
+                            //Mark the original entry as conflict
+                            parents.last()->child(parents.last()->childCount()-1)->status = MERGE_CONFLICT;
+                        }
+                        number++;
+                        continue;
+                    }
+                }
 		QStringList pathItems;
 		pathItems << "rootihopenobodynamestheirdirectorythisinsanename";
 		pathItems << lines[number].split("/");
@@ -272,7 +283,7 @@ QString ProjectsModel::filepath(const QModelIndex &index)
 				}
 				break;
 			} else if(j>=dirs.size()) {
-				//We found that an dir subchild(s) added
+                                //We found addotional dir subchild(ren)
 				for(int k=j;k<(pathItems.size()-1);k++) {
 					dirs << pathItems[k];
 					QList<QVariant> data;

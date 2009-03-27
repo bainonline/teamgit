@@ -51,6 +51,8 @@
  #include <QModelIndex>
  #include <QVariant>
 
+
+ enum STATUS { NORMAL, MODIFIED, MERGE_CONFLICT };
  class ProjectsItem
  {
  public:
