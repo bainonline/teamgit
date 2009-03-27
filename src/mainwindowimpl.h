@@ -35,10 +35,6 @@
 //
 
 #define MAX_RECENT 5
-#define GIT_INVOKE(action_slot)	\
-		do {			\
-				QMetaObject::invokeMethod(gt->git,action_slot,Qt::QueuedConnection); \
-			} while(0)
 
 
 class MainWindowImpl : public QMainWindow, public Ui::MainWindow
