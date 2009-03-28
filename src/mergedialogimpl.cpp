@@ -1,6 +1,10 @@
 #include <QTreeWidget>
 #include <QProcess>
+#include <QTemporaryFile>
+#include <QTextStream>
+#include <QMessageBox>
 #include "mergedialogimpl.h"
+#include "gsettings.h"
 
 MergeDialogImpl::MergeDialogImpl(GitThread *gitthread,QWidget *parent)
 	: QDialog(parent)
@@ -60,5 +64,37 @@ void MergeDialogImpl::mergeFile(QString file)
 
 void MergeDialogImpl::runMergeTool(QStringList fileContents)
 {
-
+	QTemporaryFile base,local,remote;
+	base.open();
+	local.open();
+	remote.open();
+	QString baseFile,localFile,remoteFile,mergedFile;
+	baseFile = base.fileName();
+	localFile = local.fileName();
+	remoteFile = remote.fileName();
+	mergedFile = fileContents[3];
+	QTextStream outBase(&base), outLocal(&local), outRemote(&remote); 
+	outBase << fileContents[0];
+	outLocal << fileContents[1];
+	outRemote << fileContents[2];
+	base.close();
+	local.close();
+	remote.close();
+	QStringList args;
+	args << baseFile << mergedFile << remoteFile;
+	if(!gSettings->mergeToolPath.contains("meld")){
+		QMessageBox::warning((QWidget *)this, tr("Merge Tool"),
+					tr("Only meld is supported for now?"),
+					QMessageBox::Ok);
+		return;
+	}
+	QProcess::execute(gSettings->mergeToolPath,args);
+	int ret = QMessageBox::question((QWidget *)this, tr("Merge Tool"),
+			tr("Was this merge successfull?"),
+			QMessageBox::Yes|QMessageBox::No,QMessageBox::No);
+	if(ret == QMessageBox::Yes) {
+		QMetaObject::invokeMethod(gt->git,"addFiles",Qt::QueuedConnection,
+							Q_ARG(QStringList,QStringList(mergedFile)));
+	}
+	conflict_diff->clear();
 }
