@@ -142,7 +142,11 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="mergeToolPath" />
+          <widget class="QLineEdit" name="mergeToolPath" >
+           <property name="enabled" >
+            <bool>false</bool>
+           </property>
+          </widget>
          </item>
          <item>
           <widget class="QPushButton" name="selectMergeTool" >
