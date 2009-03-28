@@ -22,6 +22,8 @@ void MergeDialogImpl::fileDiffReceived(QString diff)
 
 void MergeDialogImpl::init(QString files)
 {
+	filesTreeWidget->clear();
+	conflict_diff->clear();
 	connect(gt->git,SIGNAL(fileDiff(QString,int)),this,SLOT(fileDiffReceived(QString)));
 	QStringList filesList=files.split("\n");
 	QList<QTreeWidgetItem *> items;
