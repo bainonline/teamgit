@@ -786,3 +786,33 @@ void GitProcess::checkUnMerged()
 	emit notify("Ready");
 	emit progress(100);
 }
+
+void GitProcess::getUnMergedFileContents(QString file)
+{
+	QStringList args;
+
+	emit notify("Gathering unmerged files contents");
+	emit progress(0);
+	args << "cat-file";
+	args << "blob";
+	args << ":1:" + file;
+	QByteArray content1 = runGit(args);
+	args.removeLast();
+	args <<  ":2:" + file;
+	emit progress(33);
+	QByteArray content2 = runGit(args);
+	args.removeLast();
+	args <<  ":3:" + file;
+	emit progress(66);
+	QByteArray content3 = runGit(args);
+	
+	QStringList contents;
+	contents << QString::fromUtf8(content1);
+	contents << QString::fromUtf8(content2);
+	contents << QString::fromUtf8(content3);
+
+	emit unmergedFileContents(contents);
+	emit notify("Ready");
+	emit progress(100);
+}
+
