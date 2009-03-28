@@ -810,7 +810,7 @@ void GitProcess::getUnMergedFileContents(QString file)
 	contents << QString::fromUtf8(content1);
 	contents << QString::fromUtf8(content2);
 	contents << QString::fromUtf8(content3);
-
+	contents << workingDir+"/"+file;
 	emit unmergedFileContents(contents);
 	emit notify("Ready");
 	emit progress(100);
