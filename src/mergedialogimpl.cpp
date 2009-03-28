@@ -1,4 +1,5 @@
 #include <QTreeWidget>
+#include <QProcess>
 #include "mergedialogimpl.h"
 
 MergeDialogImpl::MergeDialogImpl(GitThread *gitthread,QWidget *parent)
@@ -11,6 +12,7 @@ MergeDialogImpl::MergeDialogImpl(GitThread *gitthread,QWidget *parent)
 	gt=gitthread;
 	connect(filesTreeWidget,SIGNAL(itemClicked (QTreeWidgetItem*,int)),this,SLOT(fileClicked(QTreeWidgetItem*)));
 	connect(filesTreeWidget,SIGNAL(itemDoubleClicked (QTreeWidgetItem*,int)),this,SLOT(fileDoubleClicked(QTreeWidgetItem*)));
+	connect(gt->git,SIGNAL(unmergedFileContents(QStringList)),this,SLOT(runMergeTool(QStringList)));
 }
 
 void MergeDialogImpl::fileDiffReceived(QString diff)
@@ -50,5 +52,11 @@ void MergeDialogImpl::fileClicked(QTreeWidgetItem *item)
 
 void MergeDialogImpl::mergeFile(QString file)
 {
-	
+	QMetaObject::invokeMethod(gt->git,"getUnMergedFileContents",Qt::QueuedConnection,
+							Q_ARG(QString,file));
+}
+
+void MergeDialogImpl::runMergeTool(QStringList fileContents)
+{
+
 }

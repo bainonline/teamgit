@@ -34,6 +34,7 @@ class MergeDialogImpl : public QDialog, public Ui::mergeDialog
 		void fileDoubleClicked(QTreeWidgetItem*);
 	public slots:
 		void fileDiffReceived(QString);
+		void runMergeTool(QStringList);
 	public:
 		void init(QString);
 		void cleanUp();
