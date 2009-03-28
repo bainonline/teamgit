@@ -22,6 +22,11 @@
 DiffViewer::DiffViewer(QWidget * parent) : QTextEdit(parent)
 {
 	this->setReadOnly(true);
+	QFont font;
+	font.setFamily(QString::fromUtf8("Any"));
+	font.setFixedPitch(true);
+	setFont(font);
+	setReadOnly(true);
 }
 
 DiffViewer::~DiffViewer()
