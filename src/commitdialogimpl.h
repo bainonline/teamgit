@@ -25,6 +25,7 @@ class CommitDialogImpl : public QDialog, public Ui::commitDialog
 		CommitDialogImpl(QWidget *parent = 0);
 		void init(const QString &author,const QString &email,bool autosignoff);
 		QString getCommitMessage();
+		void setCommitMessage(QString);
 		QString getAuthorName() {
 			return author_name->text();
 		}

@@ -639,6 +639,15 @@ void MainWindowImpl::checkoutSlot()
 
 void MainWindowImpl::commitSlot()
 {
+	QFile file(gSettings->teamGitWorkingDir + "/.git/COMMIT_EDITMSG");
+	qDebug() << gSettings->teamGitWorkingDir + "/.git/COMMIT_EDITMSG";
+	if(file.exists()) {
+		QString commitMessage;
+		file.open(QIODevice::ReadWrite);
+		QTextStream in(&file);
+		commitMessage = in.readAll();
+		cmd->setCommitMessage(commitMessage);
+	}
 	if(!stagedFilesView->isVisible())
 		return;
 	cmd->init(gSettings->userName,gSettings->userEmail,gSettings->autosignoff);

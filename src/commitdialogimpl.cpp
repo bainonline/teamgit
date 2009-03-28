@@ -37,3 +37,8 @@ QString CommitDialogImpl::getCommitMessage()
 	return commitMessage->toPlainText();
 
 }
+
+void CommitDialogImpl::setCommitMessage(QString msg)
+{
+	commitMessage->setText(msg);
+}
