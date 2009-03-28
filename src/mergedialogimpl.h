@@ -26,8 +26,14 @@ class MergeDialogImpl : public QDialog, public Ui::mergeDialog
 	private:
 		DiffViewer *conflict_diff;
 		GitThread *gt;
+		
+		void mergeFile(QString file);
+		
+	private slots:
+		void fileClicked(QTreeWidgetItem*);
+		void fileDoubleClicked(QTreeWidgetItem*);
 	public slots:
-		void fileDiffReceived(QString,int);
+		void fileDiffReceived(QString);
 	public:
 		void init(QString);
 		void cleanUp();
