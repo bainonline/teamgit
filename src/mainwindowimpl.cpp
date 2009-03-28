@@ -636,7 +636,7 @@ void MainWindowImpl::commitSlot()
 {
 	if(!mergeConflicts.isEmpty()) {
 		QMessageBox::warning(this, tr("TeamGit"),
-							"The files \n" + mergeConflicts + "Still have unresolved merge conflicts can not commit!",
+							"Some files still have unresolved merge conflicts. \nCan not commit!",
 							QMessageBox::Ok);
 	}
 	QFile file(gSettings->teamGitWorkingDir + "/.git/COMMIT_EDITMSG");
