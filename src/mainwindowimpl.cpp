@@ -634,14 +634,25 @@ void MainWindowImpl::checkoutSlot()
 
 void MainWindowImpl::commitSlot()
 {
+	if(!mergeConflicts.isEmpty()) {
+		QMessageBox::warning(this, tr("TeamGit"),
+							"The files \n" + mergeConflicts + "Still have unresolved merge conflicts can not commit!",
+							QMessageBox::Ok);
+	}
 	QFile file(gSettings->teamGitWorkingDir + "/.git/COMMIT_EDITMSG");
-	qDebug() << gSettings->teamGitWorkingDir + "/.git/COMMIT_EDITMSG";
-	if(file.exists()) {
+	QFile file1(gSettings->teamGitWorkingDir + "/.git/MERGE_MSG");
+	if(file1.exists()) {
+		QString commitMessage;
+		file1.open(QIODevice::ReadWrite);
+		QTextStream in(&file1);
+		commitMessage = in.readAll();
+		cmd->setCommitMessage(commitMessage);
+	} else if(file.exists()) {
 		QString commitMessage;
 		file.open(QIODevice::ReadWrite);
 		QTextStream in(&file);
 		commitMessage = in.readAll();
-		cmd->setCommitMessage(commitMessage);
+		//cmd->setCommitMessage(commitMessage);
 	}
 	if(!stagedFilesView->isVisible())
 		return;
