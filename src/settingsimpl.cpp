@@ -122,7 +122,7 @@ void SettingsImpl::readSettings()
 	gSettings->recentlyOpened = settings.value("RecentlyOpened",QStringList()).toStringList();
 	gSettings->autosignoff = settings.value("autosignoff",bool()).toBool();
 	gSettings->lastApplyMailPath = settings.value("applyMailStartPath",QString("/home")).toString();
-	gSettings->mergeToolPath = settings.value("mergeToolPath",QString()).toString();
+	gSettings->mergeToolPath = settings.value("mergeToolPath",QString("/usr/bin/meld")).toString();
 	settings.endGroup();
 }
 
