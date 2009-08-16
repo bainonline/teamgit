@@ -904,7 +904,6 @@ QStandardItemModel *MainWindowImpl::parseLog2Model(QString log)
 	return model;
 }
 
-
 void MainWindowImpl::commitDetails(QStringList cd)
 {
 	commit_author->setText(cd[1].remove(0,8));
@@ -968,10 +967,10 @@ void MainWindowImpl::diffDoubleClicked()
 	patch.append(commit_diff->textCursor().selection().toPlainText());
 	if(commit_diff->getDiffType()==stagedDiff) {
 			QMetaObject::invokeMethod(gt->git,"unStageHunk",Qt::QueuedConnection,
-                           Q_ARG(QString,patch));
+ 										Q_ARG(QString,patch));
 	} else {
 			QMetaObject::invokeMethod(gt->git,"stageHunk",Qt::QueuedConnection,
-                           Q_ARG(QString,patch));
+										Q_ARG(QString,patch));
 	}
 }
 
@@ -1127,7 +1126,6 @@ void MainWindowImpl::logClicked(const QModelIndex &index)
 							Q_ARG(QString,model->item(item->row(),3)->text()));
 }
 
-
 void MainWindowImpl::newTag()
 {
 	bool ok;
@@ -1158,7 +1156,6 @@ void MainWindowImpl::projectsComboBoxActivated(int index)
 	gt->git->setWorkingDir(gSettings->teamGitWorkingDir + gSettings->currProjectPath);
 	refresh();
 }
-
 
 void MainWindowImpl::resetLog()
 {
@@ -1204,7 +1201,8 @@ void MainWindowImpl::merge()
 			branch = remoteBranchesModel->filepath(index);
 			branch = branch.trimmed();
 			if(branch.indexOf("/") >= 0)
-				branch.remove(branch.indexOf("/"),branch.size()-branch.indexOf("/"));
+				branch.remove(branch.indexOf("/"),
+				branch.size()-branch.indexOf("/"));
 		}
 	}
 	if(!branch.isEmpty()) {
@@ -1226,13 +1224,13 @@ void MainWindowImpl::cherryPickSelectedCommit()
 
 void MainWindowImpl::revertSelectedCommit()
 {
-        QModelIndex index = logView->selectionModel()->currentIndex();
-        if(!index.isValid())
-                return;
-        QStandardItemModel *model=(QStandardItemModel *)logView->model();
-        QStandardItem *item = model->itemFromIndex(index);
-        QMetaObject::invokeMethod(gt->git,"revert",Qt::QueuedConnection,
-                                                        Q_ARG(QString,model->item(item->row(),3)->text()));
+	QModelIndex index = logView->selectionModel()->currentIndex();
+	if(!index.isValid())
+		return;
+	QStandardItemModel *model=(QStandardItemModel *)logView->model();
+	QStandardItem *item = model->itemFromIndex(index);
+	QMetaObject::invokeMethod(gt->git,"revert",Qt::QueuedConnection,
+							Q_ARG(QString,model->item(item->row(),3)->text()));
 }
 
 void MainWindowImpl::pushSlot()
