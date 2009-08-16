@@ -33,10 +33,11 @@
 #include "mergedialogimpl.h"
 #include "diffviewer.h"
 #include "resetdialogimpl.h"
+#include "bonjourserviceregister.h"
 //
 
 #define MAX_RECENT 5
-
+#define TEAMGIT_PORT 10000
 
 class MainWindowImpl : public QMainWindow, public Ui::MainWindow
 {
@@ -74,6 +75,8 @@ private:
 	MergeDialogImpl *md;
 	
 	QString mergeConflicts;
+	
+	BonjourServiceRegister *bonjourRegister;
 	
 	void readSettings();
 	void checkAndSetWorkingDir(QString dir);

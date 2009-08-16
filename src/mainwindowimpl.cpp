@@ -30,6 +30,7 @@
 #include <QMap>
 #include <QUrl>
 #include <QDragEnterEvent>
+#include <QHostInfo>
 
 #include <iostream>
 
@@ -134,6 +135,11 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 	
 	//Enable drag and drop
 	setAcceptDrops(true);
+	
+	bonjourRegister = new BonjourServiceRegister(this);
+	bonjourRegister->registerService(BonjourRecord(tr("Fortune Server on %1").arg(QHostInfo::localHostName()),
+									QLatin1String("_trollfortune._tcp"), QString()),
+									TEAMGIT_PORT);
 	
 }
 
