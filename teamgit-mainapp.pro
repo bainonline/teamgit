@@ -1,6 +1,6 @@
 TEMPLATE = app
 TARGET = teamgit
-QT = gui core
+QT = gui core network
 CONFIG += qt \
  warn_on \
  console \
@@ -32,7 +32,9 @@ HEADERS = src/mainwindowimpl.h \
  src/diffviewer.h \
  src/resetdialogimpl.h \
  src/guifycommanddialogimpl.h \
- src/mergedialogimpl.h
+ src/mergedialogimpl.h \
+ src/bonjourrecord.h \
+ src/bonjourserviceregister.h
 SOURCES = src/mainwindowimpl.cpp \
  src/main.cpp \
  src/gitprocess.cpp \
@@ -45,10 +47,14 @@ SOURCES = src/mainwindowimpl.cpp \
  src/diffviewer.cpp \
  src/resetdialogimpl.cpp \
  src/guifycommanddialogimpl.cpp \
- src/mergedialogimpl.cpp
+ src/mergedialogimpl.cpp \
+ src/bonjourserviceregister.cpp
 unix {
  SOURCES +=  src/kpty.cpp
  HEADERS +=  src/kpty_p.h  src/kpty.h
+}
+!mac {
+ LIBS +=  -ldns_sd
 }
 RESOURCES += ui/icons.qrc
 target.path = /usr/bin/
