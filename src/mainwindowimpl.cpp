@@ -137,9 +137,9 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 	setAcceptDrops(true);
 	
 	bonjourRegister = new BonjourServiceRegister(this);
-	bonjourRegister->registerService(BonjourRecord(tr("Fortune Server on %1").arg(QHostInfo::localHostName()),
-									QLatin1String("_trollfortune._tcp"), QString()),
-									TEAMGIT_PORT);
+	bonjourRegister->registerService(BonjourRecord(tr("Teamgit Server on %1").arg(QHostInfo::localHostName()),
+																				QLatin1String("_teamgit._tcp"), QString()),
+																				TEAMGIT_PORT);
 	
 }
 

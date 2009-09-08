@@ -15,7 +15,7 @@
 */
 #ifndef MAINWINDOWIMPL_H
 #define MAINWINDOWIMPL_H
-//
+
 #include <QMainWindow>
 #include <QStandardItemModel>
 #include <QProgressBar>
