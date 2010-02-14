@@ -107,6 +107,8 @@ private:
 
 public:
 	GitThread *gt;
+	GitThread *glt; //Git log thread
+	GitThread *gft; //Git file status thread
 	MainWindowImpl( QWidget * parent = 0, Qt::WFlags f = 0 );
 	~MainWindowImpl();
 

@@ -25,6 +25,19 @@
 				QMetaObject::invokeMethod(gt->git,action_slot,Qt::QueuedConnection); \
 			} while(0)
 
+
+#define GIT_INVOKE_LOG(action_slot)	\
+		do {			\
+				QMetaObject::invokeMethod(glt->git,action_slot,Qt::QueuedConnection); \
+			} while(0)
+
+
+#define GIT_INVOKE_FS(action_slot)	\
+		do {			\
+				QMetaObject::invokeMethod(gft->git,action_slot,Qt::QueuedConnection); \
+			} while(0)
+
+
 class GitThread  : public QThread
 {
 	Q_OBJECT;

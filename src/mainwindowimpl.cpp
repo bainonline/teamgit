@@ -51,6 +51,10 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 	setWindowIcon(QIcon(":/main/icon.png"));
 	gt = new GitThread();
 	gt->start();
+	glt = new GitThread();
+	glt->start();
+	gft = new GitThread();
+	gft->start();
 	sd = new SettingsImpl(this);
 	npd = new NewProjectImpl(this);
 	opd = new OutputDialogImpl(this);
@@ -137,9 +141,10 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 	setAcceptDrops(true);
 	
 	bonjourRegister = new BonjourServiceRegister(this);
-	bonjourRegister->registerService(BonjourRecord(tr("Teamgit Server on %1").arg(QHostInfo::localHostName()),
-																				QLatin1String("_teamgit._tcp"), QString()),
-																				TEAMGIT_PORT);
+	bonjourRegister->registerService(BonjourRecord(
+			tr("Teamgit Server on %1").arg(QHostInfo::localHostName()),
+			QLatin1String("_teamgit._tcp"), QString()),
+			TEAMGIT_PORT);
 	
 }
 
@@ -331,13 +336,13 @@ void MainWindowImpl::setupConnections()
 
 	connect(gt->git,SIGNAL(notify(const QString &)),this->statusBar(),SLOT(showMessage(const QString &)));
 	connect(gt->git,SIGNAL(progress(int)),this,SLOT(progress(int)));
-	connect(gt->git,SIGNAL(logReceived(QString)),this,SLOT(logReceived(QString)));
-	connect(gt->git,SIGNAL(namedLogReceived(QString,QString)),this,SLOT(namedLogReceived(QString,QString)));
+	connect(glt->git,SIGNAL(logReceived(QString)),this,SLOT(logReceived(QString)));
+	connect(glt->git,SIGNAL(namedLogReceived(QString,QString)),this,SLOT(namedLogReceived(QString,QString)));
 	connect(gt->git,SIGNAL(projectFiles(QString)),this,SLOT(filesReceived(QString)));
 	connect(gt->git,SIGNAL(commitDetails(QStringList)),this,SLOT(commitDetails(QStringList)));
 	connect(gt->git,SIGNAL(userSettings(QString, QString)),this,SLOT(userSettings(QString, QString)));
 	connect(gt->git,SIGNAL(cloneComplete(QString)),this,SLOT(cloneComplete(QString)));
-	connect(gt->git,SIGNAL(filesStatus(QString)),this,SLOT(filesStatusReceived(QString)));
+	connect(gft->git,SIGNAL(filesStatus(QString)),this,SLOT(filesStatusReceived(QString)));
 	connect(gt->git,SIGNAL(commitDone()),this,SLOT(refresh()));
 	connect(gt->git,SIGNAL(fileDiff(QString,int)),this,SLOT(fileDiffReceived(QString,int)));
 	connect(gt->git,SIGNAL(refresh()),this,SLOT(refresh()));
@@ -506,6 +511,8 @@ void MainWindowImpl::readSettings()
 	settings.endGroup();
 	settings.beginGroup("Git");
 	gt->git->setGitBinaryPath(settings.value("gitbinary",QString("/usr/bin/git")).toString());
+	glt->git->setGitBinaryPath(settings.value("gitbinary",QString("/usr/bin/git")).toString());
+	gft->git->setGitBinaryPath(settings.value("gitbinary",QString("/usr/bin/git")).toString());
 	settings.endGroup();
 
 	GIT_INVOKE("getUserSettings");
@@ -531,6 +538,8 @@ void MainWindowImpl::initSlot()
 void MainWindowImpl::refresh()
 {
 	gt->git->setWorkingDir(gSettings->teamGitWorkingDir + gSettings->currProjectPath);
+	glt->git->setWorkingDir(gSettings->teamGitWorkingDir + gSettings->currProjectPath);
+	gft->git->setWorkingDir(gSettings->teamGitWorkingDir + gSettings->currProjectPath);
 	setWindowTitle(gSettings->teamGitWorkingDir + " - TeamGit");
 	commit_author->clear();
 	commit_date->clear();
@@ -538,8 +547,8 @@ void MainWindowImpl::refresh()
 	commit_diff->clear();
 	hideLogReset();
 	GIT_INVOKE("getFiles");
-	GIT_INVOKE("getLog");
-	GIT_INVOKE("getStatus");
+	GIT_INVOKE_LOG("getLog");
+	GIT_INVOKE_FS("getStatus");
 	GIT_INVOKE("getTags");
 	GIT_INVOKE("getBranches");
 	GIT_INVOKE("getRemoteBranches");
@@ -885,7 +894,7 @@ QStandardItemModel *MainWindowImpl::parseLog2Model(QString log)
 		parsed++;
 		int percent=50 + ((float)((float)parsed/(float)numLogs)*(float)100)/2;
 		if(percent && !(percent % 10)) {
-			progress(percent);
+			//progress(percent);
 		}
 		QString singleLog = iterator.next();
 		if(!singleLog.contains(delimit2))
@@ -1093,7 +1102,7 @@ void MainWindowImpl::tagsViewClicked(const QModelIndex &index)
 	remoteBranchesView->selectionModel()->clear();
 
 	QString text = tagsModel->itemFromIndex(index)->text();
-	QMetaObject::invokeMethod(gt->git,"getNamedLog",Qt::QueuedConnection,
+	QMetaObject::invokeMethod(glt->git,"getNamedLog",Qt::QueuedConnection,
 							Q_ARG(QString,text));
 }
 
@@ -1109,7 +1118,7 @@ void MainWindowImpl::branchesViewClicked(const QModelIndex &index)
 	}
 	text = text.trimmed();
 	commit_diff->append(text);
-	QMetaObject::invokeMethod(gt->git,"getNamedLog",Qt::QueuedConnection,
+	QMetaObject::invokeMethod(glt->git,"getNamedLog",Qt::QueuedConnection,
 								Q_ARG(QString,text));
 }
 
@@ -1120,7 +1129,7 @@ void MainWindowImpl::remoteBranchesViewClicked(const QModelIndex &index)
 	QString branch;
 	branch = remoteBranchesModel->filepath(index);
 	branch = branch.trimmed();
-	QMetaObject::invokeMethod(gt->git,"getNamedLog",Qt::QueuedConnection,
+	QMetaObject::invokeMethod(glt->git,"getNamedLog",Qt::QueuedConnection,
 							Q_ARG(QString,branch));
 }
 
@@ -1149,7 +1158,7 @@ void MainWindowImpl::projectFilesViewClicked(const QModelIndex &index)
 	i=index;
 	QStringList path;
 	QString text =  projectsModel->filepath(index);
-	QMetaObject::invokeMethod(gt->git,"getNamedLog",Qt::QueuedConnection,
+	QMetaObject::invokeMethod(glt->git,"getNamedLog",Qt::QueuedConnection,
 							Q_ARG(QString,text));
 	if(!projectsModel->rowCount(index))
 		QMetaObject::invokeMethod(gt->git,"blame",Qt::QueuedConnection,
@@ -1160,6 +1169,8 @@ void MainWindowImpl::projectsComboBoxActivated(int index)
 {
 	gSettings->currProjectPath=projectsComboBox->itemText(index);
 	gt->git->setWorkingDir(gSettings->teamGitWorkingDir + gSettings->currProjectPath);
+	glt->git->setWorkingDir(gSettings->teamGitWorkingDir + gSettings->currProjectPath);
+	gft->git->setWorkingDir(gSettings->teamGitWorkingDir + gSettings->currProjectPath);
 	refresh();
 }
 
@@ -1388,7 +1399,7 @@ void MainWindowImpl::patchApplied()
 {
 	QModelIndex index = unstagedFilesView->selectionModel()->currentIndex();
 	unstagedClicked(index);
-	GIT_INVOKE("getStatus");
+	GIT_INVOKE_FS("getStatus");
 }
 
 void MainWindowImpl::resetSlot()
