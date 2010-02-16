@@ -1048,7 +1048,7 @@ void MainWindowImpl::untrackedDoubleClicked(const QModelIndex &index)
 	}
 	files << untrackedModel->filepath(index);
 
-	QMetaObject::invokeMethod(gt->git,"stageFiles",Qt::QueuedConnection,
+	QMetaObject::invokeMethod(gft->git,"stageFiles",Qt::QueuedConnection,
 							Q_ARG(QStringList,files));
 }
 
@@ -1064,7 +1064,7 @@ void MainWindowImpl::stagedDoubleClicked(const QModelIndex &index)
 	}
 	files << stagedModel->filepath(index);
 
-	QMetaObject::invokeMethod(gt->git,"unstageFiles",Qt::QueuedConnection,
+	QMetaObject::invokeMethod(gft->git,"unstageFiles",Qt::QueuedConnection,
 							Q_ARG(QStringList,files));
 }
 
@@ -1079,7 +1079,7 @@ void MainWindowImpl::unstagedDoubleClicked(const QModelIndex &index)
 	}
 	files << unstagedModel->filepath(index);
 
-	QMetaObject::invokeMethod(gt->git,"stageFiles",Qt::QueuedConnection,
+	QMetaObject::invokeMethod(gft->git,"stageFiles",Qt::QueuedConnection,
 							Q_ARG(QStringList,files));
 }
 
