@@ -343,9 +343,9 @@ void MainWindowImpl::setupConnections()
 	connect(action_interactiveRebase,SIGNAL(triggered()),this,SLOT(rebaseInteractive()));
 
 	connect(gt->git,SIGNAL(notify(const QString &)),this->statusBar(),SLOT(showMessage(const QString &)));
-	connect(gt->git,SIGNAL(progress(QProgressBar*,int)),this,SLOT(progress(QProgressBar*,int)));
-	connect(glt->git,SIGNAL(progress(QProgressBar*,int)),this,SLOT(progress(QProgressBar*,int)));
-	connect(gft->git,SIGNAL(progress(QProgressBar*,int)),this,SLOT(progress(QProgressBar*,int)));
+	connect(gt->git,SIGNAL(progress(QProgressBar*,int,QString)),this,SLOT(progress(QProgressBar*,int,QString)));
+	connect(glt->git,SIGNAL(progress(QProgressBar*,int,QString)),this,SLOT(progress(QProgressBar*,int,QString)));
+	connect(gft->git,SIGNAL(progress(QProgressBar*,int,QString)),this,SLOT(progress(QProgressBar*,int,QString)));
 	connect(glt->git,SIGNAL(logReceived(QString,QProgressBar*)),this,SLOT(logReceived(QString,QProgressBar*)));
 	connect(glt->git,SIGNAL(namedLogReceived(QString,QString,QProgressBar*)),this,SLOT(namedLogReceived(QString,QString,QProgressBar*)));
 	connect(gt->git,SIGNAL(projectFiles(QString)),this,SLOT(filesReceived(QString)));
@@ -999,8 +999,12 @@ void MainWindowImpl::diffDoubleClicked()
 	}
 }
 
-void MainWindowImpl::progress(QProgressBar *progressBar,int i)
+void MainWindowImpl::progress(QProgressBar *progressBar,int i,QString msg)
 {
+	if(!msg.isEmpty()) {
+		QString format = msg + ": %p%";
+		progressBar->setFormat(format);
+	}
 	if(i == 0) {
 		statusBar()->addPermanentWidget(progressBar);
 		progressBar->show();

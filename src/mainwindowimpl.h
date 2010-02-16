@@ -132,7 +132,7 @@ private slots:
 	void logReceived(QString,QProgressBar *);
 	void namedLogReceived(QString,QString,QProgressBar *);
 	void filesReceived(QString);
-	void progress(QProgressBar *,int);
+	void progress(QProgressBar *,int,QString msg=QString());
 	void cloneComplete(QString);
 	void filesStatusReceived(QString);
 

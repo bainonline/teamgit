@@ -140,7 +140,7 @@ Q_OBJECT
 	void notifyOutputDialog(const QString &);
 	void doneOutputDialog();
 
-	void progress(QProgressBar*,int);
+	void progress(QProgressBar*,int,QString msg=QString());
 	void userSettings(QString, QString);
 
 	void commitDetails(QStringList);
