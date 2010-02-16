@@ -387,7 +387,7 @@ void GitProcess::getNamedLog(QString ref)
 	QString s;
 
 	emit notify("Running git log for file");
-	emit progress(0);
+	emit progress(pb,0);
 	args << "log";
 	args.append("--pretty=format:%sTEAMGITFIELDMARKER%an<%ae>TEAMGITFIELDMARKER%adTEAMGITFIELDMARKER%HTEAMGITFIELDEND");
 	args << ref;
@@ -395,10 +395,10 @@ void GitProcess::getNamedLog(QString ref)
 	QByteArray array = runGit(args);
 
 	emit notify("Parsing log");
-	emit progress(50);
+	emit progress(pb,50);
 
 	QString log(QString::fromUtf8(array));
-	emit namedLogReceived(ref,log);
+	emit namedLogReceived(ref,log,pb);
 }
 
 void GitProcess::getLog(int numLog)
@@ -407,18 +407,18 @@ void GitProcess::getLog(int numLog)
 	QString s;
 
 	emit notify("Running git log");
-	emit progress(0);
-	emit progress(10);
+	emit progress(pb,0);
+	emit progress(pb,10);
 	s.sprintf("-%i",numLog);
 	args << "log";
 	args.append("--pretty=format:%sTEAMGITFIELDMARKER%an<%ae>TEAMGITFIELDMARKER%adTEAMGITFIELDMARKER%HTEAMGITFIELDEND");
 	QByteArray array = runGit(args);
 
 	emit notify("Parsing log");
-	emit progress(50);
+	emit progress(pb,50);
 
 	QString log(QString::fromUtf8(array));
-	emit logReceived(log);
+	emit logReceived(log,pb);
 }
 
 void GitProcess::getCommit(QString commitHash)
@@ -427,28 +427,28 @@ void GitProcess::getCommit(QString commitHash)
 	QString s;
 
 	emit notify("Gathering commit information");
-	emit progress(0);
+	emit progress(pb,0);
 	args << "show";
 	args << commitHash;
 
 	QByteArray array = runGit(args);
 
 	emit notify("Parsing commit blob");
-	emit progress(50);
+	emit progress(pb,50);
 
 	QString commit(QString::fromUtf8(array));
 	QStringList commitDet;
 	commitDet << commit.left(commit.indexOf(QChar('\n')));
 	commit.remove(0,commit.indexOf(QChar('\n'))+1);
-	emit progress(65);
+	emit progress(pb,65);
 	if(commit.startsWith("Merge:"))
 		commit.remove(0,commit.indexOf(QChar('\n'))+1);
 	commitDet << commit.left(commit.indexOf(QChar('\n')));
 	commit.remove(0,commit.indexOf(QChar('\n'))+1);
-	emit progress(70);
+	emit progress(pb,70);
 	commitDet << commit.left(commit.indexOf(QChar('\n')));
 	commit.remove(0,commit.indexOf(QChar('\n'))+1);
-	emit progress(75);
+	emit progress(pb,75);
 	QString log;
 	while(commit.size() > 1) {
 		if(commit.startsWith("diff"))
@@ -460,14 +460,14 @@ void GitProcess::getCommit(QString commitHash)
 	}
 
 	commitDet << log;
-	emit progress(90);
+	emit progress(pb,90);
 	//if(commit.size() < 1024*100)
 		commitDet << commit;
 	//else
 		//commitDet << "too huge commit to parse";
 	emit commitDetails(commitDet);
 	emit notify("Ready");
-	emit progress(100);
+	emit progress(pb,100);
 }
 
 void GitProcess::getFiles()
@@ -475,16 +475,16 @@ void GitProcess::getFiles()
 	QStringList args;
 
 	emit notify("Gathering files");
-	emit progress(0);
+	emit progress(pb,0);
 	args << "ls-files";
 
 	QByteArray files = runGit(args);
-	emit progress(50);
+	emit progress(pb,50);
 
 	emit projectFiles(QString::fromUtf8(files));
 
 	emit notify("Ready");
-	emit progress(100);
+	emit progress(pb,100);
 }
 
 void GitProcess::getStatus()
@@ -492,16 +492,16 @@ void GitProcess::getStatus()
 	QStringList args;
 
 	emit notify("Gathering files status");
-	emit progress(0);
+	emit progress(pb,0);
 	args << "status";
 
 	QByteArray status= runGit(args);
-	emit progress(50);
+	emit progress(pb,50);
 
 	emit filesStatus(QString::fromUtf8(status));
 
 	emit notify("Ready");
-	emit progress(100);
+	emit progress(pb,100);
 }
 
 void GitProcess::revert(QString ref)
@@ -544,16 +544,16 @@ void GitProcess::getBranches()
 	QStringList args;
 
 	emit notify("Gathering branches");
-	emit progress(0);
+	emit progress(pb,0);
 	args << "branch";
 
 	QByteArray branches = runGit(args);
-	emit progress(50);
+	emit progress(pb,50);
 
 	emit branchList(QString::fromUtf8(branches));
 
 	emit notify("Ready");
-	emit progress(100);
+	emit progress(pb,100);
 }
 
 void GitProcess::getRemoteBranches()
@@ -561,17 +561,17 @@ void GitProcess::getRemoteBranches()
 	QStringList args;
 
 	emit notify("Gathering branches");
-	emit progress(0);
+	emit progress(pb,0);
 	args << "branch";
 	args << "-r";
 
 	QByteArray branches = runGit(args);
-	emit progress(50);
+	emit progress(pb,50);
 
 	emit remoteBranchesList(QString::fromUtf8(branches));
 
 	emit notify("Ready");
-	emit progress(100);
+	emit progress(pb,100);
 }
 
 
@@ -580,16 +580,16 @@ void GitProcess::getTags()
 	QStringList args;
 
 	emit notify("Gathering tags");
-	emit progress(0);
+	emit progress(pb,0);
 	args << "tag";
 
 	QByteArray tags = runGit(args);
-	emit progress(50);
+	emit progress(pb,50);
 
 	emit tagList(QString::fromUtf8(tags));
 
 	emit notify("Ready");
-	emit progress(100);
+	emit progress(pb,100);
 }
 
 void  GitProcess::checkout(QString ref)
@@ -666,18 +666,18 @@ void GitProcess::newBranch(QString branch,QString ref)
 	QStringList args;
 
 	emit notify("Creating new branch");
-	emit progress(0);
+	emit progress(pb,0);
 	args << "branch";
 	args << branch;
 	if(!ref.isEmpty())
 		args << ref;
 
 	QByteArray array = runGit(args);
-	emit progress(100);
+	emit progress(pb,100);
 
 	emit refresh();
 	emit notify("Ready");
-	emit progress(100);
+	emit progress(pb,100);
 }
 
 void GitProcess::newRemoteBranch(QString name,QString repo)
@@ -685,18 +685,18 @@ void GitProcess::newRemoteBranch(QString name,QString repo)
 	QStringList args;
 
 	emit notify("Creating new remote branch");
-	emit progress(0);
+	emit progress(pb,0);
 	args << "remote";
 	args << "add";
 	args << name;
 	args << repo;
 
 	QByteArray array = runGit(args);
-	emit progress(100);
+	emit progress(pb,100);
 
 	emit refresh();
 	emit notify("Ready");
-	emit progress(100);
+	emit progress(pb,100);
 }
 
 void GitProcess::deleteBranch(QString branch)
@@ -704,17 +704,17 @@ void GitProcess::deleteBranch(QString branch)
 	QStringList args;
 
 	emit notify("Deleting branch");
-	emit progress(0);
+	emit progress(pb,0);
 	args << "branch";
 	args << "-d";
 	args << branch;
 
 	QByteArray array = runGit(args);
-	emit progress(100);
+	emit progress(pb,100);
 
 	emit refresh();
 	emit notify("Ready");
-	emit progress(100);
+	emit progress(pb,100);
 }
 
 void GitProcess::blame(QString file)
@@ -729,7 +729,7 @@ void GitProcess::blame(QString file)
 	QByteArray array = runGit(args);
 	emit annotatedFile(QString::fromUtf8(array));
 	emit notify("Ready");
-	emit progress(100);
+	emit progress(pb,100);
 }
 
 void GitProcess::fetch(QString ref)
@@ -774,17 +774,17 @@ void GitProcess::checkUnMerged()
 	QStringList args;
 
 	emit notify("Gathering merge conflicts");
-	emit progress(0);
+	emit progress(pb,0);
 	args << "ls-files";
 	args << "-u";
 
 	QByteArray files = runGit(args);
-	emit progress(50);
+	emit progress(pb,50);
 
 	emit unMerged(QString::fromUtf8(files));
 
 	emit notify("Ready");
-	emit progress(100);
+	emit progress(pb,100);
 }
 
 void GitProcess::getUnMergedFileContents(QString file)
@@ -792,18 +792,18 @@ void GitProcess::getUnMergedFileContents(QString file)
 	QStringList args;
 
 	emit notify("Gathering unmerged files contents");
-	emit progress(0);
+	emit progress(pb,0);
 	args << "cat-file";
 	args << "blob";
 	args << ":1:" + file;
 	QByteArray content1 = runGit(args);
 	args.removeLast();
 	args <<  ":2:" + file;
-	emit progress(33);
+	emit progress(pb,33);
 	QByteArray content2 = runGit(args);
 	args.removeLast();
 	args <<  ":3:" + file;
-	emit progress(66);
+	emit progress(pb,66);
 	QByteArray content3 = runGit(args);
 	
 	QStringList contents;
@@ -813,6 +813,6 @@ void GitProcess::getUnMergedFileContents(QString file)
 	contents << workingDir+"/"+file;
 	emit unmergedFileContents(contents);
 	emit notify("Ready");
-	emit progress(100);
+	emit progress(pb,100);
 }
 

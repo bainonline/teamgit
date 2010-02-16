@@ -48,12 +48,20 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 	delete commit_diff1;
 	commit_diff = new DiffViewer(this);
 	hboxLayout5->addWidget(commit_diff);
+	
 	setWindowIcon(QIcon(":/main/icon.png"));
+
 	gt = new GitThread();
+	gt->pb = new QProgressBar(this);
+	gt->pb->hide();
 	gt->start();
 	glt = new GitThread();
+	glt->pb = new QProgressBar(this);
+	glt->pb->hide();
 	glt->start();
 	gft = new GitThread();
+	gft->pb = new QProgressBar(this);
+	gft->pb->hide();
 	gft->start();
 	sd = new SettingsImpl(this);
 	npd = new NewProjectImpl(this);
@@ -335,9 +343,11 @@ void MainWindowImpl::setupConnections()
 	connect(action_interactiveRebase,SIGNAL(triggered()),this,SLOT(rebaseInteractive()));
 
 	connect(gt->git,SIGNAL(notify(const QString &)),this->statusBar(),SLOT(showMessage(const QString &)));
-	connect(gt->git,SIGNAL(progress(int)),this,SLOT(progress(int)));
-	connect(glt->git,SIGNAL(logReceived(QString)),this,SLOT(logReceived(QString)));
-	connect(glt->git,SIGNAL(namedLogReceived(QString,QString)),this,SLOT(namedLogReceived(QString,QString)));
+	connect(gt->git,SIGNAL(progress(QProgressBar*,int)),this,SLOT(progress(QProgressBar*,int)));
+	connect(glt->git,SIGNAL(progress(QProgressBar*,int)),this,SLOT(progress(QProgressBar*,int)));
+	connect(gft->git,SIGNAL(progress(QProgressBar*,int)),this,SLOT(progress(QProgressBar*,int)));
+	connect(glt->git,SIGNAL(logReceived(QString,QProgressBar*)),this,SLOT(logReceived(QString,QProgressBar*)));
+	connect(glt->git,SIGNAL(namedLogReceived(QString,QString,QProgressBar*)),this,SLOT(namedLogReceived(QString,QString,QProgressBar*)));
 	connect(gt->git,SIGNAL(projectFiles(QString)),this,SLOT(filesReceived(QString)));
 	connect(gt->git,SIGNAL(commitDetails(QStringList)),this,SLOT(commitDetails(QStringList)));
 	connect(gt->git,SIGNAL(userSettings(QString, QString)),this,SLOT(userSettings(QString, QString)));
@@ -731,13 +741,13 @@ void MainWindowImpl::doneOutputDialog()
 	QApplication::restoreOverrideCursor();
 }
 
-void MainWindowImpl::logReceived(QString log)
+void MainWindowImpl::logReceived(QString log,QProgressBar *pb)
 {
 	QStandardItemModel *prevModel;
 	prevModel = (QStandardItemModel *)logView->model();
 	if(prevModel != logModel && logModel!=NULL)
 		delete logModel;
-	logModel = parseLog2Model(log);
+	logModel = parseLog2Model(log,pb);
 	logView->setModel(logModel);
 	if(prevModel)
 		delete prevModel;
@@ -746,19 +756,19 @@ void MainWindowImpl::logReceived(QString log)
 
 }
 
-void MainWindowImpl::namedLogReceived(QString ref,QString log)
+void MainWindowImpl::namedLogReceived(QString ref,QString log,QProgressBar *pb)
 {
 	QStandardItemModel *prevModel;
 	prevModel = (QStandardItemModel *)logView->model();
 
-	QStandardItemModel *model = parseLog2Model(log);
+	QStandardItemModel *model = parseLog2Model(log,pb);
 	logView->setModel(model);
 	if(prevModel != logModel)
 		delete prevModel;
 	this->statusBar()->showMessage("Ready");
 	LogMessage->setText("Showing log for : " + ref);
 	showLogReset();;
-	progress(100);
+	progress(pb,100);
 }
 
 void MainWindowImpl::filesStatusReceived(QString status)
@@ -872,7 +882,7 @@ void MainWindowImpl::tagsListReceived(QString tags)
 	tagsView->setModel(tagsModel);
 }
 
-QStandardItemModel *MainWindowImpl::parseLog2Model(QString log)
+QStandardItemModel *MainWindowImpl::parseLog2Model(QString log,QProgressBar *pb)
 {
 	QStandardItemModel *model = new QStandardItemModel(0,4);
 	QStandardItem *it = new QStandardItem(QString("Log"));
@@ -894,7 +904,7 @@ QStandardItemModel *MainWindowImpl::parseLog2Model(QString log)
 		parsed++;
 		int percent=50 + ((float)((float)parsed/(float)numLogs)*(float)100)/2;
 		if(percent && !(percent % 10)) {
-			//progress(percent);
+			progress(pb,percent);
 		}
 		QString singleLog = iterator.next();
 		if(!singleLog.contains(delimit2))
@@ -989,20 +999,14 @@ void MainWindowImpl::diffDoubleClicked()
 	}
 }
 
-void MainWindowImpl::progress(int i)
+void MainWindowImpl::progress(QProgressBar *progressBar,int i)
 {
 	if(i == 0) {
-		progressBar = new QProgressBar(this);
 		statusBar()->addPermanentWidget(progressBar);
-		QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-
+		progressBar->show();
 	} else if(i == 100) {
-		if(progressBar) {
-			statusBar()->removeWidget(progressBar);
-			delete progressBar;
-			progressBar = NULL;
-			QApplication::restoreOverrideCursor();
-		}
+		progressBar->hide();
+		statusBar()->removeWidget(progressBar);
 	} else {
 		progressBar->setValue(i);
 	}

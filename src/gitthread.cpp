@@ -18,6 +18,7 @@
 
 GitThread::GitThread()
 {
+
 }
 
 bool GitThread::threadStarted(void (GitThread::*fn)(void))
@@ -34,6 +35,7 @@ bool GitThread::threadStarted(void (GitThread::*fn)(void))
 void GitThread::run()
 {
 	git = new GitProcess();
+	git->pb=pb;
 	exec();
 	while(1)
 		sleep(10);

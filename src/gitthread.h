@@ -18,6 +18,7 @@
 
 #include <QObject>
 #include <QThread>
+#include <QProgressBar>
 #include "gitprocess.h"
 
 #define GIT_INVOKE(action_slot)	\
@@ -46,6 +47,7 @@ private:
 	void (GitThread::*function)(void);
 
 public:
+	QProgressBar *pb;
 	GitProcess *git;
 	GitThread();
 	void run();

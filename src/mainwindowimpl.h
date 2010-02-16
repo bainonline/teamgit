@@ -68,7 +68,6 @@ private:
 	ProjectsModel *unstagedModel;
 	ProjectsModel *untrackedModel;
 
-	QProgressBar *progressBar;
 	OutputDialogImpl *opd;
 	CommitDialogImpl *cmd;
 	ResetDialogImpl *rsd;
@@ -95,7 +94,7 @@ private:
 
 	void showLogReset();
 	void populateProjects();
-	QStandardItemModel *parseLog2Model(QString log);
+	QStandardItemModel *parseLog2Model(QString log,	QProgressBar *progressBar);
 
 	void addRecentlyOpened(QString dir);
 	void updateRecentlyOpened();
@@ -130,10 +129,10 @@ private slots:
 	void newProjectDialog();
 	void pullDialog();
 
-	void logReceived(QString);
-	void namedLogReceived(QString,QString);
+	void logReceived(QString,QProgressBar *);
+	void namedLogReceived(QString,QString,QProgressBar *);
 	void filesReceived(QString);
-	void progress(int);
+	void progress(QProgressBar *,int);
 	void cloneComplete(QString);
 	void filesStatusReceived(QString);
 

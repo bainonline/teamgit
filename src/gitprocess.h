@@ -21,6 +21,7 @@
 #include <QString>
 #include <QStandardItemModel>
 #include <QFile>
+#include <QProgressBar>
 #include <QWaitCondition>
 
 #if defined Q_OS_UNIX
@@ -63,7 +64,11 @@ Q_OBJECT
 
 	void sendGitOutput();
 
+
+
 	public:
+	
+	QProgressBar *pb;
 	GitProcess();
 
 	QByteArray runGit(QStringList arguments, bool block=true,bool usePseudoTerm=false);
@@ -127,15 +132,15 @@ Q_OBJECT
 	void getCommands();
 
 	signals:
-	void logReceived(QString);
-	void namedLogReceived(QString,QString);
+	void logReceived(QString,QProgressBar*);
+	void namedLogReceived(QString,QString,QProgressBar*);
 	void notify(const QString &);
 
 	void initOutputDialog();
 	void notifyOutputDialog(const QString &);
 	void doneOutputDialog();
 
-	void progress(int);
+	void progress(QProgressBar*,int);
 	void userSettings(QString, QString);
 
 	void commitDetails(QStringList);
