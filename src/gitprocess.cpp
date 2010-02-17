@@ -381,6 +381,45 @@ void GitProcess::getDiff(QString file)
 	emit fileDiff(QString::fromUtf8(diff),unstagedDiff);
 }
 
+QList< QList<QStandardItem *> > GitProcess::parseLog2Model(QString log)
+{
+	QList< QList<QStandardItem *> > StandardItemListList;
+
+	QString delimit("TEAMGITFIELDEND");
+	QString delimit2("TEAMGITFIELDMARKER");
+	QStringList logList=log.split(delimit);
+	int numLogs=logList.count();
+	int parsed=0;
+	QStringListIterator iterator(logList);
+	while (iterator.hasNext()) {
+		parsed++;
+		int percent=50 + ((float)((float)parsed/(float)numLogs)*(float)100)/2;
+		if(percent && !(percent % 10)) {
+			progress(pb,percent);
+		}
+		QString singleLog = iterator.next();
+		if(!singleLog.contains(delimit2))
+			continue;
+		QStringList logFields = singleLog.split(delimit2);
+		QStringListIterator it2(logFields);
+		QList<QStandardItem*> itemlist;
+		QString oneLiner = it2.next();
+		if(oneLiner.startsWith("\n"))
+			oneLiner = oneLiner.remove(0,1);
+		QStandardItem *item1 = new QStandardItem(oneLiner);
+		item1->setEditable(false);
+		itemlist.append(item1);
+
+		while(it2.hasNext()) {
+			QStandardItem *item1 = new QStandardItem(it2.next());
+			item1->setEditable(false);
+			itemlist.append(item1);
+		}
+		StandardItemListList.append(itemlist);
+	}
+	return StandardItemListList;
+}
+
 void GitProcess::getNamedLog(QString ref)
 {
 	QStringList args;
@@ -397,29 +436,30 @@ void GitProcess::getNamedLog(QString ref)
 	emit notify("Parsing log");
 	emit progress(pb,50,"Parsing log");
 
-	QString log(QString::fromUtf8(array));
-	emit namedLogReceived(ref,log,pb);
+	QString log(QString::fromUtf8(array));	
+	QList< QList<QStandardItem *> >itemListList = parseLog2Model(log);
+	emit namedLogReceived(ref,itemListList);
 }
 
 void GitProcess::getLog(int numLog)
 {
-	QStringList args;
+	QStringList args,args2;
 	QString s;
 
 	emit notify("Running git log");
 	emit progress(pb,0,"Running git log");
-	emit progress(pb,10);
 	s.sprintf("-%i",numLog);
 	args << "log";
 	args.append("--pretty=format:%sTEAMGITFIELDMARKER%an<%ae>TEAMGITFIELDMARKER%adTEAMGITFIELDMARKER%HTEAMGITFIELDEND");
 	QByteArray array = runGit(args);
-
-	emit notify("Parsing log");
-	emit progress(pb,50,"Parsing log");
-
 	QString log(QString::fromUtf8(array));
-	emit logReceived(log,pb);
+	QList< QList<QStandardItem *> >itemListList;
+	itemListList = parseLog2Model(log);
+	emit logReceived(itemListList);
+	emit notify("Parsing initial log");
+	emit progress(pb,100,"Parsing log");
 }
+
 
 void GitProcess::getCommit(QString commitHash)
 {
@@ -815,4 +855,5 @@ void GitProcess::getUnMergedFileContents(QString file)
 	emit notify("Ready");
 	emit progress(pb,100);
 }
+
 

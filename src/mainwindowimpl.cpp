@@ -14,6 +14,7 @@
 	If not, see <http://www.devslashzero.com/teamgit/license>.
 */
 
+#include <QMetaType>
 #include <QDesktopServices>
 #include <QMetaObject>
 #include <QTimer>
@@ -48,9 +49,8 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 	delete commit_diff1;
 	commit_diff = new DiffViewer(this);
 	hboxLayout5->addWidget(commit_diff);
-	
 	setWindowIcon(QIcon(":/main/icon.png"));
-
+ 	qRegisterMetaType<QList< QList<QStandardItem *> > >("QList< QList<QStandardItem *> >");
 	gt = new GitThread();
 	gt->pb = new QProgressBar(this);
 	gt->pb->hide();
@@ -346,8 +346,8 @@ void MainWindowImpl::setupConnections()
 	connect(gt->git,SIGNAL(progress(QProgressBar*,int,QString)),this,SLOT(progress(QProgressBar*,int,QString)));
 	connect(glt->git,SIGNAL(progress(QProgressBar*,int,QString)),this,SLOT(progress(QProgressBar*,int,QString)));
 	connect(gft->git,SIGNAL(progress(QProgressBar*,int,QString)),this,SLOT(progress(QProgressBar*,int,QString)));
-	connect(glt->git,SIGNAL(logReceived(QString,QProgressBar*)),this,SLOT(logReceived(QString,QProgressBar*)));
-	connect(glt->git,SIGNAL(namedLogReceived(QString,QString,QProgressBar*)),this,SLOT(namedLogReceived(QString,QString,QProgressBar*)));
+	connect(glt->git,SIGNAL(logReceived(QList< QList<QStandardItem *> >)),this,SLOT(logReceived(QList< QList<QStandardItem *> >)));
+	connect(glt->git,SIGNAL(namedLogReceived(QString,QList< QList<QStandardItem *> >)),this,SLOT(namedLogReceived(QString,QList< QList<QStandardItem *> >)));
 	connect(gt->git,SIGNAL(projectFiles(QString)),this,SLOT(filesReceived(QString)));
 	connect(gt->git,SIGNAL(commitDetails(QStringList)),this,SLOT(commitDetails(QStringList)));
 	connect(gt->git,SIGNAL(userSettings(QString, QString)),this,SLOT(userSettings(QString, QString)));
@@ -741,13 +741,25 @@ void MainWindowImpl::doneOutputDialog()
 	QApplication::restoreOverrideCursor();
 }
 
-void MainWindowImpl::logReceived(QString log,QProgressBar *pb)
+void MainWindowImpl::logReceived(QList< QList<QStandardItem *> >itemListList)
 {
 	QStandardItemModel *prevModel;
 	prevModel = (QStandardItemModel *)logView->model();
 	if(prevModel != logModel && logModel!=NULL)
 		delete logModel;
-	logModel = parseLog2Model(log,pb);
+
+	logModel = new QStandardItemModel(0,4);
+	QStandardItem *it = new QStandardItem(QString("Log"));
+	QStandardItem *it1 = new QStandardItem(QString("Author"));
+	QStandardItem *it2 = new QStandardItem(QString("Date"));
+	QStandardItem *it3 = new QStandardItem(QString("Commit"));
+	logModel->setHorizontalHeaderItem(0,it);
+	logModel->setHorizontalHeaderItem(1,it1);
+	logModel->setHorizontalHeaderItem(2,it2);
+	logModel->setHorizontalHeaderItem(3,it3);
+	for(int i=0;i<itemListList.size();i++) {
+			logModel->appendRow(itemListList[i]);
+	}
 	logView->setModel(logModel);
 	if(prevModel)
 		delete prevModel;
@@ -756,19 +768,29 @@ void MainWindowImpl::logReceived(QString log,QProgressBar *pb)
 
 }
 
-void MainWindowImpl::namedLogReceived(QString ref,QString log,QProgressBar *pb)
+void MainWindowImpl::namedLogReceived(QString ref,QList< QList<QStandardItem *> >itemListList)
 {
 	QStandardItemModel *prevModel;
 	prevModel = (QStandardItemModel *)logView->model();
 
-	QStandardItemModel *model = parseLog2Model(log,pb);
+	QStandardItemModel *model = new QStandardItemModel(0,4);
+	QStandardItem *it = new QStandardItem(QString("Log"));
+	QStandardItem *it1 = new QStandardItem(QString("Author"));
+	QStandardItem *it2 = new QStandardItem(QString("Date"));
+	QStandardItem *it3 = new QStandardItem(QString("Commit"));
+	model->setHorizontalHeaderItem(0,it);
+	model->setHorizontalHeaderItem(1,it1);
+	model->setHorizontalHeaderItem(2,it2);
+	model->setHorizontalHeaderItem(3,it3);
+	for(int i=0;i<itemListList.size();i++) {
+			model->appendRow(itemListList[i]);
+	}
 	logView->setModel(model);
 	if(prevModel != logModel)
 		delete prevModel;
 	this->statusBar()->showMessage("Ready");
 	LogMessage->setText("Showing log for : " + ref);
-	showLogReset();;
-	progress(pb,100);
+	showLogReset();
 }
 
 void MainWindowImpl::filesStatusReceived(QString status)
@@ -882,53 +904,6 @@ void MainWindowImpl::tagsListReceived(QString tags)
 	tagsView->setModel(tagsModel);
 }
 
-QStandardItemModel *MainWindowImpl::parseLog2Model(QString log,QProgressBar *pb)
-{
-	QStandardItemModel *model = new QStandardItemModel(0,4);
-	QStandardItem *it = new QStandardItem(QString("Log"));
-	QStandardItem *it1 = new QStandardItem(QString("Author"));
-	QStandardItem *it2 = new QStandardItem(QString("Date"));
-	QStandardItem *it3 = new QStandardItem(QString("Commit"));
-	model->setHorizontalHeaderItem(0,it);
-	model->setHorizontalHeaderItem(1,it1);
-	model->setHorizontalHeaderItem(2,it2);
-	model->setHorizontalHeaderItem(3,it3);
-
-	QString delimit("TEAMGITFIELDEND");
-	QString delimit2("TEAMGITFIELDMARKER");
-	QStringList logList=log.split(delimit);
-	int numLogs=logList.count();
-	int parsed=0;
-	QStringListIterator iterator(logList);
-	while (iterator.hasNext()) {
-		parsed++;
-		int percent=50 + ((float)((float)parsed/(float)numLogs)*(float)100)/2;
-		if(percent && !(percent % 10)) {
-			progress(pb,percent);
-		}
-		QString singleLog = iterator.next();
-		if(!singleLog.contains(delimit2))
-			continue;
-		QStringList logFields = singleLog.split(delimit2);
-		QStringListIterator it2(logFields);
-		QList<QStandardItem*> itemlist;
-		QString oneLiner = it2.next();
-		if(oneLiner.startsWith("\n"))
-			oneLiner = oneLiner.remove(0,1);
-		QStandardItem *item1 = new QStandardItem(oneLiner);
-		item1->setEditable(false);
-		itemlist.append(item1);
-
-		while(it2.hasNext()) {
-			QStandardItem *item1 = new QStandardItem(it2.next());
-			item1->setEditable(false);
-			itemlist.append(item1);
-		}
-		model->appendRow(itemlist);
-	}
-	return model;
-}
-
 void MainWindowImpl::commitDetails(QStringList cd)
 {
 	commit_author->setText(cd[1].remove(0,8));
@@ -1001,14 +976,18 @@ void MainWindowImpl::diffDoubleClicked()
 
 void MainWindowImpl::progress(QProgressBar *progressBar,int i,QString msg)
 {
+	if(progressBar == NULL)
+			return;
 	if(!msg.isEmpty()) {
 		QString format = msg + ": %p%";
 		progressBar->setFormat(format);
 	}
 	if(i == 0) {
+		progressBar->setValue(i);
 		statusBar()->addPermanentWidget(progressBar);
 		progressBar->show();
 	} else if(i == 100) {
+		progressBar->setValue(i);
 		progressBar->hide();
 		statusBar()->removeWidget(progressBar);
 	} else {

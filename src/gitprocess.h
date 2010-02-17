@@ -31,6 +31,9 @@
 enum gitDiffType {commitDiff=0,stagedDiff,unstagedDiff};
 enum gitResetType {simple=0,soft,hard};
 
+
+Q_DECLARE_METATYPE(QList< QList<QStandardItem *> >)
+
 /*
 This is the class which is responsible for both executing the
 git process _and_ parsing its output.
@@ -64,7 +67,7 @@ Q_OBJECT
 
 	void sendGitOutput();
 
-
+	QList<QList<QStandardItem *> > parseLog2Model(QString log);
 
 	public:
 	
@@ -132,8 +135,8 @@ Q_OBJECT
 	void getCommands();
 
 	signals:
-	void logReceived(QString,QProgressBar*);
-	void namedLogReceived(QString,QString,QProgressBar*);
+	void logReceived(QList< QList<QStandardItem *> >);
+	void namedLogReceived(QString,QList< QList<QStandardItem *> >);
 	void notify(const QString &);
 
 	void initOutputDialog();

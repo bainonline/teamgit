@@ -94,7 +94,6 @@ private:
 
 	void showLogReset();
 	void populateProjects();
-	QStandardItemModel *parseLog2Model(QString log,	QProgressBar *progressBar);
 
 	void addRecentlyOpened(QString dir);
 	void updateRecentlyOpened();
@@ -129,8 +128,8 @@ private slots:
 	void newProjectDialog();
 	void pullDialog();
 
-	void logReceived(QString,QProgressBar *);
-	void namedLogReceived(QString,QString,QProgressBar *);
+	void logReceived(QList< QList<QStandardItem *> >);
+	void namedLogReceived(QString,QList< QList<QStandardItem *> >itemListList);
 	void filesReceived(QString);
 	void progress(QProgressBar *,int,QString msg=QString());
 	void cloneComplete(QString);
