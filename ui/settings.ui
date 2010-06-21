@@ -1,7 +1,8 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>SettingsDialog</class>
- <widget class="QDialog" name="SettingsDialog" >
-  <property name="geometry" >
+ <widget class="QDialog" name="SettingsDialog">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
@@ -9,26 +10,26 @@
     <height>313</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2" >
+  <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
-    <widget class="QTabWidget" name="tabWidget" >
-     <property name="currentIndex" >
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
       <number>1</number>
      </property>
-     <widget class="QWidget" name="tab" >
-      <attribute name="title" >
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
        <string>General</string>
       </attribute>
-      <layout class="QVBoxLayout" >
+      <layout class="QVBoxLayout">
        <item>
         <spacer>
-         <property name="orientation" >
+         <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>
-         <property name="sizeHint" stdset="0" >
+         <property name="sizeHint" stdset="0">
           <size>
            <width>20</width>
            <height>40</height>
@@ -37,46 +38,46 @@
         </spacer>
        </item>
        <item>
-        <layout class="QHBoxLayout" >
+        <layout class="QHBoxLayout">
          <item>
-          <widget class="QLabel" name="label_4" >
-           <property name="text" >
+          <widget class="QLabel" name="label_4">
+           <property name="text">
             <string>User Name</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="userName" />
+          <widget class="QLineEdit" name="userName"/>
          </item>
         </layout>
        </item>
        <item>
-        <layout class="QHBoxLayout" >
+        <layout class="QHBoxLayout">
          <item>
-          <widget class="QLabel" name="label_3" >
-           <property name="text" >
+          <widget class="QLabel" name="label_3">
+           <property name="text">
             <string>User Email </string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="userEmail" />
+          <widget class="QLineEdit" name="userEmail"/>
          </item>
         </layout>
        </item>
        <item>
-        <widget class="QCheckBox" name="autosignoff" >
-         <property name="text" >
+        <widget class="QCheckBox" name="autosignoff">
+         <property name="text">
           <string>Auto add signoff lines to commit messages</string>
          </property>
         </widget>
        </item>
        <item>
         <spacer>
-         <property name="orientation" >
+         <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>
-         <property name="sizeHint" stdset="0" >
+         <property name="sizeHint" stdset="0">
           <size>
            <width>360</width>
            <height>41</height>
@@ -86,17 +87,17 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="gitTab" >
-      <attribute name="title" >
+     <widget class="QWidget" name="gitTab">
+      <attribute name="title">
        <string>&amp;Git Options</string>
       </attribute>
-      <layout class="QVBoxLayout" >
+      <layout class="QVBoxLayout">
        <item>
         <spacer>
-         <property name="orientation" >
+         <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>
-         <property name="sizeHint" stdset="0" >
+         <property name="sizeHint" stdset="0">
           <size>
            <width>20</width>
            <height>40</height>
@@ -105,18 +106,18 @@
         </spacer>
        </item>
        <item>
-        <layout class="QHBoxLayout" >
+        <layout class="QHBoxLayout">
          <item>
-          <widget class="QLabel" name="label" >
-           <property name="text" >
+          <widget class="QLabel" name="label">
+           <property name="text">
             <string>Git Binary</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="gitBinaryPath" >
-           <property name="sizePolicy" >
-            <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+          <widget class="QLineEdit" name="gitBinaryPath">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -124,8 +125,8 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pickPathButton" >
-           <property name="text" >
+          <widget class="QPushButton" name="pickPathButton">
+           <property name="text">
             <string>&amp;Select</string>
            </property>
           </widget>
@@ -133,24 +134,45 @@
         </layout>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout" >
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
-          <widget class="QLabel" name="label_5" >
-           <property name="text" >
+          <widget class="QLabel" name="label_6">
+           <property name="text">
+            <string>Editor Tool</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="editorPath"/>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pickEditorButton">
+           <property name="text">
+            <string>Select</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QLabel" name="label_5">
+           <property name="text">
             <string>Merge tool</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="mergeToolPath" >
-           <property name="enabled" >
+          <widget class="QLineEdit" name="mergeToolPath">
+           <property name="enabled">
             <bool>false</bool>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="selectMergeTool" >
-           <property name="text" >
+          <widget class="QPushButton" name="selectMergeTool">
+           <property name="text">
             <string>S&amp;elect</string>
            </property>
           </widget>
@@ -159,10 +181,10 @@
        </item>
        <item>
         <spacer>
-         <property name="orientation" >
+         <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>
-         <property name="sizeHint" stdset="0" >
+         <property name="sizeHint" stdset="0">
           <size>
            <width>20</width>
            <height>40</height>
@@ -172,17 +194,17 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_2" >
-      <attribute name="title" >
+     <widget class="QWidget" name="tab_2">
+      <attribute name="title">
        <string>&amp;Advanced</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout" >
+      <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <spacer name="verticalSpacer" >
-         <property name="orientation" >
+        <spacer name="verticalSpacer">
+         <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>
-         <property name="sizeHint" stdset="0" >
+         <property name="sizeHint" stdset="0">
           <size>
            <width>20</width>
            <height>59</height>
@@ -191,34 +213,34 @@
         </spacer>
        </item>
        <item>
-        <widget class="QCheckBox" name="showAdvancedCheckBox" >
-         <property name="text" >
+        <widget class="QCheckBox" name="showAdvancedCheckBox">
+         <property name="text">
           <string>Show Advanced Menu</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="label_2" >
-         <property name="midLineWidth" >
+        <widget class="QLabel" name="label_2">
+         <property name="midLineWidth">
           <number>0</number>
          </property>
-         <property name="text" >
+         <property name="text">
           <string>WARNING: Advanced menu is still _VERY_ _unstable_ and should not be enabled except for testing and debugging  purposed</string>
          </property>
-         <property name="textFormat" >
+         <property name="textFormat">
           <enum>Qt::RichText</enum>
          </property>
-         <property name="wordWrap" >
+         <property name="wordWrap">
           <bool>true</bool>
          </property>
         </widget>
        </item>
        <item>
-        <spacer name="verticalSpacer_2" >
-         <property name="orientation" >
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>
-         <property name="sizeHint" stdset="0" >
+         <property name="sizeHint" stdset="0">
           <size>
            <width>20</width>
            <height>59</height>
@@ -231,8 +253,8 @@
     </widget>
    </item>
    <item>
-    <widget class="QDialogButtonBox" name="buttonBox" >
-     <property name="standardButtons" >
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="standardButtons">
       <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
      </property>
     </widget>
@@ -247,11 +269,11 @@
    <receiver>SettingsDialog</receiver>
    <slot>accept()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>354</x>
      <y>276</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>401</x>
      <y>284</y>
     </hint>
@@ -263,11 +285,11 @@
    <receiver>SettingsDialog</receiver>
    <slot>reject()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>175</x>
      <y>276</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>191</x>
      <y>300</y>
     </hint>

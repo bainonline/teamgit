@@ -27,6 +27,7 @@
 #include <QInputDialog>
 #include <QFileDialog>
 #include <QTextBlock>
+#include <QFileInfo>
 #include <QTextDocumentFragment>
 #include <QMap>
 #include <QUrl>
@@ -375,6 +376,7 @@ void MainWindowImpl::setupConnections()
 
 	connect(logView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(logClicked(const QModelIndex &)));
 	connect(projectFilesView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(projectFilesViewClicked(const QModelIndex &)));
+        connect(projectFilesView,SIGNAL(doubleClicked(const QModelIndex &)),this,SLOT(projectFilesViewDoubleClicked(const QModelIndex &)));
 	connect(projectsComboBox,SIGNAL(activated(int)),this,SLOT(projectsComboBoxActivated(int)));
 	connect(ResetLogButton,SIGNAL(clicked()),this,SLOT(resetLog()));
 	connect(unstagedFilesView,SIGNAL(doubleClicked(const QModelIndex &)),this,SLOT(unstagedDoubleClicked(const QModelIndex &)));
@@ -1150,6 +1152,15 @@ void MainWindowImpl::projectFilesViewClicked(const QModelIndex &index)
 	if(!projectsModel->rowCount(index))
 		QMetaObject::invokeMethod(gt->git,"blame",Qt::QueuedConnection,
 							Q_ARG(QString,text));
+}
+
+void MainWindowImpl::projectFilesViewDoubleClicked(const QModelIndex &index)
+{
+    QString text = projectsModel->filepath(index);
+    QFileInfo file(gSettings->teamGitWorkingDir+"/"+text);
+    if(file.isFile()){
+        QProcess::execute(gSettings->editorPath,QStringList(file.absoluteFilePath()));
+    }
 }
 
 void MainWindowImpl::projectsComboBoxActivated(int index)

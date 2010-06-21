@@ -25,6 +25,7 @@ struct gsettings {
 	bool autosignoff;
 	QString teamGitWorkingDir;
 	QString currProjectPath;
+        QString editorPath;
 	QStringList recentlyOpened;
 	QString lastApplyMailPath;
 	bool showAdvanced;
@@ -41,7 +42,9 @@ class SettingsImpl : public QDialog, public Ui::SettingsDialog
 	public:
 		SettingsImpl(QWidget *parent = 0);
 		void setGitBinaryPath(const QString &path);
+                void setEditorPath(const QString &path);
 		QString getGitBinaryPath();
+                QString getEditorPath();
 		void setUserSettings(const QString &name, const QString &email);
 		QString getUserName();
 		QString getUserEmail();
@@ -52,6 +55,7 @@ class SettingsImpl : public QDialog, public Ui::SettingsDialog
 	public slots:
 		void refreshUi();
 		void getGitFilePath();
+                void getEditorFilePath();
 		void getMergeToolFilePath();
 		void getWorkingDirPath();
 		void accept();

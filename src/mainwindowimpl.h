@@ -168,6 +168,7 @@ private slots:
 
 	void logClicked(const QModelIndex &);
 	void projectFilesViewClicked(const QModelIndex &);
+        void projectFilesViewDoubleClicked(const QModelIndex &);
 	void projectsComboBoxActivated(int);
 	void resetLog();
 	void expandStagedUnstagedSlot();

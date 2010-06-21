@@ -28,6 +28,7 @@ SettingsImpl::SettingsImpl(QWidget *parent)
 	setupUi(this);
 	autosignoff->setChecked(true);
 	connect(pickPathButton,SIGNAL(clicked()),this,SLOT(getGitFilePath()));
+        connect(pickEditorButton,SIGNAL(clicked()),this,SLOT(getEditorFilePath()));
 	connect(selectMergeTool,SIGNAL(clicked()),this,SLOT(getMergeToolFilePath()));
 
 	gSettings = &GlobalSettings;//(gsettings *)malloc(sizeof(gsettings));
@@ -61,6 +62,16 @@ QString SettingsImpl::getGitBinaryPath()
 	return gitBinaryPath->text();
 }
 
+void SettingsImpl::setEditorPath(const QString &path)
+{
+    editorPath->setText(path);
+}
+
+QString SettingsImpl::getEditorPath()
+{
+    return editorPath->text();
+}
+
 QString SettingsImpl::getFilePath()
 {
 	return QFileDialog::getOpenFileName(this, tr("Open Binary"),
@@ -82,6 +93,13 @@ void SettingsImpl::getMergeToolFilePath()
 		mergeToolPath->setText(path);
 }
 
+void SettingsImpl::getEditorFilePath()
+{
+    QString path=getFilePath();
+    if(!path.isNull())
+            editorPath->setText(path);
+}
+
 void SettingsImpl::getWorkingDirPath()
 {
 }
@@ -93,6 +111,7 @@ void SettingsImpl::refreshUi()
 	userEmail->setText(gSettings->userEmail);
 	autosignoff->setChecked(gSettings->autosignoff);
 	mergeToolPath->setText(gSettings->mergeToolPath);
+        editorPath->setText(gSettings->editorPath);
 	if(gSettings->showAdvanced)
 		showAdvancedCheckBox->setCheckState(Qt::Checked);
 	else
@@ -104,6 +123,7 @@ void SettingsImpl::accept()
 	gSettings->userName = userName->text();
 	gSettings->userEmail = userEmail->text();
 	gSettings->mergeToolPath = mergeToolPath->text();
+        gSettings->editorPath = editorPath->text();
 	if(autosignoff->checkState() == Qt::Checked)
 		gSettings->autosignoff = true;
 	else
@@ -123,6 +143,7 @@ void SettingsImpl::readSettings()
 	gSettings->autosignoff = settings.value("autosignoff",bool()).toBool();
 	gSettings->lastApplyMailPath = settings.value("applyMailStartPath",QString("/home")).toString();
 	gSettings->mergeToolPath = settings.value("mergeToolPath",QString("/usr/bin/meld")).toString();
+        gSettings->editorPath = settings.value("editorPath",QString("/usr/bin/kate")).toString();
 	settings.endGroup();
 }
 
@@ -137,6 +158,7 @@ void SettingsImpl::writeSettings()
 	settings.setValue("autosignoff",gSettings->autosignoff);
 	settings.setValue("applyMailStartPath",gSettings->lastApplyMailPath);
 	settings.setValue("mergeToolPath",gSettings->mergeToolPath);
+        settings.setValue("editorPath",gSettings->editorPath);
 	settings.endGroup();
 
 }
