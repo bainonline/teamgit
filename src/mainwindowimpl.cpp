@@ -1159,7 +1159,7 @@ void MainWindowImpl::projectFilesViewDoubleClicked(const QModelIndex &index)
     QString text = projectsModel->filepath(index);
     QFileInfo file(gSettings->teamGitWorkingDir+"/"+text);
     if(file.isFile()){
-        QProcess::execute(gSettings->editorPath,QStringList(file.absoluteFilePath()));
+        QProcess::startDetached(gSettings->editorPath,QStringList(file.absoluteFilePath()));
     }
 }
 
