@@ -145,16 +145,16 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 	}
 	updateRecentlyOpened();
 	fileAnnotationTabIndex=0;
-	
+
 	//Enable drag and drop
 	setAcceptDrops(true);
-	
+
 	bonjourRegister = new BonjourServiceRegister(this);
 	bonjourRegister->registerService(BonjourRecord(
 			tr("Teamgit Server on %1").arg(QHostInfo::localHostName()),
 			QLatin1String("_teamgit._tcp"), QString()),
 			TEAMGIT_PORT);
-	
+
 }
 
 void MainWindowImpl::dragEnterEvent(QDragEnterEvent *event)
@@ -164,7 +164,7 @@ void MainWindowImpl::dragEnterEvent(QDragEnterEvent *event)
 }
 
 void MainWindowImpl::dropEvent(QDropEvent *event)
-{ 
+{
 	QList<QUrl> urlList;
 	QString fName;
 	QFileInfo info;
@@ -181,7 +181,7 @@ void MainWindowImpl::dropEvent(QDropEvent *event)
 				applyMail( info.absoluteFilePath() );
 			}
 	}
-	
+
 	event->acceptProposedAction();
 }
 
@@ -514,7 +514,7 @@ void MainWindowImpl::writeSettings()
 void MainWindowImpl::readSettings()
 {
 	QSettings settings(COMPANY, "Teamgit");
-	
+
 	settings.beginGroup("MainWindow");
 	restoreGeometry(settings.value("geometry").toByteArray());
 	horizontalSplitter1->restoreState(settings.value("horizontalSplitter1").toByteArray());
@@ -1444,7 +1444,7 @@ void MainWindowImpl::gotUnMerged(QString files)
         if(files.isEmpty()){
 		mergeConflictLabel->hide();
 	} else {
-		mergeConflictLabel->setAutoFillBackground(true); 
+		mergeConflictLabel->setAutoFillBackground(true);
 		mergeConflictLabel->setBackgroundRole(QPalette::Light);
 		mergeConflictLabel->show();
 	}
@@ -1468,4 +1468,4 @@ void MainWindowImpl::testSlot()
 
 }
 //
-	
+

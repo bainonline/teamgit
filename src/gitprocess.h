@@ -70,7 +70,7 @@ Q_OBJECT
 	QList<QList<QStandardItem *> > parseLog2Model(QString log);
 
 	public:
-	
+
 	QProgressBar *pb;
 	GitProcess();
 
@@ -126,7 +126,7 @@ Q_OBJECT
 	void merge(QString);
 	void checkUnMerged();
 	void getUnMergedFileContents(QString file);
-	
+
 	void newBranch(QString,QString);
 	void newRemoteBranch(QString,QString);
 	void deleteBranch(QString);
@@ -170,7 +170,7 @@ Q_OBJECT
 
 	void helpMessage(QString,QString);
 	void commands(QString);
-	
+
 	void unMerged(QString);
 	void unmergedFileContents(QStringList);
 };

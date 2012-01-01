@@ -436,7 +436,7 @@ void GitProcess::getNamedLog(QString ref)
 	emit notify("Parsing log");
 	emit progress(pb,50,"Parsing log");
 
-	QString log(QString::fromUtf8(array));	
+	QString log(QString::fromUtf8(array));
 	QList< QList<QStandardItem *> >itemListList = parseLog2Model(log);
 	emit namedLogReceived(ref,itemListList);
 }
@@ -845,7 +845,7 @@ void GitProcess::getUnMergedFileContents(QString file)
 	args <<  ":3:" + file;
 	emit progress(pb,66);
 	QByteArray content3 = runGit(args);
-	
+
 	QStringList contents;
 	contents << QString::fromUtf8(content1);
 	contents << QString::fromUtf8(content2);

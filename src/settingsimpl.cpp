@@ -79,14 +79,14 @@ QString SettingsImpl::getFilePath()
 											"");
 }
 
-void SettingsImpl::getGitFilePath() 
+void SettingsImpl::getGitFilePath()
 {
 	QString path=getFilePath();
 	if(!path.isNull())
 		gitBinaryPath->setText(path);
 }
 
-void SettingsImpl::getMergeToolFilePath() 
+void SettingsImpl::getMergeToolFilePath()
 {
 	QString path=getFilePath();
 	if(!path.isNull())

@@ -73,7 +73,7 @@ void MergeDialogImpl::runMergeTool(QStringList fileContents)
 	localFile = local.fileName();
 	remoteFile = remote.fileName();
 	mergedFile = fileContents[3];
-	QTextStream outBase(&base), outLocal(&local), outRemote(&remote); 
+	QTextStream outBase(&base), outLocal(&local), outRemote(&remote);
 	outBase << fileContents[0];
 	outLocal << fileContents[1];
 	outRemote << fileContents[2];

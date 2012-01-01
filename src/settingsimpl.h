@@ -51,7 +51,7 @@ class SettingsImpl : public QDialog, public Ui::SettingsDialog
 		void setAutoSignoff(bool checked);
 		void readSettings();
 		void writeSettings();
-		
+
 	public slots:
 		void refreshUi();
 		void getGitFilePath();

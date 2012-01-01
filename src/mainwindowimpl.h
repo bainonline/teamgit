@@ -72,11 +72,11 @@ private:
 	CommitDialogImpl *cmd;
 	ResetDialogImpl *rsd;
 	MergeDialogImpl *md;
-	
+
 	QString mergeConflicts;
-	
+
 	BonjourServiceRegister *bonjourRegister;
-	
+
 	void readSettings();
 	void checkAndSetWorkingDir(QString dir);
 	void writeSettings();
@@ -99,7 +99,7 @@ private:
 	void updateRecentlyOpened();
 
 	int fileAnnotationTabIndex;
-	
+
 	void dropEvent(QDropEvent *event);
 	void dragEnterEvent(QDragEnterEvent *event);
 
