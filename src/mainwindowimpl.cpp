@@ -801,28 +801,26 @@ void MainWindowImpl::filesStatusReceived(QString status)
 	QString unstagedChanged,stagedChanged,untrackedChanged;
 	QString *curList=NULL;
 	for(int i=0;i<lines.size();i++) {
-		lines[i]=lines[i].simplified();
-		if(lines[i].startsWith("# Changes to be committed:")) {
-			curList=&stagedChanged;
-		} else if(lines[i].startsWith("# Changed but not updated:")) {
-			curList=&unstagedChanged;
-		} else if(lines[i].startsWith("# Untracked files:")) {
-			curList=&untrackedChanged;
-		} else if(lines[i].startsWith("# modified: ")) {
-			lines[i].remove(0,sizeof("# modified:"));
-			curList->append(lines[i]+"\n");
-		} else if(lines[i].startsWith("# new file: ")) {
-			lines[i].remove(0,sizeof("# new file:"));
-			curList->append(lines[i]+"\n");
-		} else {
-			if(curList == &untrackedChanged) {
-				if(lines[i].startsWith("# ") &&
-				   !lines[i].startsWith("# (use ")) {
-					lines[i].remove(0,sizeof("#"));
-					curList->append(lines[i]+"\n");
-				}
-			}
-		}
+                QString cline=lines[i];
+                QChar index_status,work_status;
+                if(!cline.size())
+                    continue;
+                index_status=cline.at(0);
+                work_status=cline.at(1);
+                cline.remove(0,3);
+
+                if(work_status == '?' && index_status == '?') {
+                    untrackedChanged.append(cline+"\n");
+                } else {
+                    if(index_status != ' ') {
+                        stagedChanged.append(cline+"\n");
+                    }
+
+                    if(work_status != ' ') {
+                        unstagedChanged.append(cline+"\n");
+                    }
+                }
+
 	}
 
 	if(stagedChanged.size()) {

@@ -533,7 +533,7 @@ void GitProcess::getStatus()
 
 	emit notify("Gathering files status");
 	emit progress(pb,0,"Gathering files status");
-	args << "status";
+        args << "status" << "--porcelain";
 
 	QByteArray status= runGit(args);
 	emit progress(pb,50);
