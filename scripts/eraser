@@ -5,6 +5,14 @@
 SED=$(which sed)
 MV=$(which mv)
 
+if [ -z "${SED}" ]; then 
+      exit 1
+fi
+
+if [ -z "${MV}" ]; then 
+      exit 1
+fi
+
 for i in "$@";
 do
 	"${SED}" "s/[\r\t ]*$//" "$i" > tmp.bak;
