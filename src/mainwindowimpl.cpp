@@ -1199,7 +1199,8 @@ void MainWindowImpl::rebaseInteractive()
 
 void MainWindowImpl::merge()
 {
-	QString branch;
+        QString branch;
+        QString remote;
 	QModelIndex index = branchesView->selectionModel()->currentIndex();
 	if(index.isValid()){
 		branch=branchModel->itemFromIndex(index)->text().trimmed();
@@ -1208,14 +1209,18 @@ void MainWindowImpl::merge()
 		}
 		branch.trimmed();
 	} else {
-		index = remoteBranchesView->selectionModel()->currentIndex();
-		if(index.isValid()) {
+                index = remoteBranchesView->selectionModel()->currentIndex();
+                QModelIndex parentIndex = index.parent();
+
+                if(index.isValid() && parentIndex.isValid()) {
 			branch = remoteBranchesModel->filepath(index);
-			branch = branch.trimmed();
-			if(branch.indexOf("/") >= 0)
-				branch.remove(branch.indexOf("/"),
-				branch.size()-branch.indexOf("/"));
-		}
+                        branch = branch.trimmed();
+
+                } else {
+                    QMessageBox::warning(this, tr("TeamGit"),
+                                        "Please select the branch inside the remote repo!!",
+                                        QMessageBox::Ok);
+                }
 	}
 	if(!branch.isEmpty()) {
 		 QMetaObject::invokeMethod(gt->git,"merge",Qt::QueuedConnection,
