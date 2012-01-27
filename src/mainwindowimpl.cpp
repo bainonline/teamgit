@@ -799,7 +799,6 @@ void MainWindowImpl::filesStatusReceived(QString status)
 {
 	QStringList lines=status.split("\n");
 	QString unstagedChanged,stagedChanged,untrackedChanged;
-	QString *curList=NULL;
 	for(int i=0;i<lines.size();i++) {
                 QString cline=lines[i];
                 QChar index_status,work_status;
