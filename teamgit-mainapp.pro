@@ -56,6 +56,8 @@ unix {
 !mac {
  LIBS +=  -ldns_sd
 }
+CONFIG += link_pkgconfig
+PKGCONFIG += source-highlight-qt4
 RESOURCES += ui/icons.qrc
 target.path = /usr/bin/
 manpage.path = /usr/share/man/man1
