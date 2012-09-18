@@ -1,4 +1,4 @@
-teamgit (0.0.12ubuntu) oneiric; urgency=low
+teamgit (0.0.12ubuntu1) oneiric; urgency=low
 
   * Initial Ubuntu Package (LP:#296260)
 
