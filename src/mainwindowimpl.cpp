@@ -35,6 +35,8 @@
 #include <QHostInfo>
 
 #include <iostream>
+#include <srchiliteqt/Qt4SyntaxHighlighter.h>
+#include <srchilite/versions.h>
 
 #include "defs.h"
 #include "mainwindowimpl.h"
@@ -46,11 +48,13 @@
 MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 	: QMainWindow(parent, f)
 {
-	setupUi(this);
-	delete commit_diff1;
-	commit_diff = new DiffViewer(this);
-	hboxLayout5->addWidget(commit_diff);
-	setWindowIcon(QIcon(":/main/icon.png"));
+    setupUi(this);
+    commit_diff = new DiffViewer(this);
+    srchiliteqt::Qt4SyntaxHighlighter *highlighter = new srchiliteqt::Qt4SyntaxHighlighter(commit_diff->document());
+    highlighter->init("diff.lang");
+    hboxLayout5->addWidget(commit_diff);
+    delete commit_diff1;
+    setWindowIcon(QIcon(":/main/icon.png"));
  	qRegisterMetaType<QList< QList<QStandardItem *> > >("QList< QList<QStandardItem *> >");
 	gt = new GitThread();
 	gt->pb = new QProgressBar(this);
