@@ -159,7 +159,7 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 		QTimer::singleShot(0,this,SLOT(openRepo()));
 	}
 	updateRecentlyOpened();
-	fileAnnotationTabIndex=0;
+
 
 	//Enable drag and drop
 	setAcceptDrops(true);
