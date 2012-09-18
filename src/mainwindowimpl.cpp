@@ -112,11 +112,22 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 	searchToolBar->addActions(searchOptionGroup->actions());
 	currentSearch=0;
 
-	annotatedFileBox = new QTextEdit(0);
+
+    //Important make this init early otherwise commit_diff will vanish mysteriously
+    fileAnnotationTabIndex=0;
+
+    QFont font;
+        font.setFamily("Courier");
+        font.setFixedPitch(true);
+        font.setPointSize(10);
+    annotatedFileBox = new QTextEdit(0);
 	annotatedFileBox->setReadOnly(true);
+    annotatedFileBox->setFont(font);
 	connect(annotatedFileBox,SIGNAL(cursorPositionChanged()),this,SLOT(annotatedFileClicked()));
+    srchiliteqt::Qt4SyntaxHighlighter *highlighter_annotation = new srchiliteqt::Qt4SyntaxHighlighter(annotatedFileBox->document());
+    highlighter_annotation->init("cpp.lang");
 	QTimer::singleShot(0,this,SLOT(initSlot()));
-	readSettings();
+    readSettings();
 	setupConnections();
 
 	populateProjects();
@@ -1374,11 +1385,13 @@ void MainWindowImpl::gotAnnotatedFile(QString file)
 	int commit_lines=0;
 
 	annotatedFileBox->clear();
-	QStringList fileLines = file.split("\n");
+    QStringList fileLines = file.split("\n");
 	for(int i=0;i<fileLines.count()-1;i++) {
 		if(fileLines[i].startsWith("\t")) {
 			commit_lines--;
-			annotatedFileBox->append(commit.left(6) + " " + map[commit]+fileLines[i]);
+            QString author_name=map[commit].left(20);
+            author_name += QString(20 - author_name.size(),' ');
+            annotatedFileBox->append(commit.left(6) + " " + author_name+fileLines[i]);
 		} else {
 			if(!commit_lines) {
 				QStringList fields = fileLines[i].split(" ");
