@@ -890,6 +890,9 @@ void MainWindowImpl::branchListReceived(QString branch)
 		QStandardItem *item1 = new QStandardItem(branchList[i]);
 		item1->setEditable(false);
 		branchModel->appendRow(item1);
+        if(branchList[i].startsWith("*")) {
+            currentBranch->setText(branchList[i].remove(0,1));
+        }
 	}
 	branchesView->setModel(branchModel);
 }
