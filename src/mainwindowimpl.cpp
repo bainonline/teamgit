@@ -1117,8 +1117,7 @@ void MainWindowImpl::branchesViewClicked(const QModelIndex &index)
 		resetLog();
 		return;
 	}
-	text = text.trimmed();
-	commit_diff->append(text);
+    text = text.trimmed();
 	QMetaObject::invokeMethod(glt->git,"getNamedLog",Qt::QueuedConnection,
 								Q_ARG(QString,text));
 }
