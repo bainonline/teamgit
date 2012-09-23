@@ -275,10 +275,15 @@ void  GitProcess::commit(QString commit_msg,QString author_name,QString author_e
 	emit commitDone();
 }
 
-void  GitProcess::tag(QString tag)
+void  GitProcess::tag(QString tag,QString msg)
 {
 	QStringList args;
-	args << "tag";
+    args << "tag";
+    if(!msg.isEmpty()) {
+        args << "-a";
+        args << "-m";
+        args << msg;
+    }
 	if(!tag.isEmpty())
 		args << tag;
 	runGit(args);

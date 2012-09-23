@@ -1151,7 +1151,7 @@ void MainWindowImpl::newTag()
 										tr("Please enter the tag name :"), QLineEdit::Normal,
 										"", &ok);
 	QMetaObject::invokeMethod(gt->git,"tag",Qt::QueuedConnection,
-								Q_ARG(QString,tag));
+                              Q_ARG(QString,tag),Q_ARG(QString,QString()));
 	GIT_INVOKE("getTags");
 }
 
