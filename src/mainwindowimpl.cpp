@@ -970,8 +970,13 @@ void MainWindowImpl::fileDiffReceived(QString diff,int type)
 void MainWindowImpl::diffDoubleClicked()
 {
 	if(!commit_diff->getDiffType()) {
-		return;
-	}
+        //Add review comment
+        //Should include
+        //Line number in patch
+        //commit hash
+        //one liner commit message
+        //Author (could be taken directly by review dialog)
+    }
 	QString patch;
 	patch.append(commit_diff->document()->findBlockByNumber(0).text());
 	patch.append("\n");

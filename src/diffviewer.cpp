@@ -83,8 +83,8 @@ void DiffViewer::setDiffText(QString diff)
 
 void DiffViewer::cursorPosChanged(QTextCursor cursor)
 {
-	if(!diffType)
-		return;
+//	if(!diffType)
+//		return;
 	int pos= cursor.position();
 	QTextDocument *doc= this->document();
 	QString paraText;
