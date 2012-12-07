@@ -682,7 +682,7 @@ void MainWindowImpl::checkoutSlot()
 	}
 }
 
-void MainWindowImpl::commitSlot()
+void MainWindowImpl::commitSlot(bool amend)
 {
 	if(!mergeConflicts.isEmpty()) {
         QMessageBox::warning(this, tr("TeamGit"),
@@ -713,7 +713,8 @@ void MainWindowImpl::commitSlot()
 						Q_ARG(QString, cmd->getCommitMessage()),
 						Q_ARG(QString, cmd->getAuthorName()),
 						Q_ARG(QString, cmd->getAuthorEmail()),
-						Q_ARG(bool,cmd->signoff()));
+                        Q_ARG(bool,cmd->signoff()),
+                        Q_ARG(bool,amend));
     }
 }
 
@@ -1514,6 +1515,13 @@ void MainWindowImpl::gerritReworkSlot()
         return;
     }
     QModelIndexList indexes = logView->selectionModel()->selection().indexes();
+    if(indexes.isEmpty()) {
+        QMessageBox::warning(this, tr("TeamGit"),
+                            "You can ammend only the topmost commit\n Please select the topmost commit in current branch!!",
+                            QMessageBox::Ok);
+        return;
+    }
+
     QModelIndex index = indexes.at(0);
     if(index.row() != 0) {
         QMessageBox::warning(this, tr("TeamGit"),
@@ -1540,7 +1548,7 @@ void MainWindowImpl::gerritReworkSlot()
     file.open(QIODevice::ReadWrite | QIODevice::Truncate);
     file.write(log.toAscii().data());
     file.close();
-    this->commitSlot();
+    this->commitSlot(true);
 }
 
 //Used for connecting random things while devloping,

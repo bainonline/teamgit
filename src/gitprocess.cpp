@@ -253,7 +253,7 @@ void  GitProcess::addFiles(QStringList files)
 	emit addDone();
 }
 
-void  GitProcess::commit(QString commit_msg,QString author_name,QString author_email,bool signoff)
+void  GitProcess::commit(QString commit_msg,QString author_name,QString author_email,bool signoff,bool amend)
 {
 	QStringList args;
 	args << "commit";
@@ -265,6 +265,9 @@ void  GitProcess::commit(QString commit_msg,QString author_name,QString author_e
 	if(signoff) {
 		args << "--signoff";
 	}
+    if(amend) {
+        args << "--amend";
+    }
 	if(!commit_msg.isEmpty()) {
 		args << "-m";
 		args << commit_msg;

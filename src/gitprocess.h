@@ -96,7 +96,7 @@ Q_OBJECT
 	void unstageFiles(QStringList files);
 	void stageHunk(QString hunk);
 	void unStageHunk(QString hunk);
-	void commit(QString commit_msg,QString author_name,QString author_email,bool signoff=false);
+    void commit(QString commit_msg,QString author_name,QString author_email,bool signoff=false,bool amend=false);
     void tag(QString,QString);
 	void addFiles(QStringList);
 	void getDiff(QString);

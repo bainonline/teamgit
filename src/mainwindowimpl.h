@@ -149,7 +149,7 @@ private slots:
 	void fileDiffReceived(QString,int);
 	void hideShowUntracked();
 
-	void commitSlot();
+    void commitSlot(bool amend=false);
 	void resetSlot();
 	void checkoutSlot();
 
