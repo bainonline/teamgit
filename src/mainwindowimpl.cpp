@@ -428,6 +428,8 @@ void MainWindowImpl::setupConnections()
 	connect(remoteBranchesView,SIGNAL(clicked(const QModelIndex &)),logView,SLOT(clearSelection()));
 	connect(remoteBranchesView,SIGNAL(clicked(const QModelIndex &)),tagsView,SLOT(clearSelection()));
 
+    connect(gerritPush,SIGNAL(triggered()),this,SLOT(gerritPushSlot()));
+    connect(gerritRework,SIGNAL(triggered()),this,SLOT(gerritReworkSlot()));
 }
 
 MainWindowImpl::~MainWindowImpl()
@@ -897,7 +899,7 @@ void MainWindowImpl::branchListReceived(QString branch)
 		item1->setEditable(false);
 		branchModel->appendRow(item1);
         if(branchList[i].startsWith("*")) {
-            currentBranch->setText(branchList[i].remove(0,1));
+            currentBranch->setText(branchList[i].remove(0,2));
         }
 	}
 	branchesView->setModel(branchModel);
@@ -1493,6 +1495,13 @@ void MainWindowImpl::resolvMerged()
 	md->exec();
 	md->cleanUp();
 	refresh();
+}
+
+void MainWindowImpl::gerritPushSlot()
+{
+    QMetaObject::invokeMethod(gt->git,"gerritPush",Qt::QueuedConnection,
+                        Q_ARG(QString,gSettings->gerritBranch),
+                        Q_ARG(QString,currentBranch->text()));
 }
 
 //Used for connecting random things while devloping,

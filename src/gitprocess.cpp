@@ -862,3 +862,24 @@ void GitProcess::getUnMergedFileContents(QString file)
 }
 
 
+void GitProcess::gerritPush(QString gerritBranch,QString topic)
+{
+    QStringList args;
+
+    args << "push";
+    args << "gerrit";
+
+    QString gerritRef;
+    gerritRef = "HEAD:refs/for/" + gerritBranch + "/" + topic;
+    args << gerritRef;
+
+    emit notify("Pushing out to gerrit");
+    emit initOutputDialog();
+    QByteArray array = runGit(args,false,true);
+    notifyOutputDialog(QString::fromUtf8(array));
+    sendGitOutput();
+    emit doneOutputDialog();
+    emit notify("Ready");
+}
+
+

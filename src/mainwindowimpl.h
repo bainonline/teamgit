@@ -53,6 +53,8 @@ private:
 	int currentSearch;
 	QTextEdit *annotatedFileBox;
 
+    QAction *gerritPush, *gerritRework;
+
 	QAction *recentRepos[5];
 
 	DiffViewer *commit_diff;
@@ -201,6 +203,7 @@ private slots:
 	void gotUnMerged(QString);
 	void resolvMerged();
 
+    void gerritPushSlot();
 signals:
 	void test();
 	void teamGitWorkingDirChanged(const QString &newDir);

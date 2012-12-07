@@ -134,6 +134,8 @@ Q_OBJECT
 	void getHelp(QString command);
 	void getCommands();
 
+    void gerritPush(QString gerritBranch,QString topic);
+
 	signals:
 	void logReceived(QList< QList<QStandardItem *> >);
 	void namedLogReceived(QString,QList< QList<QStandardItem *> >);
@@ -173,5 +175,6 @@ Q_OBJECT
 
 	void unMerged(QString);
 	void unmergedFileContents(QStringList);
+
 };
 #endif
