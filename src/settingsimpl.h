@@ -30,7 +30,8 @@ struct gsettings {
 	QString lastApplyMailPath;
 	bool showAdvanced;
 	QString mergeToolPath;
-
+    bool useGerrit;
+    QString gerritBranch;
 };
 
 class SettingsImpl : public QDialog, public Ui::SettingsDialog

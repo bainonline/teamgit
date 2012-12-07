@@ -111,11 +111,17 @@ void SettingsImpl::refreshUi()
 	userEmail->setText(gSettings->userEmail);
 	autosignoff->setChecked(gSettings->autosignoff);
 	mergeToolPath->setText(gSettings->mergeToolPath);
-        editorPath->setText(gSettings->editorPath);
+    editorPath->setText(gSettings->editorPath);
 	if(gSettings->showAdvanced)
 		showAdvancedCheckBox->setCheckState(Qt::Checked);
 	else
 		showAdvancedCheckBox->setCheckState(Qt::Unchecked);
+
+    if(gSettings->useGerrit)
+        useGerrit->setCheckState(Qt::Checked);
+    else
+        useGerrit->setCheckState(Qt::Unchecked);
+    gerritBranch->setText(gSettings->gerritBranch);
 }
 
 void SettingsImpl::accept()
@@ -129,6 +135,8 @@ void SettingsImpl::accept()
 	else
 		gSettings->autosignoff = false;
 	gSettings->showAdvanced = showAdvancedCheckBox->checkState() ? true : false ;
+    gSettings->useGerrit = useGerrit->checkState() ? true : false ;
+    gSettings->gerritBranch = gerritBranch->text();
 	writeSettings();
 	QDialog::accept();
 }
@@ -143,8 +151,10 @@ void SettingsImpl::readSettings()
 	gSettings->autosignoff = settings.value("autosignoff",bool()).toBool();
 	gSettings->lastApplyMailPath = settings.value("applyMailStartPath",QString("/home")).toString();
 	gSettings->mergeToolPath = settings.value("mergeToolPath",QString("/usr/bin/meld")).toString();
-        gSettings->editorPath = settings.value("editorPath",QString("/usr/bin/kate")).toString();
-	settings.endGroup();
+    gSettings->editorPath = settings.value("editorPath",QString("/usr/bin/kate")).toString();
+    gSettings->useGerrit = settings.value("useGerrit",bool()).toBool();
+    gSettings->gerritBranch = settings.value("gerritBranch",QString("master")).toString();
+    settings.endGroup();
 }
 
 
@@ -158,8 +168,10 @@ void SettingsImpl::writeSettings()
 	settings.setValue("autosignoff",gSettings->autosignoff);
 	settings.setValue("applyMailStartPath",gSettings->lastApplyMailPath);
 	settings.setValue("mergeToolPath",gSettings->mergeToolPath);
-        settings.setValue("editorPath",gSettings->editorPath);
-	settings.endGroup();
+    settings.setValue("editorPath",gSettings->editorPath);
+    settings.setValue("useGerrit",gSettings->useGerrit);
+    settings.setValue("gerritBranch",gSettings->gerritBranch);
+    settings.endGroup();
 
 }
 
