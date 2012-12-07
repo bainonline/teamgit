@@ -204,6 +204,7 @@ private slots:
 	void resolvMerged();
 
     void gerritPushSlot();
+    void gerritReworkSlot();
 signals:
 	void test();
 	void teamGitWorkingDirChanged(const QString &newDir);

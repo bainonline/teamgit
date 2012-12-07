@@ -349,7 +349,7 @@ void MainWindowImpl::setupConnections()
 	connect(action_CherryPick,SIGNAL(triggered()),this,SLOT(cherryPickSelectedCommit()));
 	connect(action_Merge,SIGNAL(triggered()),this,SLOT(merge()));
 	connect(action_Revert,SIGNAL(triggered()),this,SLOT(revertSelectedCommit()));
-	connect(action_Commit,SIGNAL(triggered()),this,SLOT(commitSlot()));
+    connect(action_Commit,SIGNAL(triggered()),this,SLOT(commitSlot()));
 	connect(actionCheck_Out,SIGNAL(triggered()),this,SLOT(checkoutSlot()));
 	connect(action_Open,SIGNAL(triggered()),this,SLOT(openRepo()));
 	connect(action_Push,SIGNAL(triggered()),this,SLOT(pushSlot()));
@@ -685,7 +685,7 @@ void MainWindowImpl::checkoutSlot()
 void MainWindowImpl::commitSlot()
 {
 	if(!mergeConflicts.isEmpty()) {
-		QMessageBox::warning(this, tr("TeamGit"),
+        QMessageBox::warning(this, tr("TeamGit"),
 							"Some files still have unresolved merge conflicts. \nCan not commit!",
 							QMessageBox::Ok);
 	}
@@ -702,7 +702,7 @@ void MainWindowImpl::commitSlot()
 		file.open(QIODevice::ReadWrite);
 		QTextStream in(&file);
 		commitMessage = in.readAll();
-		//cmd->setCommitMessage(commitMessage);
+        cmd->setCommitMessage(commitMessage);
 	}
 	if(!stagedFilesView->isVisible())
 		return;
@@ -714,7 +714,7 @@ void MainWindowImpl::commitSlot()
 						Q_ARG(QString, cmd->getAuthorName()),
 						Q_ARG(QString, cmd->getAuthorEmail()),
 						Q_ARG(bool,cmd->signoff()));
-	}
+    }
 }
 
 void MainWindowImpl::pullDialog()
@@ -1160,7 +1160,7 @@ void MainWindowImpl::logClicked(const QModelIndex &index)
 void MainWindowImpl::newTag()
 {
 	bool ok;
-	QString tag = QInputDialog::getText(this, tr("Add New Tag"),
+    QString tag = QInputDialog::getText(this, tr("Add New Tag"),
 										tr("Please enter the tag name :"), QLineEdit::Normal,
 										"", &ok);
 	QMetaObject::invokeMethod(gt->git,"tag",Qt::QueuedConnection,
@@ -1502,6 +1502,45 @@ void MainWindowImpl::gerritPushSlot()
     QMetaObject::invokeMethod(gt->git,"gerritPush",Qt::QueuedConnection,
                         Q_ARG(QString,gSettings->gerritBranch),
                         Q_ARG(QString,currentBranch->text()));
+}
+
+void MainWindowImpl::gerritReworkSlot()
+{
+
+    if(!stagedFilesView->isVisible()) {
+        QMessageBox::warning(this, tr("TeamGit"),
+                            "No changes made yet do some rework first and stage changes for commit!!",
+                            QMessageBox::Ok);
+        return;
+    }
+    QModelIndexList indexes = logView->selectionModel()->selection().indexes();
+    QModelIndex index = indexes.at(0);
+    if(index.row() != 0) {
+        QMessageBox::warning(this, tr("TeamGit"),
+                            "You can ammend only the topmost commit\n Please select the topmost commit in current branch!!",
+                            QMessageBox::Ok);
+        return;
+    }
+    QString log = commit_log->toPlainText();
+    if(!log.contains("Change-Id:")) {
+        bool ok;
+        QString changeId = QInputDialog::getText(this, tr("Change Id"),
+                                            tr("No change id found in commit message. \n Please enter the change id to resubmit :"), QLineEdit::Normal,
+                                            "", &ok);
+        if(!ok) {
+            return;
+        }
+        log.append("\nChange-Id: ");
+        log.append(changeId);
+        log.append("\n");
+    }
+
+    //commmit using the current commit message plus change id if entered above
+    QFile file(gSettings->teamGitWorkingDir + "/.git/COMMIT_EDITMSG");
+    file.open(QIODevice::ReadWrite | QIODevice::Truncate);
+    file.write(log.toAscii().data());
+    file.close();
+    this->commitSlot();
 }
 
 //Used for connecting random things while devloping,
