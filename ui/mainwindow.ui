@@ -919,6 +919,7 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionGerrit_Tools"/>
   </widget>
   <action name="action_New">
    <property name="icon">
@@ -1222,6 +1223,11 @@
   <action name="action_interactiveRebase">
    <property name="text">
     <string>&amp;Interactive rebase</string>
+   </property>
+  </action>
+  <action name="actionGerrit_Tools">
+   <property name="text">
+    <string>Gerrit Tools</string>
    </property>
   </action>
  </widget>
