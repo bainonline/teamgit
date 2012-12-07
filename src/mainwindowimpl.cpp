@@ -113,6 +113,12 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f)
 	currentSearch=0;
 
 
+
+    gerritPush = new QAction(QIcon(":/main/review.png"),"Push to gerrit for review",this);
+    gerritToolBar->addAction(gerritPush);
+    gerritRework = new QAction(QIcon(":/main/reload.png"),"Resubmit the fixes to gerrit",this);
+    gerritToolBar->addAction(gerritRework);
+
     //Important make this init early otherwise commit_diff will vanish mysteriously
     fileAnnotationTabIndex=0;
 
